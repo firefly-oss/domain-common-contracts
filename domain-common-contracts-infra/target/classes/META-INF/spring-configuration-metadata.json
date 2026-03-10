@@ -1,0 +1,30 @@
+{
+  "groups": [
+    {
+      "name": "api-configuration.common-platform.contract-mgmt",
+      "type": "com.firefly.domain.common.contracts.infra.ContractMgmtProperties",
+      "sourceType": "com.firefly.domain.common.contracts.infra.ContractMgmtProperties"
+    },
+    {
+      "name": "api-configuration.common-platform.document-mgmt",
+      "type": "com.firefly.domain.common.contracts.infra.DocumentMgmtProperties",
+      "sourceType": "com.firefly.domain.common.contracts.infra.DocumentMgmtProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "api-configuration.common-platform.contract-mgmt.base-path",
+      "type": "java.lang.String",
+      "sourceType": "com.firefly.domain.common.contracts.infra.ContractMgmtProperties"
+    },
+    {
+      "name": "api-configuration.common-platform.document-mgmt.base-path",
+      "type": "java.lang.String",
+      "sourceType": "com.firefly.domain.common.contracts.infra.DocumentMgmtProperties"
+    }
+  ],
+  "hints": [],
+  "ignored": {
+    "properties": []
+  }
+}

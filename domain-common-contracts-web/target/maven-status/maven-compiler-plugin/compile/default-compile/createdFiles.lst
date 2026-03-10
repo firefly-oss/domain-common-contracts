@@ -1,0 +1,6 @@
+com/firefly/domain/common/contracts/web/controller/ContractController.class
+com/firefly/domain/common/contracts/web/DomainCommonContractsApplication.class
+com/firefly/domain/common/contracts/web/controller/ContractTermsController.class
+com/firefly/domain/common/contracts/web/controller/ContractPartyController.class
+com/firefly/domain/common/contracts/web/controller/ContractSignatureController.class
+com/firefly/domain/common/contracts/web/controller/ContractDocumentController.class

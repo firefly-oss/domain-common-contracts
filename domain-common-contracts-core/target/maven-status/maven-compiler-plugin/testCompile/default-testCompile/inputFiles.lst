@@ -1,0 +1,16 @@
+/Users/casanchez/Desktop/FIREFLY-OSS/domain-common-contracts/domain-common-contracts-core/src/test/java/com/firefly/domain/common/contracts/core/handlers/AddContractPartyHandlerTest.java
+/Users/casanchez/Desktop/FIREFLY-OSS/domain-common-contracts/domain-common-contracts-core/src/test/java/com/firefly/domain/common/contracts/core/handlers/AddContractTermsHandlerTest.java
+/Users/casanchez/Desktop/FIREFLY-OSS/domain-common-contracts/domain-common-contracts-core/src/test/java/com/firefly/domain/common/contracts/core/handlers/ConfirmContractSignatureHandlerTest.java
+/Users/casanchez/Desktop/FIREFLY-OSS/domain-common-contracts/domain-common-contracts-core/src/test/java/com/firefly/domain/common/contracts/core/handlers/CreateContractHandlerTest.java
+/Users/casanchez/Desktop/FIREFLY-OSS/domain-common-contracts/domain-common-contracts-core/src/test/java/com/firefly/domain/common/contracts/core/handlers/GenerateContractDocumentHandlerTest.java
+/Users/casanchez/Desktop/FIREFLY-OSS/domain-common-contracts/domain-common-contracts-core/src/test/java/com/firefly/domain/common/contracts/core/handlers/GetActiveContractsByPartyHandlerTest.java
+/Users/casanchez/Desktop/FIREFLY-OSS/domain-common-contracts/domain-common-contracts-core/src/test/java/com/firefly/domain/common/contracts/core/handlers/GetContractDetailHandlerTest.java
+/Users/casanchez/Desktop/FIREFLY-OSS/domain-common-contracts/domain-common-contracts-core/src/test/java/com/firefly/domain/common/contracts/core/handlers/GetContractDocumentHandlerTest.java
+/Users/casanchez/Desktop/FIREFLY-OSS/domain-common-contracts/domain-common-contracts-core/src/test/java/com/firefly/domain/common/contracts/core/handlers/GetContractDocumentsHandlerTest.java
+/Users/casanchez/Desktop/FIREFLY-OSS/domain-common-contracts/domain-common-contracts-core/src/test/java/com/firefly/domain/common/contracts/core/handlers/GetContractPartiesHandlerTest.java
+/Users/casanchez/Desktop/FIREFLY-OSS/domain-common-contracts/domain-common-contracts-core/src/test/java/com/firefly/domain/common/contracts/core/handlers/GetContractStatusHandlerTest.java
+/Users/casanchez/Desktop/FIREFLY-OSS/domain-common-contracts/domain-common-contracts-core/src/test/java/com/firefly/domain/common/contracts/core/handlers/GetContractStatusHistoryHandlerTest.java
+/Users/casanchez/Desktop/FIREFLY-OSS/domain-common-contracts/domain-common-contracts-core/src/test/java/com/firefly/domain/common/contracts/core/handlers/GetContractTermsHandlerTest.java
+/Users/casanchez/Desktop/FIREFLY-OSS/domain-common-contracts/domain-common-contracts-core/src/test/java/com/firefly/domain/common/contracts/core/handlers/GetContractsByPartyHandlerTest.java
+/Users/casanchez/Desktop/FIREFLY-OSS/domain-common-contracts/domain-common-contracts-core/src/test/java/com/firefly/domain/common/contracts/core/handlers/RemoveContractPartyHandlerTest.java
+/Users/casanchez/Desktop/FIREFLY-OSS/domain-common-contracts/domain-common-contracts-core/src/test/java/com/firefly/domain/common/contracts/core/handlers/RequestContractSignatureHandlerTest.java

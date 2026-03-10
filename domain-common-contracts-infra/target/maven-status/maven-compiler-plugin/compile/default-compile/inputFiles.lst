@@ -1,0 +1,9 @@
+/Users/casanchez/Desktop/FIREFLY-OSS/domain-common-contracts/domain-common-contracts-infra/src/main/java/com/firefly/domain/common/contracts/infra/ContractMgmtClientFactory.java
+/Users/casanchez/Desktop/FIREFLY-OSS/domain-common-contracts/domain-common-contracts-infra/src/main/java/com/firefly/domain/common/contracts/infra/ContractMgmtProperties.java
+/Users/casanchez/Desktop/FIREFLY-OSS/domain-common-contracts/domain-common-contracts-infra/src/main/java/com/firefly/domain/common/contracts/infra/DocumentMgmtClientFactory.java
+/Users/casanchez/Desktop/FIREFLY-OSS/domain-common-contracts/domain-common-contracts-infra/src/main/java/com/firefly/domain/common/contracts/infra/DocumentMgmtProperties.java
+/Users/casanchez/Desktop/FIREFLY-OSS/domain-common-contracts/domain-common-contracts-infra/src/main/java/com/firefly/domain/common/contracts/infra/StubESignatureAdapter.java
+/Users/casanchez/Desktop/FIREFLY-OSS/domain-common-contracts/domain-common-contracts-infra/src/main/java/com/firefly/domain/common/contracts/infra/ports/ESignaturePort.java
+/Users/casanchez/Desktop/FIREFLY-OSS/domain-common-contracts/domain-common-contracts-infra/src/main/java/com/firefly/domain/common/contracts/infra/ports/model/SignatureRequest.java
+/Users/casanchez/Desktop/FIREFLY-OSS/domain-common-contracts/domain-common-contracts-infra/src/main/java/com/firefly/domain/common/contracts/infra/ports/model/SignatureRequestResult.java
+/Users/casanchez/Desktop/FIREFLY-OSS/domain-common-contracts/domain-common-contracts-infra/src/main/java/com/firefly/domain/common/contracts/infra/ports/model/SignatureVerificationResult.java
