@@ -1,45 +1,46 @@
 package com.firefly.domain.common.contracts.core.handlers;
 
-import com.firefly.core.contract.sdk.api.ContractStatusHistoryApi;
-import com.firefly.core.contract.sdk.model.ContractStatusHistoryDTO;
 import com.firefly.domain.common.contracts.core.commands.RequestContractSignatureCommand;
-import com.firefly.domain.common.contracts.core.mappers.ContractCommandMapper;
-import com.firefly.domain.common.contracts.infra.ports.ESignaturePort;
 import org.fireflyframework.cqrs.annotations.CommandHandlerComponent;
 import org.fireflyframework.cqrs.command.CommandHandler;
+import org.fireflyframework.orchestration.saga.engine.SagaEngine;
+import org.fireflyframework.orchestration.saga.engine.StepInputs;
 import reactor.core.publisher.Mono;
 
-import java.util.Objects;
 import java.util.UUID;
 
 /**
- * Handles {@link RequestContractSignatureCommand} by requesting an e-signature
- * through the {@link ESignaturePort} and recording the status transition.
+ * Handles {@link RequestContractSignatureCommand} by executing the
+ * {@code request-signature-saga}, which creates a signature record, submits it
+ * to the e-signature provider, and records the SUBMITTED_FOR_APPROVAL status.
+ * Returns the resulting {@code contractStatusHistoryId}.
  */
 @CommandHandlerComponent
 public class RequestContractSignatureHandler extends CommandHandler<RequestContractSignatureCommand, UUID> {
 
-    private final ESignaturePort eSignaturePort;
-    private final ContractStatusHistoryApi contractStatusHistoryApi;
-    private final ContractCommandMapper mapper;
+    private final SagaEngine sagaEngine;
 
-    public RequestContractSignatureHandler(ESignaturePort eSignaturePort,
-                                           ContractStatusHistoryApi contractStatusHistoryApi,
-                                           ContractCommandMapper mapper) {
-        this.eSignaturePort = eSignaturePort;
-        this.contractStatusHistoryApi = contractStatusHistoryApi;
-        this.mapper = mapper;
+    public RequestContractSignatureHandler(SagaEngine sagaEngine) {
+        this.sagaEngine = sagaEngine;
     }
 
     @Override
     protected Mono<UUID> doHandle(RequestContractSignatureCommand cmd) {
-        return eSignaturePort.requestSignature(mapper.toSignatureRequest(cmd))
+        StepInputs inputs = StepInputs.builder()
+                .forStepId("create-signature-request", cmd)
+                .forStepId("send-to-provider", cmd)
+                .forStepId("update-contract-status", cmd)
+                .build();
+
+        return sagaEngine.execute("request-signature-saga", inputs)
                 .flatMap(result -> {
-                    ContractStatusHistoryDTO statusDto = new ContractStatusHistoryDTO();
-                    statusDto.setContractId(cmd.contractId());
-                    statusDto.setStatusCode(ContractStatusHistoryDTO.StatusCodeEnum.SUBMITTED_FOR_APPROVAL);
-                    return contractStatusHistoryApi.createContractStatusHistory(cmd.contractId(), statusDto)
-                            .mapNotNull(sh -> Objects.requireNonNull(sh).getContractStatusHistoryId());
+                    if (result.isFailed()) {
+                        return Mono.error(new RuntimeException(
+                                "request-signature-saga failed at step: " +
+                                result.firstErrorStepId().orElse("unknown")));
+                    }
+                    return Mono.justOrEmpty(
+                            result.resultOf("update-contract-status", UUID.class).orElse(null));
                 });
     }
 }

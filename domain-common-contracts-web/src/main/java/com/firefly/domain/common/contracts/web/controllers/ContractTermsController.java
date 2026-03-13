@@ -1,4 +1,4 @@
-package com.firefly.domain.common.contracts.web.controller;
+package com.firefly.domain.common.contracts.web.controllers;
 
 import com.firefly.domain.common.contracts.core.commands.AddContractTermsCommand;
 import com.firefly.domain.common.contracts.core.services.ContractService;

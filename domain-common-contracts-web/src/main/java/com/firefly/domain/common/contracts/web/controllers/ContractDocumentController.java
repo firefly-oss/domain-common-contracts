@@ -1,4 +1,4 @@
-package com.firefly.domain.common.contracts.web.controller;
+package com.firefly.domain.common.contracts.web.controllers;
 
 import com.firefly.domain.common.contracts.core.commands.GenerateContractDocumentCommand;
 import com.firefly.domain.common.contracts.core.services.ContractService;
@@ -37,6 +37,15 @@ public class ContractDocumentController {
     @GetMapping
     public Mono<ResponseEntity<Object>> listDocuments(@PathVariable UUID contractId) {
         return contractService.getContractDocuments(contractId)
+                .map(ResponseEntity::ok);
+    }
+
+    @Operation(summary = "Get Document", description = "Retrieve a specific document associated with a contract")
+    @GetMapping("/{docId}")
+    public Mono<ResponseEntity<Object>> getDocument(
+            @PathVariable UUID contractId,
+            @PathVariable UUID docId) {
+        return contractService.getContractDocument(contractId, docId)
                 .map(ResponseEntity::ok);
     }
 }

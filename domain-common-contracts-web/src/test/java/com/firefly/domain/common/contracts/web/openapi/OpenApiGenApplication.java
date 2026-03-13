@@ -31,7 +31,7 @@ import org.springframework.context.annotation.ComponentScan;
  * Maven profile with {@code useTestClasspath=true}.
  */
 @EnableOpenApiGen
-@ComponentScan(basePackages = "com.firefly.domain.common.contracts.web.controller")
+@ComponentScan(basePackages = "com.firefly.domain.common.contracts.web.controllers")
 public class OpenApiGenApplication {
     public static void main(String[] args) {
         SpringApplication.run(OpenApiGenApplication.class, args);

@@ -1,23 +1,20 @@
 package com.firefly.domain.common.contracts.core.handlers;
 
-import com.firefly.core.contract.sdk.api.ContractStatusHistoryApi;
-import com.firefly.core.contract.sdk.model.ContractStatusHistoryDTO;
 import com.firefly.domain.common.contracts.core.commands.RequestContractSignatureCommand;
-import com.firefly.domain.common.contracts.infra.ports.ESignaturePort;
-import com.firefly.domain.common.contracts.infra.ports.model.SignatureRequest;
-import com.firefly.domain.common.contracts.infra.ports.model.SignatureRequestResult;
+import org.fireflyframework.orchestration.saga.engine.SagaEngine;
+import org.fireflyframework.orchestration.saga.engine.SagaResult;
+import org.fireflyframework.orchestration.saga.engine.StepInputs;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.util.Optional;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -27,20 +24,20 @@ import static org.mockito.Mockito.when;
 class RequestContractSignatureHandlerTest {
 
     @Mock
-    private ESignaturePort eSignaturePort;
+    private SagaEngine sagaEngine;
 
     @Mock
-    private ContractStatusHistoryApi contractStatusHistoryApi;
+    private SagaResult sagaResult;
 
     private RequestContractSignatureHandler handler;
 
     @BeforeEach
     void setUp() {
-        handler = new RequestContractSignatureHandler(eSignaturePort, contractStatusHistoryApi);
+        handler = new RequestContractSignatureHandler(sagaEngine);
     }
 
     @Test
-    void doHandle_shouldRequestSignatureAndRecordStatus() {
+    void doHandle_shouldDelegateToSagaAndReturnStatusHistoryId() {
         UUID contractId = UUID.randomUUID();
         UUID documentId = UUID.randomUUID();
         UUID signerPartyId = UUID.randomUUID();
@@ -48,30 +45,34 @@ class RequestContractSignatureHandlerTest {
 
         RequestContractSignatureCommand cmd = new RequestContractSignatureCommand(contractId, documentId, signerPartyId);
 
-        SignatureRequestResult sigResult = SignatureRequestResult.builder()
-                .signatureRequestId(UUID.randomUUID().toString())
-                .provider("STUB")
-                .status("REQUESTED")
-                .build();
-        when(eSignaturePort.requestSignature(any(SignatureRequest.class)))
-                .thenReturn(Mono.just(sigResult));
-
-        ContractStatusHistoryDTO statusResponse = new ContractStatusHistoryDTO(statusHistoryId, null, null);
-        when(contractStatusHistoryApi.createContractStatusHistory(eq(contractId), any(ContractStatusHistoryDTO.class)))
-                .thenReturn(Mono.just(statusResponse));
+        when(sagaResult.isFailed()).thenReturn(false);
+        when(sagaResult.resultOf(eq("update-contract-status"), eq(UUID.class)))
+                .thenReturn(Optional.of(statusHistoryId));
+        when(sagaEngine.execute(eq("request-signature-saga"), any(StepInputs.class)))
+                .thenReturn(Mono.just(sagaResult));
 
         StepVerifier.create(handler.doHandle(cmd))
                 .expectNext(statusHistoryId)
                 .verifyComplete();
 
-        ArgumentCaptor<SignatureRequest> sigCaptor = ArgumentCaptor.forClass(SignatureRequest.class);
-        verify(eSignaturePort).requestSignature(sigCaptor.capture());
-        assertThat(sigCaptor.getValue().getContractId()).isEqualTo(contractId);
-        assertThat(sigCaptor.getValue().getDocumentId()).isEqualTo(documentId);
+        verify(sagaEngine).execute(eq("request-signature-saga"), any(StepInputs.class));
+    }
 
-        ArgumentCaptor<ContractStatusHistoryDTO> statusCaptor = ArgumentCaptor.forClass(ContractStatusHistoryDTO.class);
-        verify(contractStatusHistoryApi).createContractStatusHistory(eq(contractId), statusCaptor.capture());
-        assertThat(statusCaptor.getValue().getStatusCode())
-                .isEqualTo(ContractStatusHistoryDTO.StatusCodeEnum.SUBMITTED_FOR_APPROVAL);
+    @Test
+    void doHandle_whenSagaFails_shouldEmitError() {
+        UUID contractId = UUID.randomUUID();
+        UUID documentId = UUID.randomUUID();
+        UUID signerPartyId = UUID.randomUUID();
+
+        RequestContractSignatureCommand cmd = new RequestContractSignatureCommand(contractId, documentId, signerPartyId);
+
+        when(sagaResult.isFailed()).thenReturn(true);
+        when(sagaResult.firstErrorStepId()).thenReturn(Optional.of("send-to-provider"));
+        when(sagaEngine.execute(eq("request-signature-saga"), any(StepInputs.class)))
+                .thenReturn(Mono.just(sagaResult));
+
+        StepVerifier.create(handler.doHandle(cmd))
+                .expectErrorMatches(e -> e.getMessage().contains("request-signature-saga failed"))
+                .verify();
     }
 }

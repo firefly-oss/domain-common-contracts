@@ -26,6 +26,10 @@
             <groupId>com.firefly</groupId>
             <artifactId>domain-common-contracts-interfaces</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.firefly</groupId>
+            <artifactId>domain-common-contracts-core</artifactId>
+        </dependency>
 
         <!-- Common Libraries -->
         <dependency>

@@ -64,7 +64,7 @@ springdoc:
     operationsSorter: method
     docExpansion: none
     filter: true
-  packages-to-scan: com.firefly.domain.common.contracts.web.controller
+  packages-to-scan: com.firefly.domain.common.contracts.web.controllers
   paths-to-match: /api/**
 
 management:

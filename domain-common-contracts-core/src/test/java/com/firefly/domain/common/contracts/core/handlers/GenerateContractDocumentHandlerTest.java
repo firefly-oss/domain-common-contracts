@@ -1,22 +1,20 @@
 package com.firefly.domain.common.contracts.core.handlers;
 
-import com.firefly.commons.ecm.sdk.api.DocumentControllerApi;
-import com.firefly.commons.ecm.sdk.model.DocumentDTO;
-import com.firefly.core.contract.sdk.api.ContractDocumentsApi;
-import com.firefly.core.contract.sdk.model.ContractDocumentDTO;
 import com.firefly.domain.common.contracts.core.commands.GenerateContractDocumentCommand;
+import org.fireflyframework.orchestration.saga.engine.SagaEngine;
+import org.fireflyframework.orchestration.saga.engine.SagaResult;
+import org.fireflyframework.orchestration.saga.engine.StepInputs;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.util.Optional;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -26,45 +24,53 @@ import static org.mockito.Mockito.when;
 class GenerateContractDocumentHandlerTest {
 
     @Mock
-    private DocumentControllerApi documentControllerApi;
+    private SagaEngine sagaEngine;
 
     @Mock
-    private ContractDocumentsApi contractDocumentsApi;
+    private SagaResult sagaResult;
 
     private GenerateContractDocumentHandler handler;
 
     @BeforeEach
     void setUp() {
-        handler = new GenerateContractDocumentHandler(documentControllerApi, contractDocumentsApi);
+        handler = new GenerateContractDocumentHandler(sagaEngine);
     }
 
     @Test
-    void doHandle_shouldCreateDocumentAndLinkToContract() {
+    void doHandle_shouldDelegateToSagaAndReturnContractDocumentId() {
         UUID contractId = UUID.randomUUID();
         UUID templateId = UUID.randomUUID();
-        UUID docId = UUID.randomUUID();
-        UUID contractDocId = UUID.randomUUID();
+        UUID contractDocumentId = UUID.randomUUID();
 
         GenerateContractDocumentCommand cmd = new GenerateContractDocumentCommand(contractId, templateId);
 
-        DocumentDTO createdDoc = new DocumentDTO(docId);
-        when(documentControllerApi.createDocument(any(DocumentDTO.class)))
-                .thenReturn(Mono.just(createdDoc));
-
-        ContractDocumentDTO contractDocDto = new ContractDocumentDTO(contractDocId, null, null);
-        when(contractDocumentsApi.createContractDocument(eq(contractId), any(ContractDocumentDTO.class)))
-                .thenReturn(Mono.just(contractDocDto));
+        when(sagaResult.isFailed()).thenReturn(false);
+        when(sagaResult.resultOf(eq("attach-to-contract"), eq(UUID.class)))
+                .thenReturn(Optional.of(contractDocumentId));
+        when(sagaEngine.execute(eq("generate-document-saga"), any(StepInputs.class)))
+                .thenReturn(Mono.just(sagaResult));
 
         StepVerifier.create(handler.doHandle(cmd))
-                .expectNext(contractDocId)
+                .expectNext(contractDocumentId)
                 .verifyComplete();
 
-        verify(documentControllerApi).createDocument(any(DocumentDTO.class));
+        verify(sagaEngine).execute(eq("generate-document-saga"), any(StepInputs.class));
+    }
 
-        ArgumentCaptor<ContractDocumentDTO> captor = ArgumentCaptor.forClass(ContractDocumentDTO.class);
-        verify(contractDocumentsApi).createContractDocument(eq(contractId), captor.capture());
-        assertThat(captor.getValue().getDocumentId()).isEqualTo(docId);
-        assertThat(captor.getValue().getContractId()).isEqualTo(contractId);
-        assertThat(captor.getValue().getDocumentTypeId()).isEqualTo(templateId);
+    @Test
+    void doHandle_whenSagaFails_shouldEmitError() {
+        UUID contractId = UUID.randomUUID();
+        UUID templateId = UUID.randomUUID();
+
+        GenerateContractDocumentCommand cmd = new GenerateContractDocumentCommand(contractId, templateId);
+
+        when(sagaResult.isFailed()).thenReturn(true);
+        when(sagaResult.firstErrorStepId()).thenReturn(Optional.of("generate-document"));
+        when(sagaEngine.execute(eq("generate-document-saga"), any(StepInputs.class)))
+                .thenReturn(Mono.just(sagaResult));
+
+        StepVerifier.create(handler.doHandle(cmd))
+                .expectErrorMatches(e -> e.getMessage().contains("generate-document-saga failed"))
+                .verify();
     }
 }
