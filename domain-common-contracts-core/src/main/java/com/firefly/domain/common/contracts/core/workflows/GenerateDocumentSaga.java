@@ -60,7 +60,7 @@ public class GenerateDocumentSaga {
         docDto.setName("contract-doc-" + cmd.contractId());
         docDto.setDocumentType(DocumentDTO.DocumentTypeEnum.CONTRACT);
 
-        return documentControllerApi.createDocument(docDto)
+        return documentControllerApi.createDocument(docDto, UUID.randomUUID().toString())
                 .mapNotNull(DocumentDTO::getId)
                 .doOnNext(docId -> ctx.putVariable(CTX_DOCUMENT_ID, docId));
     }
@@ -70,7 +70,7 @@ public class GenerateDocumentSaga {
      */
     public Mono<Void> deleteDocument(UUID documentId) {
         log.debug("Compensating: deleting document: {}", documentId);
-        return documentControllerApi.deleteDocument(documentId);
+        return documentControllerApi.deleteDocument(documentId, UUID.randomUUID().toString());
     }
 
     /**
@@ -87,7 +87,7 @@ public class GenerateDocumentSaga {
         contractDocDto.setDocumentId(documentId);
         contractDocDto.setDocumentTypeId(cmd.templateId());
 
-        return contractDocumentsApi.createContractDocument(cmd.contractId(), contractDocDto)
+        return contractDocumentsApi.createContractDocument(cmd.contractId(), contractDocDto, UUID.randomUUID().toString())
                 .mapNotNull(dto -> Objects.requireNonNull(dto).getContractDocumentId())
                 .doOnNext(id -> ctx.putVariable(CTX_CONTRACT_DOC_ID, id));
     }
@@ -98,6 +98,6 @@ public class GenerateDocumentSaga {
     public Mono<Void> detachFromContract(UUID contractDocumentId, ExecutionContext ctx) {
         UUID contractId = ctx.getVariableAs(CTX_CONTRACT_ID, UUID.class);
         log.debug("Compensating: detaching document {} from contract: {}", contractDocumentId, contractId);
-        return contractDocumentsApi.deleteContractDocument(contractId, contractDocumentId);
+        return contractDocumentsApi.deleteContractDocument(contractId, contractDocumentId, UUID.randomUUID().toString());
     }
 }

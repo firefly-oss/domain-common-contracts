@@ -14,6 +14,7 @@ import reactor.test.StepVerifier;
 import java.util.List;
 import java.util.UUID;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -38,13 +39,13 @@ class GetContractStatusHandlerTest {
         PaginationResponse response = new PaginationResponse();
         response.setContent(List.of("latestStatus", "olderStatus"));
 
-        when(contractStatusHistoryApi.filterContractStatusHistory(contractId, null))
+        when(contractStatusHistoryApi.filterContractStatusHistory(any(), any(), any()))
                 .thenReturn(Mono.just(response));
 
         StepVerifier.create(handler.doHandle(query))
                 .expectNext("latestStatus")
                 .verifyComplete();
 
-        verify(contractStatusHistoryApi).filterContractStatusHistory(contractId, null);
+        verify(contractStatusHistoryApi).filterContractStatusHistory(any(), any(), any());
     }
 }

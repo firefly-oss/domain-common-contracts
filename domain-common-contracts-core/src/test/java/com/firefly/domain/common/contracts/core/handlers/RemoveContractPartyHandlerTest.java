@@ -12,6 +12,8 @@ import reactor.test.StepVerifier;
 
 import java.util.UUID;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -34,11 +36,11 @@ class RemoveContractPartyHandlerTest {
         UUID partyId = UUID.randomUUID();
         RemoveContractPartyCommand cmd = new RemoveContractPartyCommand(contractId, partyId);
 
-        when(contractPartiesApi.deleteContractParty(contractId, partyId)).thenReturn(Mono.empty());
+        when(contractPartiesApi.deleteContractParty(eq(contractId), eq(partyId), any())).thenReturn(Mono.empty());
 
         StepVerifier.create(handler.doHandle(cmd))
                 .verifyComplete();
 
-        verify(contractPartiesApi).deleteContractParty(contractId, partyId);
+        verify(contractPartiesApi).deleteContractParty(eq(contractId), eq(partyId), any());
     }
 }

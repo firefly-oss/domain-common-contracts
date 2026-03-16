@@ -14,6 +14,8 @@ import reactor.test.StepVerifier;
 
 import java.util.UUID;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -42,13 +44,13 @@ class CreateContractHandlerTest {
         ContractDTO mappedDto = new ContractDTO(null, null, null);
         ContractDTO responseDto = new ContractDTO(expectedId, null, null);
         when(mapper.toContractDto(cmd)).thenReturn(mappedDto);
-        when(contractsApi.createContract(mappedDto)).thenReturn(Mono.just(responseDto));
+        when(contractsApi.createContract(eq(mappedDto), any())).thenReturn(Mono.just(responseDto));
 
         StepVerifier.create(handler.doHandle(cmd))
                 .expectNext(expectedId)
                 .verifyComplete();
 
         verify(mapper).toContractDto(cmd);
-        verify(contractsApi).createContract(mappedDto);
+        verify(contractsApi).createContract(eq(mappedDto), any());
     }
 }

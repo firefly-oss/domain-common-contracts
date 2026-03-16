@@ -7,6 +7,7 @@ import org.fireflyframework.cqrs.query.QueryHandler;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Handles {@link GetContractPartiesQuery} by retrieving all parties of a contract.
@@ -22,7 +23,7 @@ public class GetContractPartiesHandler extends QueryHandler<GetContractPartiesQu
 
     @Override
     protected Mono<List<Object>> doHandle(GetContractPartiesQuery query) {
-        return contractPartiesApi.filterContractParties(query.getContractId(), null)
+        return contractPartiesApi.filterContractParties(query.getContractId(), null, UUID.randomUUID().toString())
                 .mapNotNull(response -> response.getContent() != null
                         ? response.getContent()
                         : List.of());

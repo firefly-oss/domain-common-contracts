@@ -68,7 +68,7 @@ public class RequestSignatureSaga {
                 .documentId(cmd.documentId())
                 .signerPartyId(cmd.signerPartyId());
 
-        return documentSignatureControllerApi.addDocumentSignature(cmd.documentId(), sigDto)
+        return documentSignatureControllerApi.addDocumentSignature(cmd.documentId(), sigDto, UUID.randomUUID().toString())
                 .mapNotNull(dto -> Objects.requireNonNull(dto).getId())
                 .doOnNext(sigId -> ctx.putVariable(CTX_SIGNATURE_RECORD_ID, sigId));
     }
@@ -83,7 +83,7 @@ public class RequestSignatureSaga {
             log.warn("Cannot cancel signature record {}: document ID not in context", signatureRecordId);
             return Mono.empty();
         }
-        return documentSignatureControllerApi.deleteDocumentSignature(documentId, signatureRecordId)
+        return documentSignatureControllerApi.deleteDocumentSignature(documentId, signatureRecordId, UUID.randomUUID().toString())
                 .onErrorComplete(e -> {
                     log.warn("Failed to cancel signature record {}: {}", signatureRecordId, e.getMessage());
                     return true;
@@ -124,7 +124,7 @@ public class RequestSignatureSaga {
         statusDto.setContractId(contractId);
         statusDto.setStatusCode(ContractStatusHistoryDTO.StatusCodeEnum.SUBMITTED_FOR_APPROVAL);
 
-        return contractStatusHistoryApi.createContractStatusHistory(contractId, statusDto)
+        return contractStatusHistoryApi.createContractStatusHistory(contractId, statusDto, UUID.randomUUID().toString())
                 .mapNotNull(dto -> Objects.requireNonNull(dto).getContractStatusHistoryId());
     }
 }

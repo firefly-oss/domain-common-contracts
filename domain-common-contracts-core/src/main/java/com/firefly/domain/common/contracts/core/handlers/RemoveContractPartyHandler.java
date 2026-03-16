@@ -5,6 +5,7 @@ import com.firefly.domain.common.contracts.core.commands.RemoveContractPartyComm
 import org.fireflyframework.cqrs.annotations.CommandHandlerComponent;
 import org.fireflyframework.cqrs.command.CommandHandler;
 import reactor.core.publisher.Mono;
+import java.util.UUID;
 
 /**
  * Handles {@link RemoveContractPartyCommand} by delegating to the contract parties SDK.
@@ -20,6 +21,6 @@ public class RemoveContractPartyHandler extends CommandHandler<RemoveContractPar
 
     @Override
     protected Mono<Void> doHandle(RemoveContractPartyCommand cmd) {
-        return contractPartiesApi.deleteContractParty(cmd.contractId(), cmd.partyId());
+        return contractPartiesApi.deleteContractParty(cmd.contractId(), cmd.partyId(), UUID.randomUUID().toString());
     }
 }

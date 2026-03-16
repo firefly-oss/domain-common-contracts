@@ -14,6 +14,7 @@ import reactor.test.StepVerifier;
 
 import java.util.UUID;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -44,7 +45,7 @@ class AddContractPartyHandlerTest {
         ContractPartyDTO mappedDto = new ContractPartyDTO(null, null, null);
         ContractPartyDTO responseDto = new ContractPartyDTO(expectedPartyId, null, null);
         when(mapper.toContractPartyDto(cmd)).thenReturn(mappedDto);
-        when(contractPartiesApi.createContractParty(eq(contractId), eq(mappedDto)))
+        when(contractPartiesApi.createContractParty(eq(contractId), eq(mappedDto), any()))
                 .thenReturn(Mono.just(responseDto));
 
         StepVerifier.create(handler.doHandle(cmd))
@@ -52,6 +53,6 @@ class AddContractPartyHandlerTest {
                 .verifyComplete();
 
         verify(mapper).toContractPartyDto(cmd);
-        verify(contractPartiesApi).createContractParty(contractId, mappedDto);
+        verify(contractPartiesApi).createContractParty(eq(contractId), eq(mappedDto), any());
     }
 }

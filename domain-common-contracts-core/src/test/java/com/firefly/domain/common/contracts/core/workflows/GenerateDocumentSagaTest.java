@@ -83,11 +83,11 @@ class GenerateDocumentSagaTest {
 
         GenerateContractDocumentCommand cmd = new GenerateContractDocumentCommand(contractId, templateId);
 
-        when(documentControllerApi.createDocument(any(DocumentDTO.class)))
+        when(documentControllerApi.createDocument(any(DocumentDTO.class), any()))
                 .thenReturn(Mono.just(new DocumentDTO(documentId)));
 
         ContractDocumentDTO contractDocDto = new ContractDocumentDTO(contractDocumentId, null, null);
-        when(contractDocumentsApi.createContractDocument(eq(contractId), any(ContractDocumentDTO.class)))
+        when(contractDocumentsApi.createContractDocument(eq(contractId), any(ContractDocumentDTO.class), any()))
                 .thenReturn(Mono.just(contractDocDto));
 
         StepInputs inputs = StepInputs.builder()
@@ -113,7 +113,7 @@ class GenerateDocumentSagaTest {
 
         GenerateContractDocumentCommand cmd = new GenerateContractDocumentCommand(contractId, templateId);
 
-        when(documentControllerApi.createDocument(any(DocumentDTO.class)))
+        when(documentControllerApi.createDocument(any(DocumentDTO.class), any()))
                 .thenReturn(Mono.error(new RuntimeException("ECM unavailable")));
 
         StepInputs inputs = StepInputs.builder()
@@ -130,7 +130,7 @@ class GenerateDocumentSagaTest {
                 })
                 .verifyComplete();
 
-        verify(contractDocumentsApi, never()).createContractDocument(any(), any());
+        verify(contractDocumentsApi, never()).createContractDocument(any(), any(), any());
     }
 
     // ─── Compensation: attach-to-contract fails → compensate generate-document ─
@@ -143,11 +143,11 @@ class GenerateDocumentSagaTest {
 
         GenerateContractDocumentCommand cmd = new GenerateContractDocumentCommand(contractId, templateId);
 
-        when(documentControllerApi.createDocument(any(DocumentDTO.class)))
+        when(documentControllerApi.createDocument(any(DocumentDTO.class), any()))
                 .thenReturn(Mono.just(new DocumentDTO(documentId)));
-        when(contractDocumentsApi.createContractDocument(eq(contractId), any(ContractDocumentDTO.class)))
+        when(contractDocumentsApi.createContractDocument(eq(contractId), any(ContractDocumentDTO.class), any()))
                 .thenReturn(Mono.error(new RuntimeException("Contract service unavailable")));
-        when(documentControllerApi.deleteDocument(eq(documentId)))
+        when(documentControllerApi.deleteDocument(eq(documentId), any()))
                 .thenReturn(Mono.empty());
 
         StepInputs inputs = StepInputs.builder()
@@ -164,6 +164,6 @@ class GenerateDocumentSagaTest {
                 })
                 .verifyComplete();
 
-        verify(documentControllerApi).deleteDocument(eq(documentId));
+        verify(documentControllerApi).deleteDocument(eq(documentId), any());
     }
 }

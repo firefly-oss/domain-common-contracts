@@ -28,7 +28,7 @@ public class AddContractTermsHandler extends CommandHandler<AddContractTermsComm
     @Override
     protected Mono<UUID> doHandle(AddContractTermsCommand cmd) {
         ContractTermDynamicDTO dto = mapper.toContractTermDto(cmd);
-        return contractTermsApi.createContractTerm(cmd.contractId(), dto)
+        return contractTermsApi.createContractTerm(cmd.contractId(), dto, UUID.randomUUID().toString())
                 .mapNotNull(result -> Objects.requireNonNull(result).getTermId());
     }
 }

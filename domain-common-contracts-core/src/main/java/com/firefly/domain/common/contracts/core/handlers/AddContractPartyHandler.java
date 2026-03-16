@@ -28,7 +28,7 @@ public class AddContractPartyHandler extends CommandHandler<AddContractPartyComm
     @Override
     protected Mono<UUID> doHandle(AddContractPartyCommand cmd) {
         ContractPartyDTO dto = mapper.toContractPartyDto(cmd);
-        return contractPartiesApi.createContractParty(cmd.contractId(), dto)
+        return contractPartiesApi.createContractParty(cmd.contractId(), dto, UUID.randomUUID().toString())
                 .mapNotNull(result -> Objects.requireNonNull(result).getContractPartyId());
     }
 }

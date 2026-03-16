@@ -5,6 +5,7 @@ import com.firefly.domain.common.contracts.core.queries.GetContractDetailQuery;
 import org.fireflyframework.cqrs.annotations.QueryHandlerComponent;
 import org.fireflyframework.cqrs.query.QueryHandler;
 import reactor.core.publisher.Mono;
+import java.util.UUID;
 
 /**
  * Handles {@link GetContractDetailQuery} by retrieving a contract by its identifier.
@@ -20,6 +21,6 @@ public class GetContractDetailHandler extends QueryHandler<GetContractDetailQuer
 
     @Override
     protected Mono<Object> doHandle(GetContractDetailQuery query) {
-        return contractsApi.getContractById(query.getContractId()).map(dto -> dto);
+        return contractsApi.getContractById(query.getContractId(), UUID.randomUUID().toString()).map(dto -> dto);
     }
 }

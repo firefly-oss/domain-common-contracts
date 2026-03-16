@@ -7,6 +7,7 @@ import org.fireflyframework.cqrs.query.QueryHandler;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Handles {@link GetContractStatusHistoryQuery} by retrieving the full status history of a contract.
@@ -22,7 +23,7 @@ public class GetContractStatusHistoryHandler extends QueryHandler<GetContractSta
 
     @Override
     protected Mono<List<Object>> doHandle(GetContractStatusHistoryQuery query) {
-        return contractStatusHistoryApi.filterContractStatusHistory(query.getContractId(), null)
+        return contractStatusHistoryApi.filterContractStatusHistory(query.getContractId(), null, UUID.randomUUID().toString())
                 .mapNotNull(response -> response.getContent() != null
                         ? response.getContent()
                         : List.of());

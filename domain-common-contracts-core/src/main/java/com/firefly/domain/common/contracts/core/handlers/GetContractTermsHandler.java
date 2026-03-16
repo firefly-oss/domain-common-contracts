@@ -7,6 +7,7 @@ import org.fireflyframework.cqrs.query.QueryHandler;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Handles {@link GetContractTermsQuery} by retrieving all terms of a contract.
@@ -22,7 +23,7 @@ public class GetContractTermsHandler extends QueryHandler<GetContractTermsQuery,
 
     @Override
     protected Mono<List<Object>> doHandle(GetContractTermsQuery query) {
-        return contractTermsApi.filterContractTerms(query.getContractId(), null)
+        return contractTermsApi.filterContractTerms(query.getContractId(), null, UUID.randomUUID().toString())
                 .mapNotNull(response -> response.getContent() != null
                         ? response.getContent()
                         : List.of());

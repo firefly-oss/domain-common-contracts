@@ -28,7 +28,7 @@ public class CreateContractHandler extends CommandHandler<CreateContractCommand,
     @Override
     protected Mono<UUID> doHandle(CreateContractCommand cmd) {
         ContractDTO dto = mapper.toContractDto(cmd);
-        return contractsApi.createContract(dto)
+        return contractsApi.createContract(dto, UUID.randomUUID().toString())
                 .mapNotNull(result -> Objects.requireNonNull(result).getContractId());
     }
 }

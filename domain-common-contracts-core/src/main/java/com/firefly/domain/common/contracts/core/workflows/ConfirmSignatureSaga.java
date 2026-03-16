@@ -79,7 +79,7 @@ public class ConfirmSignatureSaga {
         statusDto.setContractId(contractId);
         statusDto.setStatusCode(ContractStatusHistoryDTO.StatusCodeEnum.APPROVED);
 
-        return contractStatusHistoryApi.createContractStatusHistory(contractId, statusDto)
+        return contractStatusHistoryApi.createContractStatusHistory(contractId, statusDto, UUID.randomUUID().toString())
                 .mapNotNull(dto -> Objects.requireNonNull(dto).getContractStatusHistoryId())
                 .doOnNext(id -> ctx.putVariable(CTX_STATUS_HISTORY_ID, id));
     }

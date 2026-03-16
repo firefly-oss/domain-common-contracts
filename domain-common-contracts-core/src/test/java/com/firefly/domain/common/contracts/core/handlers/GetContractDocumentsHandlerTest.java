@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -39,13 +40,13 @@ class GetContractDocumentsHandlerTest {
         PaginationResponse response = new PaginationResponse();
         response.setContent(List.of("doc1", "doc2"));
 
-        when(contractDocumentsApi.filterContractDocuments(contractId, null))
+        when(contractDocumentsApi.filterContractDocuments(any(), any(), any()))
                 .thenReturn(Mono.just(response));
 
         StepVerifier.create(handler.doHandle(query))
                 .assertNext(results -> assertThat(results).hasSize(2))
                 .verifyComplete();
 
-        verify(contractDocumentsApi).filterContractDocuments(contractId, null);
+        verify(contractDocumentsApi).filterContractDocuments(any(), any(), any());
     }
 }

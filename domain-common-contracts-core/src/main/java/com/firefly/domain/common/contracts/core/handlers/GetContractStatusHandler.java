@@ -5,6 +5,7 @@ import com.firefly.domain.common.contracts.core.queries.GetContractStatusQuery;
 import org.fireflyframework.cqrs.annotations.QueryHandlerComponent;
 import org.fireflyframework.cqrs.query.QueryHandler;
 import reactor.core.publisher.Mono;
+import java.util.UUID;
 
 /**
  * Handles {@link GetContractStatusQuery} by retrieving the latest status history entry
@@ -21,7 +22,7 @@ public class GetContractStatusHandler extends QueryHandler<GetContractStatusQuer
 
     @Override
     protected Mono<Object> doHandle(GetContractStatusQuery query) {
-        return contractStatusHistoryApi.filterContractStatusHistory(query.getContractId(), null)
+        return contractStatusHistoryApi.filterContractStatusHistory(query.getContractId(), null, UUID.randomUUID().toString())
                 .mapNotNull(response -> {
                     if (response.getContent() != null && !response.getContent().isEmpty()) {
                         return response.getContent().getFirst();

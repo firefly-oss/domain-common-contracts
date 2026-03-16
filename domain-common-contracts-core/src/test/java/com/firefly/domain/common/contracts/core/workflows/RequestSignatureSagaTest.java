@@ -85,17 +85,17 @@ class RequestSignatureSagaTest {
 
         RequestContractSignatureCommand cmd = new RequestContractSignatureCommand(contractId, documentId, signerPartyId);
 
-        when(documentSignatureControllerApi.addDocumentSignature(eq(documentId), any(DocumentSignatureDTO.class)))
+        when(documentSignatureControllerApi.addDocumentSignature(eq(documentId), any(DocumentSignatureDTO.class), any()))
                 .thenReturn(Mono.just(new DocumentSignatureDTO(signatureRecordId, null, null, null, null, null, null, null)));
 
         when(eSignaturePort.requestSignature(any()))
                 .thenReturn(Mono.just(SignatureRequestResult.builder()
-                        .signatureRequestId(UUID.randomUUID().toString())
+                        .signatureRequestId(null)
                         .provider("STUB")
                         .status("REQUESTED")
                         .build()));
 
-        when(contractStatusHistoryApi.createContractStatusHistory(eq(contractId), any(ContractStatusHistoryDTO.class)))
+        when(contractStatusHistoryApi.createContractStatusHistory(eq(contractId), any(ContractStatusHistoryDTO.class), any()))
                 .thenReturn(Mono.just(new ContractStatusHistoryDTO(statusHistoryId, null, null)));
 
         StepInputs inputs = StepInputs.builder()
@@ -123,7 +123,7 @@ class RequestSignatureSagaTest {
 
         RequestContractSignatureCommand cmd = new RequestContractSignatureCommand(contractId, documentId, signerPartyId);
 
-        when(documentSignatureControllerApi.addDocumentSignature(eq(documentId), any(DocumentSignatureDTO.class)))
+        when(documentSignatureControllerApi.addDocumentSignature(eq(documentId), any(DocumentSignatureDTO.class), any()))
                 .thenReturn(Mono.error(new RuntimeException("Document service unavailable")));
 
         StepInputs inputs = StepInputs.builder()
@@ -140,7 +140,7 @@ class RequestSignatureSagaTest {
                 .verifyComplete();
 
         verify(eSignaturePort, never()).requestSignature(any());
-        verify(contractStatusHistoryApi, never()).createContractStatusHistory(any(), any());
+        verify(contractStatusHistoryApi, never()).createContractStatusHistory(any(), any(), any());
     }
 
     // ─── Compensation: send-to-provider fails → cancel signature record ────────
@@ -154,11 +154,11 @@ class RequestSignatureSagaTest {
 
         RequestContractSignatureCommand cmd = new RequestContractSignatureCommand(contractId, documentId, signerPartyId);
 
-        when(documentSignatureControllerApi.addDocumentSignature(eq(documentId), any(DocumentSignatureDTO.class)))
+        when(documentSignatureControllerApi.addDocumentSignature(eq(documentId), any(DocumentSignatureDTO.class), any()))
                 .thenReturn(Mono.just(new DocumentSignatureDTO(signatureRecordId, null, null, null, null, null, null, null)));
         when(eSignaturePort.requestSignature(any()))
                 .thenReturn(Mono.error(new RuntimeException("Provider timeout")));
-        when(documentSignatureControllerApi.deleteDocumentSignature(eq(documentId), eq(signatureRecordId)))
+        when(documentSignatureControllerApi.deleteDocumentSignature(eq(documentId), eq(signatureRecordId), any()))
                 .thenReturn(Mono.empty());
 
         StepInputs inputs = StepInputs.builder()
@@ -175,7 +175,7 @@ class RequestSignatureSagaTest {
                 })
                 .verifyComplete();
 
-        verify(contractStatusHistoryApi, never()).createContractStatusHistory(any(), any());
+        verify(contractStatusHistoryApi, never()).createContractStatusHistory(any(), any(), any());
     }
 
     // ─── Compensation: update-contract-status fails ───────────────────────────
@@ -189,15 +189,15 @@ class RequestSignatureSagaTest {
 
         RequestContractSignatureCommand cmd = new RequestContractSignatureCommand(contractId, documentId, signerPartyId);
 
-        when(documentSignatureControllerApi.addDocumentSignature(eq(documentId), any(DocumentSignatureDTO.class)))
+        when(documentSignatureControllerApi.addDocumentSignature(eq(documentId), any(DocumentSignatureDTO.class), any()))
                 .thenReturn(Mono.just(new DocumentSignatureDTO(signatureRecordId, null, null, null, null, null, null, null)));
         when(eSignaturePort.requestSignature(any()))
                 .thenReturn(Mono.just(SignatureRequestResult.builder()
-                        .signatureRequestId(UUID.randomUUID().toString())
+                        .signatureRequestId(null)
                         .provider("STUB").status("REQUESTED").build()));
-        when(contractStatusHistoryApi.createContractStatusHistory(eq(contractId), any()))
+        when(contractStatusHistoryApi.createContractStatusHistory(eq(contractId), any(), any()))
                 .thenReturn(Mono.error(new RuntimeException("Contract service down")));
-        when(documentSignatureControllerApi.deleteDocumentSignature(eq(documentId), eq(signatureRecordId)))
+        when(documentSignatureControllerApi.deleteDocumentSignature(eq(documentId), eq(signatureRecordId), any()))
                 .thenReturn(Mono.empty());
 
         StepInputs inputs = StepInputs.builder()

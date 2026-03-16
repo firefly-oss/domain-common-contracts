@@ -14,6 +14,7 @@ import reactor.test.StepVerifier;
 
 import java.util.UUID;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -44,7 +45,7 @@ class AddContractTermsHandlerTest {
         ContractTermDynamicDTO mappedDto = new ContractTermDynamicDTO(null, null, null);
         ContractTermDynamicDTO responseDto = new ContractTermDynamicDTO(expectedTermId, null, null);
         when(mapper.toContractTermDto(cmd)).thenReturn(mappedDto);
-        when(contractTermsApi.createContractTerm(eq(contractId), eq(mappedDto)))
+        when(contractTermsApi.createContractTerm(eq(contractId), eq(mappedDto), any()))
                 .thenReturn(Mono.just(responseDto));
 
         StepVerifier.create(handler.doHandle(cmd))
@@ -52,6 +53,6 @@ class AddContractTermsHandlerTest {
                 .verifyComplete();
 
         verify(mapper).toContractTermDto(cmd);
-        verify(contractTermsApi).createContractTerm(contractId, mappedDto);
+        verify(contractTermsApi).createContractTerm(eq(contractId), eq(mappedDto), any());
     }
 }

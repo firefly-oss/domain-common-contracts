@@ -8,6 +8,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Handles {@link GetContractsByPartyQuery} by retrieving all contracts for a given party.
@@ -23,7 +24,7 @@ public class GetContractsByPartyHandler extends QueryHandler<GetContractsByParty
 
     @Override
     protected Mono<List<Object>> doHandle(GetContractsByPartyQuery query) {
-        return globalContractPartiesApi.getContractPartiesByPartyId(query.getPartyId(), null)
+        return globalContractPartiesApi.getContractPartiesByPartyId(query.getPartyId(), null, UUID.randomUUID().toString())
                 .mapNotNull(response -> response.getContent() != null
                         ? new ArrayList<>(response.getContent())
                         : List.of());

@@ -89,7 +89,7 @@ class ConfirmSignatureSagaTest {
                         .provider("STUB")
                         .build()));
 
-        when(contractStatusHistoryApi.createContractStatusHistory(eq(contractId), any(ContractStatusHistoryDTO.class)))
+        when(contractStatusHistoryApi.createContractStatusHistory(eq(contractId), any(ContractStatusHistoryDTO.class), any()))
                 .thenReturn(Mono.just(new ContractStatusHistoryDTO(statusHistoryId, null, null)));
 
         StepInputs inputs = StepInputs.builder()
@@ -135,7 +135,7 @@ class ConfirmSignatureSagaTest {
                 })
                 .verifyComplete();
 
-        verify(contractStatusHistoryApi, never()).createContractStatusHistory(any(), any());
+        verify(contractStatusHistoryApi, never()).createContractStatusHistory(any(), any(), any());
     }
 
     // ─── Compensation: update-contract-status fails ───────────────────────────
@@ -153,7 +153,7 @@ class ConfirmSignatureSagaTest {
                         .status("VERIFIED")
                         .provider("STUB")
                         .build()));
-        when(contractStatusHistoryApi.createContractStatusHistory(eq(contractId), any(ContractStatusHistoryDTO.class)))
+        when(contractStatusHistoryApi.createContractStatusHistory(eq(contractId), any(ContractStatusHistoryDTO.class), any()))
                 .thenReturn(Mono.error(new RuntimeException("Contract service down")));
 
         StepInputs inputs = StepInputs.builder()
@@ -189,7 +189,7 @@ class ConfirmSignatureSagaTest {
                         .provider("STUB")
                         .build()));
 
-        when(contractStatusHistoryApi.createContractStatusHistory(eq(contractId), any(ContractStatusHistoryDTO.class)))
+        when(contractStatusHistoryApi.createContractStatusHistory(eq(contractId), any(ContractStatusHistoryDTO.class), any()))
                 .thenReturn(Mono.just(new ContractStatusHistoryDTO(statusHistoryId, null, null)));
 
         StepInputs inputs = StepInputs.builder()
