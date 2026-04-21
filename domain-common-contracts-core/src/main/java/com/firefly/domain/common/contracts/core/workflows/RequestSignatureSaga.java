@@ -39,6 +39,8 @@ import java.util.UUID;
 public class RequestSignatureSaga {
 
     static final String CTX_CONTRACT_ID = "contractId";
+    static final String CTX_DOCUMENT_ID = "documentId";
+    static final String CTX_SIGNER_PARTY_ID = "signerPartyId";
     static final String CTX_SIGNATURE_RECORD_ID = "signatureRecordId";
     static final String CTX_PROVIDER_REQUEST_ID = "providerRequestId";
 
@@ -62,7 +64,11 @@ public class RequestSignatureSaga {
     @SagaStep(id = "create-signature-request", compensate = "cancelSignatureRequest")
     public Mono<UUID> createSignatureRequest(RequestContractSignatureCommand cmd, ExecutionContext ctx) {
         log.debug("Creating signature request for document: {}, contract: {}", cmd.documentId(), cmd.contractId());
+        // Persist command fields in the context so downstream steps can read them even
+        // when the argument resolver does not inject the original command instance.
         ctx.putVariable(CTX_CONTRACT_ID, cmd.contractId());
+        ctx.putVariable(CTX_DOCUMENT_ID, cmd.documentId());
+        ctx.putVariable(CTX_SIGNER_PARTY_ID, cmd.signerPartyId());
 
         DocumentSignatureDTO sigDto = new DocumentSignatureDTO()
                 .documentId(cmd.documentId())
@@ -78,7 +84,7 @@ public class RequestSignatureSaga {
      */
     public Mono<Void> cancelSignatureRequest(UUID signatureRecordId, ExecutionContext ctx) {
         log.debug("Compensating: cancelling signature record: {}", signatureRecordId);
-        UUID documentId = ctx.getVariableAs("documentId", UUID.class);
+        UUID documentId = ctx.getVariableAs(CTX_DOCUMENT_ID, UUID.class);
         if (documentId == null) {
             log.warn("Cannot cancel signature record {}: document ID not in context", signatureRecordId);
             return Mono.empty();
@@ -95,19 +101,29 @@ public class RequestSignatureSaga {
      * Depends on create-signature-request.
      */
     @SagaStep(id = "send-to-provider", dependsOn = "create-signature-request")
-    public Mono<String> sendToProvider(RequestContractSignatureCommand cmd, ExecutionContext ctx) {
-        log.debug("Sending signature request to provider for contract: {}", cmd.contractId());
+    public Mono<String> sendToProvider(ExecutionContext ctx) {
+        // Read command fields from context: the argument resolver does not reliably
+        // inject the original command instance into downstream steps.
+        UUID contractId = ctx.getVariableAs(CTX_CONTRACT_ID, UUID.class);
+        UUID documentId = ctx.getVariableAs(CTX_DOCUMENT_ID, UUID.class);
+        UUID signerPartyId = ctx.getVariableAs(CTX_SIGNER_PARTY_ID, UUID.class);
+        log.debug("Sending signature request to provider for contract: {}", contractId);
 
         SignatureRequest request = SignatureRequest.builder()
-                .contractId(cmd.contractId())
-                .documentId(cmd.documentId())
-                .signerPartyId(cmd.signerPartyId())
+                .contractId(contractId)
+                .documentId(documentId)
+                .signerPartyId(signerPartyId)
                 .build();
 
         return eSignaturePort.requestSignature(request)
                 .map(result -> {
-                    ctx.putVariable(CTX_PROVIDER_REQUEST_ID, result.getSignatureRequestId());
-                    return result.getSignatureRequestId();
+                    String providerRequestId = result.getSignatureRequestId();
+                    // Saga engine treats Mono.empty() as step failure (map->null becomes empty),
+                    // and the execution context does not accept null values. Use a sentinel when
+                    // the provider does not return an id (e.g. stub providers).
+                    String effectiveId = providerRequestId != null ? providerRequestId : "no-provider-id";
+                    ctx.putVariable(CTX_PROVIDER_REQUEST_ID, effectiveId);
+                    return effectiveId;
                 });
     }
 

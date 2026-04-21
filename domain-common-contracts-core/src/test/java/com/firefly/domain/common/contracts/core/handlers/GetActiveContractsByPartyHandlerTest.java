@@ -17,6 +17,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -42,13 +43,13 @@ class GetActiveContractsByPartyHandlerTest {
         PaginationResponseContractPartyDTO response = new PaginationResponseContractPartyDTO();
         response.setContent(List.of(partyDto));
 
-        when(globalContractPartiesApi.getContractPartiesByPartyId(partyId, true, any()))
+        when(globalContractPartiesApi.getContractPartiesByPartyId(eq(partyId), eq(true), any()))
                 .thenReturn(Mono.just(response));
 
         StepVerifier.create(handler.doHandle(query))
                 .assertNext(results -> assertThat(results).hasSize(1))
                 .verifyComplete();
 
-        verify(globalContractPartiesApi).getContractPartiesByPartyId(partyId, true, any());
+        verify(globalContractPartiesApi).getContractPartiesByPartyId(eq(partyId), eq(true), any());
     }
 }

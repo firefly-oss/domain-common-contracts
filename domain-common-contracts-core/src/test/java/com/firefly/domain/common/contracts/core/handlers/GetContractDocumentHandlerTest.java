@@ -14,6 +14,7 @@ import reactor.test.StepVerifier;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -37,13 +38,13 @@ class GetContractDocumentHandlerTest {
         GetContractDocumentQuery query = new GetContractDocumentQuery(contractId, documentId);
 
         ContractDocumentDTO responseDto = new ContractDocumentDTO(documentId, null, null);
-        when(contractDocumentsApi.getContractDocumentById(contractId, documentId, any()))
+        when(contractDocumentsApi.getContractDocumentById(eq(contractId), eq(documentId), any()))
                 .thenReturn(Mono.just(responseDto));
 
         StepVerifier.create(handler.doHandle(query))
                 .expectNextMatches(result -> result instanceof ContractDocumentDTO)
                 .verifyComplete();
 
-        verify(contractDocumentsApi).getContractDocumentById(contractId, documentId, any());
+        verify(contractDocumentsApi).getContractDocumentById(eq(contractId), eq(documentId), any());
     }
 }
