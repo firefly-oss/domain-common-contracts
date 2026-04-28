@@ -1,0 +1,566 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:18080
+  description: Generated server url
+tags:
+- name: Contract Parties
+  description: Contract party management operations
+- name: Contracts
+  description: Contract management operations
+- name: Contract Terms
+  description: Contract terms management operations
+- name: Contract Signatures
+  description: Contract signature operations
+- name: Contract Documents
+  description: Contract document management operations
+paths:
+  /api/v1/contracts:
+    post:
+      tags:
+      - Contracts
+      summary: Create Contract
+      description: Create a new contract
+      operationId: createContract
+      parameters:
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateContractCommand"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/contracts/{contractId}/terms:
+    get:
+      tags:
+      - Contract Terms
+      summary: List Terms
+      description: Retrieve all terms associated with a contract
+      operationId: listTerms
+      parameters:
+      - name: contractId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+    post:
+      tags:
+      - Contract Terms
+      summary: Add Terms
+      description: Add terms to a contract
+      operationId: addTerms
+      parameters:
+      - name: contractId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddContractTermsCommand"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/contracts/{contractId}/signature/request:
+    post:
+      tags:
+      - Contract Signatures
+      summary: Request Signature
+      description: Request a signature on a contract document
+      operationId: requestSignature
+      parameters:
+      - name: contractId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestContractSignatureCommand"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/contracts/{contractId}/signature/confirm:
+    post:
+      tags:
+      - Contract Signatures
+      summary: Confirm Signature
+      description: Confirm a previously requested contract signature
+      operationId: confirmSignature
+      parameters:
+      - name: contractId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConfirmContractSignatureCommand"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/contracts/{contractId}/parties:
+    get:
+      tags:
+      - Contract Parties
+      summary: List Parties
+      description: Retrieve all parties associated with a contract
+      operationId: listParties
+      parameters:
+      - name: contractId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+    post:
+      tags:
+      - Contract Parties
+      summary: Add Party
+      description: Add a party to a contract
+      operationId: addParty
+      parameters:
+      - name: contractId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddContractPartyCommand"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/contracts/{contractId}/documents/generate:
+    post:
+      tags:
+      - Contract Documents
+      summary: Generate Document
+      description: Generate a document for a contract
+      operationId: generateDocument
+      parameters:
+      - name: contractId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenerateContractDocumentCommand"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/contracts/{contractId}:
+    get:
+      tags:
+      - Contracts
+      summary: Get Contract Detail
+      description: Retrieve the details of a specific contract
+      operationId: getContractDetail
+      parameters:
+      - name: contractId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/contracts/{contractId}/status:
+    get:
+      tags:
+      - Contracts
+      summary: Get Contract Status
+      description: Retrieve the current status of a contract
+      operationId: getStatus
+      parameters:
+      - name: contractId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/contracts/{contractId}/status-history:
+    get:
+      tags:
+      - Contracts
+      summary: Get Contract Status History
+      description: Retrieve the full status history of a contract
+      operationId: getStatusHistory
+      parameters:
+      - name: contractId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/contracts/{contractId}/documents:
+    get:
+      tags:
+      - Contract Documents
+      summary: List Documents
+      description: Retrieve all documents associated with a contract
+      operationId: listDocuments
+      parameters:
+      - name: contractId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/contracts/{contractId}/documents/{docId}:
+    get:
+      tags:
+      - Contract Documents
+      summary: Get Document
+      description: Retrieve a specific document associated with a contract
+      operationId: getDocument
+      parameters:
+      - name: contractId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: docId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/contracts/by-party/{partyId}:
+    get:
+      tags:
+      - Contracts
+      summary: List Contracts by Party
+      description: Retrieve all contracts associated with a party
+      operationId: listByParty
+      parameters:
+      - name: partyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/contracts/by-party/{partyId}/active:
+    get:
+      tags:
+      - Contracts
+      summary: List Active Contracts by Party
+      description: Retrieve all active contracts associated with a party
+      operationId: listActiveByParty
+      parameters:
+      - name: partyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/contracts/{contractId}/parties/{partyId}:
+    delete:
+      tags:
+      - Contract Parties
+      summary: Remove Party
+      description: Remove a party from a contract
+      operationId: removeParty
+      parameters:
+      - name: contractId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: partyId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+components:
+  schemas:
+    CreateContractCommand:
+      type: object
+      properties:
+        partyId:
+          type: string
+          format: uuid
+        contractType:
+          type: string
+        description:
+          type: string
+    AddContractTermsCommand:
+      type: object
+      properties:
+        contractId:
+          type: string
+          format: uuid
+        termTemplateId:
+          type: string
+          format: uuid
+        termValue:
+          type: string
+    RequestContractSignatureCommand:
+      type: object
+      properties:
+        contractId:
+          type: string
+          format: uuid
+        documentId:
+          type: string
+          format: uuid
+        signerPartyId:
+          type: string
+          format: uuid
+    ConfirmContractSignatureCommand:
+      type: object
+      properties:
+        contractId:
+          type: string
+          format: uuid
+        signatureRequestId:
+          type: string
+    AddContractPartyCommand:
+      type: object
+      properties:
+        contractId:
+          type: string
+          format: uuid
+        partyId:
+          type: string
+          format: uuid
+        role:
+          type: string
+    GenerateContractDocumentCommand:
+      type: object
+      properties:
+        contractId:
+          type: string
+          format: uuid
+        templateId:
+          type: string
+          format: uuid
