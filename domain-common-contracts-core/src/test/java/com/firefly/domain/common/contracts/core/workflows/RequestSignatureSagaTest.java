@@ -19,7 +19,7 @@ import org.fireflyframework.orchestration.saga.engine.StepInputs;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -44,33 +44,33 @@ class RequestSignatureSagaTest {
 
     // ─── Direct saga dependencies ─────────────────────────────────────────────
 
-    @MockBean
+    @MockitoBean
     private DocumentSignatureControllerApi documentSignatureControllerApi;
 
-    @MockBean
+    @MockitoBean
     private ESignaturePort eSignaturePort;
 
-    @MockBean
+    @MockitoBean
     private ContractStatusHistoryApi contractStatusHistoryApi;
 
     // ─── Required by other beans in the same Spring context ───────────────────
 
-    @MockBean
+    @MockitoBean
     private ContractsApi contractsApi;
 
-    @MockBean
+    @MockitoBean
     private ContractPartiesApi contractPartiesApi;
 
-    @MockBean
+    @MockitoBean
     private GlobalContractPartiesApi globalContractPartiesApi;
 
-    @MockBean
+    @MockitoBean
     private ContractTermsApi contractTermsApi;
 
-    @MockBean
+    @MockitoBean
     private ContractDocumentsApi contractDocumentsApi;
 
-    @MockBean
+    @MockitoBean
     private DocumentControllerApi documentControllerApi;
 
     // ─── Happy Path ────────────────────────────────────────────────────────────
