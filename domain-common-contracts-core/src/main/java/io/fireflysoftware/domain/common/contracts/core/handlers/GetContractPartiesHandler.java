@@ -1,0 +1,31 @@
+package io.fireflysoftware.domain.common.contracts.core.handlers;
+
+import io.fireflysoftware.core.contract.sdk.api.ContractPartiesApi;
+import io.fireflysoftware.domain.common.contracts.core.queries.GetContractPartiesQuery;
+import org.fireflyframework.cqrs.annotations.QueryHandlerComponent;
+import org.fireflyframework.cqrs.query.QueryHandler;
+import reactor.core.publisher.Mono;
+
+import java.util.List;
+import java.util.UUID;
+
+/**
+ * Handles {@link GetContractPartiesQuery} by retrieving all parties of a contract.
+ */
+@QueryHandlerComponent
+public class GetContractPartiesHandler extends QueryHandler<GetContractPartiesQuery, List<Object>> {
+
+    private final ContractPartiesApi contractPartiesApi;
+
+    public GetContractPartiesHandler(ContractPartiesApi contractPartiesApi) {
+        this.contractPartiesApi = contractPartiesApi;
+    }
+
+    @Override
+    protected Mono<List<Object>> doHandle(GetContractPartiesQuery query) {
+        return contractPartiesApi.filterContractParties(query.getContractId(), null, UUID.randomUUID().toString())
+                .mapNotNull(response -> response.getContent() != null
+                        ? response.getContent()
+                        : List.of());
+    }
+}

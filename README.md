@@ -54,10 +54,10 @@ HTTP Request
      │  Queries  → QueryHandlers   ──► direct SDK call
      │
      ├──► ContractMgmtClientFactory  ──►  core-common-contract-mgmt  (:8082)
-     │         com.firefly.core.contract.sdk
+     │         io.fireflysoftware.core.contract.sdk
      │
      └──► DocumentMgmtClientFactory  ──►  core-common-document-mgmt  (:8084)
-               com.firefly.commons.ecm.sdk
+               io.fireflysoftware.commons.ecm.sdk
 
 ESignaturePort (port interface, domain-common-contracts-infra)
      └── StubESignatureAdapter  (active when integration.esignature.provider=stub)
@@ -225,8 +225,8 @@ Step 3 — send-notification         (Layer 2, best-effort, dependsOn: update-co
 
 | Service | SDK Package | Client Factory | APIs exposed |
 |---------|-------------|----------------|--------------|
-| `core-common-contract-mgmt` | `com.firefly.core.contract.sdk` | `ContractMgmtClientFactory` | `ContractsApi`, `ContractPartiesApi`, `ContractTermsApi`, `ContractDocumentsApi`, `ContractStatusHistoryApi`, `ContractEventsApi`, `ContractRiskAssessmentsApi`, `GlobalContractPartiesApi`, `ContractTermTemplatesApi`, `ContractTermValidationRulesApi` |
-| `core-common-document-mgmt` | `com.firefly.commons.ecm.sdk` | `DocumentMgmtClientFactory` | `DocumentControllerApi`, `DocumentSignatureControllerApi`, `SignatureRequestControllerApi`, `SignatureVerificationControllerApi`, `SignatureProviderControllerApi`, `DocumentVersionControllerApi`, `DocumentMetadataControllerApi`, `DocumentTagControllerApi`, `DocumentPermissionControllerApi`, `DocumentSearchControllerApi`, `FolderControllerApi`, `TagControllerApi` |
+| `core-common-contract-mgmt` | `io.fireflysoftware.core.contract.sdk` | `ContractMgmtClientFactory` | `ContractsApi`, `ContractPartiesApi`, `ContractTermsApi`, `ContractDocumentsApi`, `ContractStatusHistoryApi`, `ContractEventsApi`, `ContractRiskAssessmentsApi`, `GlobalContractPartiesApi`, `ContractTermTemplatesApi`, `ContractTermValidationRulesApi` |
+| `core-common-document-mgmt` | `io.fireflysoftware.commons.ecm.sdk` | `DocumentMgmtClientFactory` | `DocumentControllerApi`, `DocumentSignatureControllerApi`, `SignatureRequestControllerApi`, `SignatureVerificationControllerApi`, `SignatureProviderControllerApi`, `DocumentVersionControllerApi`, `DocumentMetadataControllerApi`, `DocumentTagControllerApi`, `DocumentPermissionControllerApi`, `DocumentSearchControllerApi`, `FolderControllerApi`, `TagControllerApi` |
 
 The base URL for each service is resolved at startup from configuration properties injected into `ContractMgmtProperties` (`api-configuration.common-platform.contract-mgmt.base-path`) and `DocumentMgmtProperties` (`api-configuration.common-platform.document-mgmt.base-path`).
 
@@ -234,9 +234,9 @@ The base URL for each service is resolved at startup from configuration properti
 
 Other services within the Firefly platform can integrate with `domain-common-contracts` using the `domain-common-contracts-sdk` Maven artifact. The SDK is a reactive WebClient-based Java client generated from this service's OpenAPI specification. Generated packages:
 
-- `com.firefly.domain.common.contracts.sdk.api` — API client classes
-- `com.firefly.domain.common.contracts.sdk.model` — Request and response model classes
-- `com.firefly.domain.common.contracts.sdk.invoker` — HTTP client infrastructure
+- `io.fireflysoftware.domain.common.contracts.sdk.api` — API client classes
+- `io.fireflysoftware.domain.common.contracts.sdk.model` — Request and response model classes
+- `io.fireflysoftware.domain.common.contracts.sdk.invoker` — HTTP client infrastructure
 
 ## Configuration
 
@@ -271,7 +271,7 @@ All properties are defined in `domain-common-contracts-web/src/main/resources/ap
 | `management.endpoints.web.exposure.include` | `health,info,prometheus` | Exposed Actuator endpoints |
 | `management.health.livenessState.enabled` | `true` | Kubernetes liveness probe |
 | `management.health.readinessState.enabled` | `true` | Kubernetes readiness probe |
-| `logging.level.com.firefly` | `DEBUG` | Log level for all Firefly classes |
+| `logging.level.io.fireflysoftware` | `DEBUG` | Log level for all Firefly classes |
 
 ## Running Locally
 

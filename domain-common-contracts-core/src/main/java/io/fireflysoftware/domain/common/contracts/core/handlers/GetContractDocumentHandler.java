@@ -1,0 +1,27 @@
+package io.fireflysoftware.domain.common.contracts.core.handlers;
+
+import io.fireflysoftware.core.contract.sdk.api.ContractDocumentsApi;
+import io.fireflysoftware.domain.common.contracts.core.queries.GetContractDocumentQuery;
+import org.fireflyframework.cqrs.annotations.QueryHandlerComponent;
+import org.fireflyframework.cqrs.query.QueryHandler;
+import reactor.core.publisher.Mono;
+import java.util.UUID;
+
+/**
+ * Handles {@link GetContractDocumentQuery} by retrieving a specific document from a contract.
+ */
+@QueryHandlerComponent
+public class GetContractDocumentHandler extends QueryHandler<GetContractDocumentQuery, Object> {
+
+    private final ContractDocumentsApi contractDocumentsApi;
+
+    public GetContractDocumentHandler(ContractDocumentsApi contractDocumentsApi) {
+        this.contractDocumentsApi = contractDocumentsApi;
+    }
+
+    @Override
+    protected Mono<Object> doHandle(GetContractDocumentQuery query) {
+        return contractDocumentsApi.getContractDocumentById(query.getContractId(), query.getDocumentId(), UUID.randomUUID().toString())
+                .map(dto -> dto);
+    }
+}
