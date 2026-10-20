@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>domain-common-contracts-sdk</artifactId>
+    <name>domain-common-contracts-sdk</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

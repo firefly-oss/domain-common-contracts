@@ -12,6 +12,7 @@
     </parent>
 
     <artifactId>domain-common-contracts</artifactId>
+    <name>domain-common-contracts</name>
     <version>26.10.3</version>
     <packaging>pom</packaging>
     <modules>
