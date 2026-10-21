@@ -19,6 +19,7 @@ package io.fireflysoftware.domain.common.contracts.core.workflows;
 
 import io.fireflysoftware.commons.ecm.sdk.api.DocumentControllerApi;
 import io.fireflysoftware.commons.ecm.sdk.api.DocumentSignatureControllerApi;
+import io.fireflysoftware.core.contract.sdk.api.ContractEventsApi;
 import io.fireflysoftware.core.contract.sdk.api.ContractDocumentsApi;
 import io.fireflysoftware.core.contract.sdk.api.ContractLinesApi;
 import io.fireflysoftware.core.contract.sdk.api.ContractPartiesApi;
@@ -26,6 +27,7 @@ import io.fireflysoftware.core.contract.sdk.api.ContractStatusHistoryApi;
 import io.fireflysoftware.core.contract.sdk.api.ContractTermsApi;
 import io.fireflysoftware.core.contract.sdk.api.ContractsApi;
 import io.fireflysoftware.core.contract.sdk.api.GlobalContractPartiesApi;
+import io.fireflysoftware.core.contract.sdk.model.ContractEventDTO;
 import io.fireflysoftware.core.contract.sdk.model.ContractStatusHistoryDTO;
 import io.fireflysoftware.domain.common.contracts.core.TestContractsCoreApplication;
 import io.fireflysoftware.domain.common.contracts.core.commands.ConfirmContractSignatureCommand;
@@ -66,6 +68,9 @@ class ConfirmSignatureSagaTest {
 
     @MockitoBean
     private ContractStatusHistoryApi contractStatusHistoryApi;
+
+    @MockitoBean
+    private ContractEventsApi contractEventsApi;
 
     // ─── Required by other beans in the same Spring context ───────────────────
 
@@ -112,6 +117,8 @@ class ConfirmSignatureSagaTest {
 
         when(contractStatusHistoryApi.createContractStatusHistory(eq(contractId), any(ContractStatusHistoryDTO.class), any()))
                 .thenReturn(Mono.just(new ContractStatusHistoryDTO(statusHistoryId, null, null)));
+        when(contractEventsApi.createContractEvent(eq(contractId), any(ContractEventDTO.class), any()))
+                .thenReturn(Mono.just(signedEvent()));
 
         StepInputs inputs = StepInputs.builder()
                 .forStepId("verify-signature", cmd)
@@ -212,6 +219,8 @@ class ConfirmSignatureSagaTest {
 
         when(contractStatusHistoryApi.createContractStatusHistory(eq(contractId), any(ContractStatusHistoryDTO.class), any()))
                 .thenReturn(Mono.just(new ContractStatusHistoryDTO(statusHistoryId, null, null)));
+        when(contractEventsApi.createContractEvent(eq(contractId), any(ContractEventDTO.class), any()))
+                .thenReturn(Mono.just(signedEvent()));
 
         StepInputs inputs = StepInputs.builder()
                 .forStepId("verify-signature", cmd)
@@ -219,12 +228,18 @@ class ConfirmSignatureSagaTest {
                 .forStepId("send-notification", cmd)
                 .build();
 
-        // send-notification returns Mono.empty() by design — the saga still completes successfully
+        // The signed event is recorded on the contract after status approval.
         StepVerifier.create(sagaEngine.execute("confirm-signature-saga", inputs))
                 .assertNext(result -> {
                     assertThat(result.isSuccess()).isTrue();
                     assertThat(result.compensatedSteps()).isEmpty();
                 })
                 .verifyComplete();
+    }
+
+    private static ContractEventDTO signedEvent() {
+        ContractEventDTO event = new ContractEventDTO(UUID.randomUUID(), null, null);
+        event.setEventType(ContractEventDTO.EventTypeEnum.CONTRACT_SIGNED);
+        return event;
     }
 }

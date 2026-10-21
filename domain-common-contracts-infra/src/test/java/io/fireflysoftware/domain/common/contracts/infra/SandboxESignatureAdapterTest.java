@@ -26,39 +26,42 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class StubESignatureAdapterTest {
+class SandboxESignatureAdapterTest {
 
-    private StubESignatureAdapter adapter;
+    private SandboxESignatureAdapter adapter;
 
     @BeforeEach
     void setUp() {
-        adapter = new StubESignatureAdapter();
+        adapter = new SandboxESignatureAdapter();
     }
 
     @Test
-    void requestSignature_shouldReturnSuccessfulResult() {
+    void requestSignature_returnsTheSameIdForTheSameParties() {
+        UUID contractId = UUID.fromString("11111111-1111-1111-1111-111111111111");
+        UUID documentId = UUID.fromString("22222222-2222-2222-2222-222222222222");
+        UUID signerId = UUID.fromString("33333333-3333-3333-3333-333333333333");
         SignatureRequest request = SignatureRequest.builder()
-                .contractId(UUID.randomUUID())
-                .documentId(UUID.randomUUID())
-                .signerPartyId(UUID.randomUUID())
+                .contractId(contractId)
+                .documentId(documentId)
+                .signerPartyId(signerId)
                 .build();
 
-        StepVerifier.create(adapter.requestSignature(request))
-                .assertNext(result -> {
-                    assertThat(result.getProvider()).isEqualTo("STUB");
-                    assertThat(result.getStatus()).isEqualTo("REQUESTED");
-                    assertThat(result.getSignatureRequestId()).isNotNull();
+        StepVerifier.create(adapter.requestSignature(request).zipWith(adapter.requestSignature(request)))
+                .assertNext(pair -> {
+                    assertThat(pair.getT1().getProvider()).isEqualTo("SANDBOX");
+                    assertThat(pair.getT1().getStatus()).isEqualTo("REQUESTED");
+                    assertThat(pair.getT1().getSignatureRequestId()).isEqualTo(pair.getT2().getSignatureRequestId());
                 })
                 .verifyComplete();
     }
 
     @Test
-    void verifySignature_shouldReturnVerifiedResult() {
-        String requestId = UUID.randomUUID().toString();
+    void verifySignature_returnsVerifiedForTheRequestId() {
+        String requestId = "sample-request";
 
         StepVerifier.create(adapter.verifySignature(requestId))
                 .assertNext(result -> {
-                    assertThat(result.getProvider()).isEqualTo("STUB");
+                    assertThat(result.getProvider()).isEqualTo("SANDBOX");
                     assertThat(result.getStatus()).isEqualTo("VERIFIED");
                     assertThat(result.getSignatureRequestId()).isEqualTo(requestId);
                 })

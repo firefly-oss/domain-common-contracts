@@ -87,7 +87,7 @@ management:
 
 integration:
   esignature:
-    provider: stub
+    provider: sandbox
 
 logging:
   pattern:

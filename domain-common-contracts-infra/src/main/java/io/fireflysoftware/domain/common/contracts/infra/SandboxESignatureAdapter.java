@@ -26,39 +26,47 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import java.time.Duration;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 /**
- * Stub implementation of {@link ESignaturePort} for development and testing.
- * Simulates e-signature operations with a brief delay and returns successful results.
+ * Deterministic sample e-signature provider used when no external provider is configured.
+ * The same contract, document, and signer always receive the same signature request id.
  */
 @Component
-@ConditionalOnProperty(name = "integration.esignature.provider", havingValue = "stub", matchIfMissing = true)
+@ConditionalOnProperty(name = "integration.esignature.provider", havingValue = "sandbox", matchIfMissing = true)
 @Slf4j
-public class StubESignatureAdapter implements ESignaturePort {
+public class SandboxESignatureAdapter implements ESignaturePort {
 
-    private static final String PROVIDER = "STUB";
+    static final String PROVIDER = "SANDBOX";
 
     @Override
     public Mono<SignatureRequestResult> requestSignature(SignatureRequest request) {
-        log.debug("Stub e-signature request for contract: {}", request.getContractId());
-        return Mono.delay(Duration.ofMillis(100))
-                .map(tick -> SignatureRequestResult.builder()
-                        .signatureRequestId(UUID.randomUUID().toString())
-                        .provider(PROVIDER)
-                        .status("REQUESTED")
-                        .build());
+        String signatureRequestId = UUID.nameUUIDFromBytes(sampleKey(request).getBytes(StandardCharsets.UTF_8)).toString();
+        log.debug("Sandbox e-signature request for contract: {}", request.getContractId());
+        return Mono.just(SignatureRequestResult.builder()
+                .signatureRequestId(signatureRequestId)
+                .provider(PROVIDER)
+                .status("REQUESTED")
+                .build());
     }
 
     @Override
     public Mono<SignatureVerificationResult> verifySignature(String signatureRequestId) {
-        log.debug("Stub e-signature verification for request: {}", signatureRequestId);
-        return Mono.delay(Duration.ofMillis(100))
-                .map(tick -> SignatureVerificationResult.builder()
-                        .signatureRequestId(signatureRequestId)
-                        .status("VERIFIED")
-                        .provider(PROVIDER)
-                        .build());
+        log.debug("Sandbox e-signature verification for request: {}", signatureRequestId);
+        return Mono.just(SignatureVerificationResult.builder()
+                .signatureRequestId(signatureRequestId)
+                .status("VERIFIED")
+                .provider(PROVIDER)
+                .build());
+    }
+
+    private static String sampleKey(SignatureRequest request) {
+        return "signature:"
+                + request.getContractId()
+                + ":"
+                + request.getDocumentId()
+                + ":"
+                + request.getSignerPartyId();
     }
 }

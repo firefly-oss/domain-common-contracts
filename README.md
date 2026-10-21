@@ -62,7 +62,7 @@ HTTP Request
                io.fireflysoftware.commons.ecm.sdk
 
 ESignaturePort (port interface, domain-common-contracts-infra)
-     └── StubESignatureAdapter  (active when integration.esignature.provider=stub)
+     └── SandboxESignatureAdapter  (active when integration.esignature.provider=sandbox)
 ```
 
 Saga compensation runs in reverse step order. The `generate-document-saga` compensates by detaching the contract-document link then deleting the ECM document. The `request-signature-saga` compensates by cancelling the signature record on a best-effort basis; provider state is not reversed. The `confirm-signature-saga` logs a warning on status reversion because rolling back an APPROVED status requires an explicit business decision.
@@ -71,9 +71,9 @@ Saga compensation runs in reverse step order. The `generate-document-saga` compe
 
 | Module | Purpose |
 |--------|---------|
-| `domain-common-contracts-interfaces` | Reserved for shared interface definitions consumed across modules; currently a placeholder with no Java sources |
+| `domain-common-contracts-interfaces` | Reserved for shared interface definitions consumed across modules; the module has no Java sources yet |
 | `domain-common-contracts-core` | CQRS commands, queries, command and query handlers, saga workflows, domain service interface (`ContractService`) and its `CommandBus`/`QueryBus`-based implementation, and MapStruct mappers |
-| `domain-common-contracts-infra` | SDK client factories (`ContractMgmtClientFactory`, `DocumentMgmtClientFactory`), configuration properties beans (`ContractMgmtProperties`, `DocumentMgmtProperties`), `ESignaturePort` interface, and `StubESignatureAdapter` |
+| `domain-common-contracts-infra` | SDK client factories (`ContractMgmtClientFactory`, `DocumentMgmtClientFactory`), configuration properties beans (`ContractMgmtProperties`, `DocumentMgmtProperties`), `ESignaturePort` interface, and `SandboxESignatureAdapter` |
 | `domain-common-contracts-web` | Spring Boot application entry point (`DomainCommonContractsApplication`), all five REST controllers, and `application.yaml`; the runnable artifact |
 | `domain-common-contracts-sdk` | Reactive WebClient-based Java client SDK auto-generated from the service's own OpenAPI specification at build time via the OpenAPI Generator Maven Plugin |
 
@@ -198,7 +198,7 @@ The handler returns the `contractStatusHistoryId` produced by step 3.
 
 #### `confirm-signature-saga`
 
-Verifies the signature with the provider, records the `APPROVED` status on the contract, and sends a best-effort notification.
+Verifies the signature with the provider, records the `APPROVED` status on the contract, and records a `CONTRACT_SIGNED` event.
 
 ```
 Step 1 — verify-signature          (Layer 0)
@@ -208,18 +208,18 @@ Step 1 — verify-signature          (Layer 0)
 Step 2 — update-contract-status    (Layer 1, dependsOn: verify-signature)
   Action:      ContractStatusHistoryApi.createContractStatusHistory  (status: APPROVED)
   Stores:      ctx["statusHistoryId"]
-  Compensate:  Logs a warning — automated status reversion deferred to business decision
+  Compensate:  ContractStatusHistoryApi.deleteContractStatusHistory
 
-Step 3 — send-notification         (Layer 2, best-effort, dependsOn: update-contract-status)
-  Action:      Stub returning "skipped"
-               (TODO: replace with domain-common-notifications SDK call)
+Step 3 — send-notification         (Layer 2, dependsOn: update-contract-status)
+  Action:      ContractEventsApi.createContractEvent (CONTRACT_SIGNED)
+  Compensate:  ContractEventsApi.deleteContractEvent
 ```
 
 ### E-Signature Port
 
 `ESignaturePort` is a hexagonal port interface with two methods: `requestSignature(SignatureRequest)` and `verifySignature(signatureRequestId)`. The active adapter is selected by the `integration.esignature.provider` property.
 
-`StubESignatureAdapter` is the default implementation (`@ConditionalOnProperty(matchIfMissing = true)`). It simulates both operations with a 100 ms delay and returns a successful result — `REQUESTED` status with a randomly generated `signatureRequestId` for request, and `VERIFIED` status for verification.
+`SandboxESignatureAdapter` is the default implementation (`@ConditionalOnProperty(matchIfMissing = true)`). The same contract, document, and signer always receive the same signature request id, and verification returns `VERIFIED`.
 
 ## Dependencies
 
@@ -267,7 +267,7 @@ All properties are defined in `domain-common-contracts-web/src/main/resources/ap
 | `firefly.eda.publishers.kafka.default.default-topic` | `domain-layer` | Kafka topic for domain events |
 | `firefly.eda.publishers.kafka.default.bootstrap-servers` | `${FIREFLY_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}` | Kafka bootstrap servers |
 | `firefly.stepevents.enabled` | `true` | Enables saga step event emission |
-| `integration.esignature.provider` | `stub` | Selects the active `ESignaturePort` adapter (`stub` activates `StubESignatureAdapter`) |
+| `integration.esignature.provider` | `sandbox` | Selects the active `ESignaturePort` adapter (`sandbox` activates `SandboxESignatureAdapter`) |
 | `springdoc.api-docs.path` | `/v3/api-docs` | OpenAPI specification endpoint |
 | `springdoc.swagger-ui.path` | `/swagger-ui.html` | Swagger UI path |
 | `management.endpoints.web.exposure.include` | `health,info,prometheus` | Exposed Actuator endpoints |
@@ -310,7 +310,7 @@ mvn generate-sources -pl domain-common-contracts-sdk
 mvn clean verify
 ```
 
-Unit tests live under each module's `src/test/java` tree. The core module contains dedicated test classes for every command handler, query handler, and saga (`CreateContractHandlerTest`, `GenerateDocumentSagaTest`, `RequestSignatureSagaTest`, `ConfirmSignatureSagaTest`, and others). The infra module tests the `StubESignatureAdapter`. The web module contains controller slice tests for all five controllers.
+Unit tests live under each module's `src/test/java` tree. The core module contains dedicated test classes for every command handler, query handler, and saga (`CreateContractHandlerTest`, `GenerateDocumentSagaTest`, `RequestSignatureSagaTest`, `ConfirmSignatureSagaTest`, and others). The infra module tests the `SandboxESignatureAdapter`. The web module contains controller slice tests for all five controllers.
 
 To run tests for a specific module:
 

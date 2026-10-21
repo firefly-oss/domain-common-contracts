@@ -20,6 +20,7 @@ package io.fireflysoftware.domain.common.contracts.core.workflows;
 import io.fireflysoftware.commons.ecm.sdk.api.DocumentControllerApi;
 import io.fireflysoftware.commons.ecm.sdk.api.DocumentSignatureControllerApi;
 import io.fireflysoftware.commons.ecm.sdk.model.DocumentSignatureDTO;
+import io.fireflysoftware.core.contract.sdk.api.ContractEventsApi;
 import io.fireflysoftware.core.contract.sdk.api.ContractDocumentsApi;
 import io.fireflysoftware.core.contract.sdk.api.ContractLinesApi;
 import io.fireflysoftware.core.contract.sdk.api.ContractPartiesApi;
@@ -70,6 +71,9 @@ class RequestSignatureSagaTest {
 
     @MockitoBean
     private ContractStatusHistoryApi contractStatusHistoryApi;
+
+    @MockitoBean
+    private ContractEventsApi contractEventsApi;
 
     // ─── Required by other beans in the same Spring context ───────────────────
 

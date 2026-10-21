@@ -19,6 +19,7 @@ package io.fireflysoftware.domain.common.contracts.core.workflows;
 
 import io.fireflysoftware.commons.ecm.sdk.api.DocumentControllerApi;
 import io.fireflysoftware.commons.ecm.sdk.model.DocumentDTO;
+import io.fireflysoftware.core.contract.sdk.api.ContractEventsApi;
 import io.fireflysoftware.core.contract.sdk.api.ContractDocumentsApi;
 import io.fireflysoftware.core.contract.sdk.api.ContractLinesApi;
 import io.fireflysoftware.core.contract.sdk.api.ContractPartiesApi;
@@ -86,6 +87,9 @@ class GenerateDocumentSagaTest {
 
     @MockitoBean
     private ContractStatusHistoryApi contractStatusHistoryApi;
+
+    @MockitoBean
+    private ContractEventsApi contractEventsApi;
 
     @MockitoBean
     private DocumentSignatureControllerApi documentSignatureControllerApi;

@@ -17,7 +17,9 @@
 
 package io.fireflysoftware.domain.common.contracts.core.workflows;
 
+import io.fireflysoftware.core.contract.sdk.api.ContractEventsApi;
 import io.fireflysoftware.core.contract.sdk.api.ContractStatusHistoryApi;
+import io.fireflysoftware.core.contract.sdk.model.ContractEventDTO;
 import io.fireflysoftware.core.contract.sdk.model.ContractStatusHistoryDTO;
 import io.fireflysoftware.domain.common.contracts.core.commands.ConfirmContractSignatureCommand;
 import io.fireflysoftware.domain.common.contracts.infra.ports.ESignaturePort;
@@ -30,12 +32,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
 /**
  * Saga that confirms an e-signature: verifies with the provider, records the APPROVED
- * status, and optionally sends a notification.
+ * records the signed contract event.
  *
  * <p>Step DAG:
  * <pre>
@@ -43,11 +46,8 @@ import java.util.UUID;
  *          |
  *   update-contract-status (Layer 1) — records APPROVED status on contract
  *          |
- *   send-notification      (Layer 2, best-effort) — notifies relevant parties
+ *   send-notification      (Layer 2) — records CONTRACT_SIGNED on the contract
  * </pre>
- *
- * <p>Compensation for update-contract-status logs a warning; full status reversion
- * requires business-level decision and is intentionally deferred.
  */
 @Saga(name = "confirm-signature-saga")
 @Service
@@ -60,12 +60,15 @@ public class ConfirmSignatureSaga {
 
     private final ESignaturePort eSignaturePort;
     private final ContractStatusHistoryApi contractStatusHistoryApi;
+    private final ContractEventsApi contractEventsApi;
 
     @Autowired
     public ConfirmSignatureSaga(ESignaturePort eSignaturePort,
-                                ContractStatusHistoryApi contractStatusHistoryApi) {
+                                ContractStatusHistoryApi contractStatusHistoryApi,
+                                ContractEventsApi contractEventsApi) {
         this.eSignaturePort = eSignaturePort;
         this.contractStatusHistoryApi = contractStatusHistoryApi;
+        this.contractEventsApi = contractEventsApi;
     }
 
     /**
@@ -101,30 +104,34 @@ public class ConfirmSignatureSaga {
                 .doOnNext(id -> ctx.putVariable(CTX_STATUS_HISTORY_ID, id));
     }
 
-    /**
-     * Compensation for update-contract-status: logs a warning as status reversion
-     * requires a business decision (e.g. returning to SUBMITTED_FOR_APPROVAL or DRAFT).
-     *
-     * <p>TODO: Replace with explicit status reversion once business rules are defined.
-     */
     public Mono<Void> revertContractStatus(UUID statusHistoryId, ExecutionContext ctx) {
         UUID contractId = ctx.getVariableAs(CTX_CONTRACT_ID, UUID.class);
-        log.warn("Compensation triggered for contract status update on contract {}. " +
-                 "Status history {} cannot be automatically reverted — manual intervention required.",
-                 contractId, statusHistoryId);
-        return Mono.empty();
+        if (contractId == null || statusHistoryId == null) {
+            return Mono.empty();
+        }
+        return contractStatusHistoryApi
+                .deleteContractStatusHistory(contractId, statusHistoryId, UUID.randomUUID().toString())
+                .then();
     }
 
-    /**
-     * Step 3 (best-effort): Sends a notification to relevant parties.
-     * Silently skips on any error so it does not block the saga from completing.
-     *
-     * <p>TODO: Replace stub with domain-common-notifications SDK call once dependency is available.
-     */
-    @SagaStep(id = "send-notification", dependsOn = "update-contract-status")
-    public Mono<String> sendNotification() {
-        log.debug("Notification step: signature confirmed — skipping (notifications service not wired)");
-        // TODO: Replace with domain-common-notifications SDK call once dependency is available
-        return Mono.just("skipped");
+    @SagaStep(id = "send-notification", dependsOn = "update-contract-status", compensate = "removeSignedEvent")
+    public Mono<UUID> sendNotification(ExecutionContext ctx) {
+        UUID contractId = ctx.getVariableAs(CTX_CONTRACT_ID, UUID.class);
+        ContractEventDTO event = new ContractEventDTO();
+        event.setContractId(contractId);
+        event.setEventType(ContractEventDTO.EventTypeEnum.CONTRACT_SIGNED);
+        event.setEventDate(LocalDateTime.now());
+        event.setEventDescription("Contract signature confirmed");
+        return contractEventsApi.createContractEvent(contractId, event, UUID.randomUUID().toString())
+                .mapNotNull(saved -> Objects.requireNonNull(saved).getContractEventId())
+                .doOnNext(id -> ctx.putVariable("contractEventId", id));
+    }
+
+    public Mono<Void> removeSignedEvent(UUID contractEventId, ExecutionContext ctx) {
+        UUID contractId = ctx.getVariableAs(CTX_CONTRACT_ID, UUID.class);
+        if (contractId == null || contractEventId == null) {
+            return Mono.empty();
+        }
+        return contractEventsApi.deleteContractEvent(contractId, contractEventId, UUID.randomUUID().toString()).then();
     }
 }
