@@ -34,6 +34,17 @@
             <groupId>io.fireflysoftware</groupId>
             <artifactId>core-common-document-mgmt-sdk</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.fireflysoftware</groupId>
+            <artifactId>core-common-document-mgmt-generation</artifactId>
+            <version>26.10.3</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.fireflysoftware</groupId>
+                    <artifactId>core-common-document-mgmt-models</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
         <!-- Common Libraries -->
         <dependency>
