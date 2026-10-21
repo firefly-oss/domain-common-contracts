@@ -20,6 +20,7 @@ import io.fireflysoftware.documents.Agreement;
 import io.fireflysoftware.documents.DocumentPort;
 import io.fireflysoftware.documents.DocumentTypeCode;
 import io.fireflysoftware.documents.IssueDocument;
+import io.fireflysoftware.documents.IssuedDocument;
 import io.fireflysoftware.documents.Party;
 import io.fireflysoftware.documents.SandboxEngagement;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,10 @@ public class KitDocumentService {
             return Mono.error(new IllegalArgumentException("Unknown document template: " + templateCode));
         }
         return Mono.fromCallable(() -> documents.issue(command(templateCode, partyId, contractId)).id());
+    }
+
+    public Mono<IssuedDocument> read(UUID documentId) {
+        return Mono.fromCallable(() -> documents.read(documentId));
     }
 
     private static IssueDocument command(String templateCode, UUID partyId, UUID contractId) {

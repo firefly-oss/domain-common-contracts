@@ -17,6 +17,8 @@
 package io.fireflysoftware.domain.common.contracts.web.controllers;
 
 import io.fireflysoftware.domain.common.contracts.core.documents.KitDocumentService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,9 +42,18 @@ public class KitDocumentsController {
         return documents.issue(body.templateCode(), body.partyId(), body.contractId()).map(RecordedId::new);
     }
 
+    @GetMapping("/{id}")
+    public Mono<IssuedView> read(@PathVariable UUID id) {
+        return documents.read(id).map(document -> new IssuedView(
+                document.id(), document.templateCode(), document.name()));
+    }
+
     public record IssueBody(String templateCode, UUID partyId, UUID contractId) {
     }
 
     public record RecordedId(UUID id) {
+    }
+
+    public record IssuedView(UUID id, String templateCode, String name) {
     }
 }

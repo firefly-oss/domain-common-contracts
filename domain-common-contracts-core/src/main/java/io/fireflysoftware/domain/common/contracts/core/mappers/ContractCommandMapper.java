@@ -27,6 +27,9 @@ import io.fireflysoftware.domain.common.contracts.core.commands.RequestContractS
 import io.fireflysoftware.domain.common.contracts.infra.ports.model.SignatureRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
+
+import java.util.UUID;
 
 @Mapper(componentModel = "spring")
 public interface ContractCommandMapper {
@@ -34,7 +37,16 @@ public interface ContractCommandMapper {
     @Mapping(target = "contractNumber", source = "contractType")
     ContractDTO toContractDto(CreateContractCommand cmd);
 
+    @Mapping(target = "roleInContractId", source = "role", qualifiedByName = "roleId")
     ContractPartyDTO toContractPartyDto(AddContractPartyCommand cmd);
+
+    @Named("roleId")
+    default UUID roleId(String role) {
+        if (role == null || role.isBlank()) {
+            return null;
+        }
+        return UUID.fromString(role);
+    }
 
     @Mapping(target = "termValueText", source = "termValue")
     ContractTermDynamicDTO toContractTermDto(AddContractTermsCommand cmd);
