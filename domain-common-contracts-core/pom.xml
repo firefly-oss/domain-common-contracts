@@ -6,7 +6,7 @@
     <parent>
         <groupId>io.fireflysoftware</groupId>
         <artifactId>domain-common-contracts</artifactId>
-        <version>26.10.4</version>
+        <version>26.10.5</version>
     </parent>
 
     <artifactId>domain-common-contracts-core</artifactId>
@@ -37,7 +37,7 @@
         <dependency>
             <groupId>io.fireflysoftware</groupId>
             <artifactId>core-common-document-mgmt-generation</artifactId>
-            <version>26.10.4</version>
+            <version>26.10.5</version>
             <exclusions>
                 <exclusion>
                     <groupId>io.fireflysoftware</groupId>

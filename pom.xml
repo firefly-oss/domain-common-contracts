@@ -7,13 +7,13 @@
     <parent>
         <groupId>io.fireflysoftware</groupId>
         <artifactId>firefly-parent</artifactId>
-        <version>26.10.4</version>
+        <version>26.10.5</version>
         <relativePath/>
     </parent>
 
     <artifactId>domain-common-contracts</artifactId>
     <name>domain-common-contracts</name>
-    <version>26.10.4</version>
+    <version>26.10.5</version>
     <packaging>pom</packaging>
     <modules>
         <module>domain-common-contracts-core</module>
