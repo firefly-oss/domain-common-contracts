@@ -17,6 +17,32 @@ tags:
 - name: Contract Documents
   description: Contract document management operations
 paths:
+  /api/v1/kit-documents:
+    post:
+      tags:
+      - kit-documents-controller
+      operationId: issue
+      parameters:
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IssueBody"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/RecordedId"
   /api/v1/contracts:
     post:
       tags:
@@ -98,6 +124,68 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/AddContractTermsCommand"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/contracts/{contractId}/status:
+    get:
+      tags:
+      - Contracts
+      summary: Get Contract Status
+      description: Retrieve the current status of a contract
+      operationId: getStatus
+      parameters:
+      - name: contractId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+    post:
+      tags:
+      - Contracts
+      summary: Change contract status
+      description: Moves the agreement along the core lifecycle and compensates the
+        status history row
+      operationId: changeStatus
+      parameters:
+      - name: contractId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangeContractStatusCommand"
         required: true
       responses:
         "200":
@@ -269,6 +357,32 @@ paths:
             '*/*':
               schema:
                 type: object
+  /api/v1/kit-documents/{id}:
+    get:
+      tags:
+      - kit-documents-controller
+      operationId: read
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Idempotency-Key
+        in: header
+        description: "Unique key for idempotent requests. If provided, ensures that\
+          \ identical requests with the same key will only be processed once."
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/IssuedView"
   /api/v1/contracts/{contractId}:
     get:
       tags:
@@ -297,13 +411,12 @@ paths:
             '*/*':
               schema:
                 type: object
-  /api/v1/contracts/{contractId}/status:
-    get:
+    delete:
       tags:
       - Contracts
-      summary: Get Contract Status
-      description: Retrieve the current status of a contract
-      operationId: getStatus
+      summary: Delete a draft contract
+      description: Deletes the agreement only while it is still a draft
+      operationId: deleteContract
       parameters:
       - name: contractId
         in: path
@@ -503,6 +616,64 @@ paths:
           description: OK
 components:
   schemas:
+    IssueBody:
+      type: object
+      properties:
+        templateCode:
+          type: string
+        partyId:
+          type: string
+          format: uuid
+        contractId:
+          type: string
+          format: uuid
+    RecordedId:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+    ContractLineDTO:
+      required:
+      - productId
+      type: object
+      properties:
+        contractLineId:
+          type: string
+          format: uuid
+          nullable: true
+        contractId:
+          type: string
+          format: uuid
+          nullable: true
+        productId:
+          type: string
+          format: uuid
+        lineRole:
+          type: string
+          nullable: true
+        quantity:
+          type: number
+          nullable: true
+        effectiveFrom:
+          type: string
+          format: date-time
+          nullable: true
+        effectiveTo:
+          type: string
+          format: date-time
+          nullable: true
+        isPrimary:
+          type: boolean
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+          nullable: true
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
     CreateContractCommand:
       type: object
       properties:
@@ -513,6 +684,23 @@ components:
           type: string
         description:
           type: string
+        currencyCode:
+          type: string
+        productId:
+          type: string
+          format: uuid
+        predecessorContractId:
+          type: string
+          format: uuid
+        linkKind:
+          type: string
+          enum:
+          - AMENDMENT
+          - RENEWAL
+        lines:
+          type: array
+          items:
+            $ref: "#/components/schemas/ContractLineDTO"
     AddContractTermsCommand:
       type: object
       properties:
@@ -523,6 +711,24 @@ components:
           type: string
           format: uuid
         termValue:
+          type: string
+    ChangeContractStatusCommand:
+      type: object
+      properties:
+        contractId:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum:
+          - DRAFT
+          - PENDING_APPROVAL
+          - ACTIVE
+          - SUSPENDED
+          - TERMINATED
+          - EXPIRED
+          - CANCELLED
+        reason:
           type: string
     RequestContractSignatureCommand:
       type: object
@@ -564,3 +770,13 @@ components:
         templateId:
           type: string
           format: uuid
+    IssuedView:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        templateCode:
+          type: string
+        name:
+          type: string

@@ -27,7 +27,7 @@ import java.util.UUID;
 
 /**
  * Issues a contract, letter, or welcome through the document core SDK.
- * The journey calls {@code KitDocumentsApi}. This service is the domain behind that client.
+ * The journey calls {@code KitDocumentsControllerApi}. This service is the domain behind that client.
  */
 @Service
 public class KitDocumentService {
