@@ -16,28 +16,25 @@
 
 package io.fireflysoftware.domain.common.contracts.core.documents;
 
-import io.fireflysoftware.documents.Agreement;
-import io.fireflysoftware.documents.DocumentPort;
+import io.fireflysoftware.commons.ecm.sdk.api.DocumentControllerApi;
+import io.fireflysoftware.commons.ecm.sdk.model.DocumentDTO;
 import io.fireflysoftware.documents.DocumentTypeCode;
-import io.fireflysoftware.documents.IssueDocument;
 import io.fireflysoftware.documents.IssuedDocument;
-import io.fireflysoftware.documents.Party;
-import io.fireflysoftware.documents.SandboxEngagement;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
 /**
- * Issues a contract, letter, or welcome through {@link DocumentPort}.
+ * Issues a contract, letter, or welcome through the document core SDK.
  * The journey calls {@code KitDocumentsApi}. This service is the domain behind that client.
  */
 @Service
 public class KitDocumentService {
 
-    private final DocumentPort documents;
+    private final DocumentControllerApi documents;
 
-    public KitDocumentService(DocumentPort documents) {
+    public KitDocumentService(DocumentControllerApi documents) {
         this.documents = documents;
     }
 
@@ -45,21 +42,46 @@ public class KitDocumentService {
         if (DocumentTypeCode.fromCode(templateCode) == null) {
             return Mono.error(new IllegalArgumentException("Unknown document template: " + templateCode));
         }
-        return Mono.fromCallable(() -> documents.issue(command(templateCode, partyId, contractId)).id());
+        DocumentDTO body = new DocumentDTO();
+        body.setName(templateCode);
+        body.setDescription(describe(templateCode, partyId, contractId));
+        body.setFileName(templateCode + ".html");
+        body.setFileExtension("html");
+        body.setMimeType("text/html");
+        body.setDocumentType(documentType(templateCode));
+        body.setDocumentStatus(DocumentDTO.DocumentStatusEnum.PUBLISHED);
+        body.setStorageType(DocumentDTO.StorageTypeEnum.DATABASE);
+        if (partyId != null) {
+            body.setTenantId(partyId.toString());
+        }
+        return documents.createDocument(body, UUID.randomUUID().toString())
+                .flatMap(saved -> {
+                    if (saved == null || saved.getId() == null) {
+                        return Mono.error(new IllegalStateException("Document core did not return an id"));
+                    }
+                    return Mono.just(saved.getId());
+                });
     }
 
     public Mono<IssuedDocument> read(UUID documentId) {
-        return Mono.fromCallable(() -> documents.read(documentId));
+        return documents.getDocumentById(documentId, UUID.randomUUID().toString())
+                .flatMap(dto -> {
+                    if (dto == null || dto.getId() == null) {
+                        return Mono.error(new IllegalStateException("Document core did not return an id"));
+                    }
+                    String template = dto.getName() == null ? dto.getDescription() : dto.getName();
+                    return Mono.just(new IssuedDocument(dto.getId(), template, dto.getMimeType(), "", dto.getName()));
+                });
     }
 
-    private static IssueDocument command(String templateCode, UUID partyId, UUID contractId) {
-        IssueDocument sample = SandboxEngagement.issue(templateCode);
-        UUID party = partyId == null ? sample.party().id() : partyId;
-        UUID contract = contractId == null ? sample.contract().id() : contractId;
-        return new IssueDocument(templateCode, sample.language(), sample.productFamily(), sample.regulated(),
-                new Party(party, sample.party().givenName(), sample.party().name(), sample.party().role()),
-                new Agreement(contract, sample.contract().status()),
-                sample.product(), sample.currency(), sample.issuedOn(), sample.effectiveOn(), sample.endsOn(),
-                sample.amount(), sample.lines(), sample.predecessorId(), sample.change());
+    private static String describe(String templateCode, UUID partyId, UUID contractId) {
+        return templateCode + " party=" + partyId + " contract=" + contractId;
+    }
+
+    private static DocumentDTO.DocumentTypeEnum documentType(String templateCode) {
+        if (DocumentTypeCode.CONTRACT.code().equals(templateCode)) {
+            return DocumentDTO.DocumentTypeEnum.CONTRACT;
+        }
+        return DocumentDTO.DocumentTypeEnum.DOCUMENT;
     }
 }

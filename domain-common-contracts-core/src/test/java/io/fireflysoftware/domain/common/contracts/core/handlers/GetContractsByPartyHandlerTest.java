@@ -17,8 +17,10 @@
 
 package io.fireflysoftware.domain.common.contracts.core.handlers;
 
+import io.fireflysoftware.core.contract.sdk.api.ContractsApi;
 import io.fireflysoftware.core.contract.sdk.api.GlobalContractPartiesApi;
 import io.fireflysoftware.core.contract.sdk.model.ContractPartyDTO;
+import io.fireflysoftware.core.product.sdk.api.ProductApi;
 import io.fireflysoftware.core.contract.sdk.model.PaginationResponseContractPartyDTO;
 import io.fireflysoftware.domain.common.contracts.core.queries.GetContractsByPartyQuery;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,11 +45,17 @@ class GetContractsByPartyHandlerTest {
     @Mock
     private GlobalContractPartiesApi globalContractPartiesApi;
 
+    @Mock
+    private ContractsApi contractsApi;
+
+    @Mock
+    private ProductApi productApi;
+
     private GetContractsByPartyHandler handler;
 
     @BeforeEach
     void setUp() {
-        handler = new GetContractsByPartyHandler(globalContractPartiesApi);
+        handler = new GetContractsByPartyHandler(globalContractPartiesApi, contractsApi, productApi);
     }
 
     @Test

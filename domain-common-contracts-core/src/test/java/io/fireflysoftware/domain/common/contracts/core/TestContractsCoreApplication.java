@@ -17,13 +17,21 @@
 
 package io.fireflysoftware.domain.common.contracts.core;
 
+import io.fireflysoftware.core.product.sdk.api.ProductApi;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 /**
  * Minimal Spring Boot application class used only for integration tests in the -core module.
  * Scans the core package so that saga beans and CQRS handlers are discovered and registered
  * with the SagaEngine and CommandBus auto-configured by fireflyframework-starter-domain.
+ * The product client is mocked here because the real bean lives in the infra module.
  */
 @SpringBootApplication(scanBasePackages = "io.fireflysoftware.domain.common.contracts.core")
 public class TestContractsCoreApplication {
+
+    @Bean
+    public ProductApi productApi() {
+        return org.mockito.Mockito.mock(ProductApi.class);
+    }
 }

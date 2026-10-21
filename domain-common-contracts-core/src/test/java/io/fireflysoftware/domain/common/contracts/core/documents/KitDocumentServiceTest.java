@@ -16,15 +16,15 @@
 
 package io.fireflysoftware.domain.common.contracts.core.documents;
 
-import io.fireflysoftware.documents.DocumentPort;
+import io.fireflysoftware.commons.ecm.sdk.api.DocumentControllerApi;
+import io.fireflysoftware.commons.ecm.sdk.model.DocumentDTO;
 import io.fireflysoftware.documents.DocumentTypeCode;
-import io.fireflysoftware.documents.IssuedDocument;
-import io.fireflysoftware.documents.SandboxEngagement;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
@@ -37,16 +37,18 @@ import static org.mockito.Mockito.when;
 class KitDocumentServiceTest {
 
     @Mock
-    private DocumentPort documents;
+    private DocumentControllerApi documents;
 
     @Test
-    void issuesContractLetterAndWelcomeThroughDocumentPort() {
+    void issuesContractLetterAndWelcomeThroughDocumentCore() {
         KitDocumentService service = new KitDocumentService(documents);
         UUID partyId = UUID.randomUUID();
         UUID contractId = UUID.randomUUID();
-        when(documents.issue(any())).thenAnswer(invocation -> {
-            var command = invocation.getArgument(0, io.fireflysoftware.documents.IssueDocument.class);
-            return new IssuedDocument(UUID.randomUUID(), command.templateCode(), "text/html", "<p></p>", command.templateCode());
+        when(documents.createDocument(any(), any())).thenAnswer(invocation -> {
+            DocumentDTO command = invocation.getArgument(0);
+            DocumentDTO saved = new DocumentDTO(UUID.randomUUID());
+            saved.setName(command.getName());
+            return Mono.just(saved);
         });
 
         for (String code : new String[]{DocumentTypeCode.CONTRACT.code(), DocumentTypeCode.LETTER.code(), DocumentTypeCode.WELCOME.code()}) {
@@ -54,13 +56,12 @@ class KitDocumentServiceTest {
             assertThat(id).isNotNull();
         }
 
-        ArgumentCaptor<io.fireflysoftware.documents.IssueDocument> captor =
-                ArgumentCaptor.forClass(io.fireflysoftware.documents.IssueDocument.class);
-        verify(documents, org.mockito.Mockito.times(3)).issue(captor.capture());
-        assertThat(captor.getAllValues()).extracting(io.fireflysoftware.documents.IssueDocument::templateCode)
+        ArgumentCaptor<DocumentDTO> captor = ArgumentCaptor.forClass(DocumentDTO.class);
+        verify(documents, org.mockito.Mockito.times(3)).createDocument(captor.capture(), any());
+        assertThat(captor.getAllValues()).extracting(DocumentDTO::getName)
                 .containsExactly("contract", "letter", "welcome");
-        assertThat(captor.getValue().party().id()).isEqualTo(partyId);
-        assertThat(captor.getValue().contract().id()).isEqualTo(contractId);
-        assertThat(SandboxEngagement.issue("welcome").templateCode()).isEqualTo("welcome");
+        assertThat(captor.getAllValues().get(0).getDocumentType()).isEqualTo(DocumentDTO.DocumentTypeEnum.CONTRACT);
+        assertThat(captor.getValue().getDescription()).contains(partyId.toString()).contains(contractId.toString());
+        assertThat(captor.getAllValues()).allSatisfy(body -> assertThat(body.getId()).isNull());
     }
 }

@@ -42,6 +42,11 @@
             <artifactId>core-common-document-mgmt-sdk</artifactId>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>io.fireflysoftware</groupId>
+            <artifactId>core-common-product-mgmt-sdk</artifactId>
+            <scope>compile</scope>
+        </dependency>
 
         <!-- Spring WebFlux -->
         <dependency>
