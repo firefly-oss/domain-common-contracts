@@ -1,9 +1,9 @@
 <a href="https://fireflysoftware.io/openplatform/">
 <picture>
-  <source media="(max-width: 640px) and (prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/firefly-oss/.github/main/profile/assets/banner-narrow-dark.svg">
-  <source media="(max-width: 640px)" srcset="https://raw.githubusercontent.com/firefly-oss/.github/main/profile/assets/banner-narrow-light.svg">
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/firefly-oss/.github/main/profile/assets/banner-dark.svg">
-  <img src="https://raw.githubusercontent.com/firefly-oss/.github/main/profile/assets/banner-light.svg" alt="Firefly OpenPlatform - Domain Common - Contracts" width="100%">
+  <source media="(max-width: 640px) and (prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/fireflysoftwaresolutions/.github/main/profile/assets/banner-narrow-dark.svg">
+  <source media="(max-width: 640px)" srcset="https://raw.githubusercontent.com/fireflysoftwaresolutions/.github/main/profile/assets/banner-narrow-light.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/fireflysoftwaresolutions/.github/main/profile/assets/banner-dark.svg">
+  <img src="https://raw.githubusercontent.com/fireflysoftwaresolutions/.github/main/profile/assets/banner-light.svg" alt="Firefly OpenPlatform - Domain Common - Contracts" width="100%">
 </picture>
 </a>
 
@@ -28,7 +28,9 @@ Developed by the Firefly Software Foundation. [dev@fireflysoftware.io](mailto:de
 
 ## Overview
 
-`domain-common-contracts` is a reactive Spring WebFlux microservice that sits in the domain layer of the Firefly platform. It exposes a REST API covering the entire contract lifecycle: creation, party and terms management, document generation, and e-signature request and confirmation. The service does not own its own persistence; instead it orchestrates two downstream platform services — `core-common-contract-mgmt` and `core-common-document-mgmt` — through their respective generated SDK clients.
+`domain-common-contracts` is a reactive Spring WebFlux microservice that sits in the domain layer of the Firefly platform. It exposes a REST API covering the entire contract lifecycle: creation, party and terms management, document generation, and e-signature request and confirmation.
+
+Creating an agreement accepts a 3-letter `currencyCode`, more than one product line, and an optional predecessor with link kind `AMENDMENT` or `RENEWAL`. The header product stays the primary line. A contract cannot link to itself. Status changes follow the core lifecycle (`DRAFT`, `PENDING_APPROVAL`, `ACTIVE`, `SUSPENDED`, `TERMINATED`, `EXPIRED`, `CANCELLED`). Compensation deletes the status-history row the change wrote and restores the previous status. Delete is allowed only while the agreement is a draft. The service does not own its own persistence; instead it orchestrates two downstream platform services — `core-common-contract-mgmt` and `core-common-document-mgmt` — through their respective generated SDK clients.
 
 Business logic is modelled using the Firefly Framework's CQRS and Saga patterns. Write operations are expressed as commands dispatched through a `CommandBus`; read operations are expressed as queries dispatched through a `QueryBus`. Multi-step workflows that require atomicity and compensation — document generation and the e-signature flow — are implemented as sagas executed by the `SagaEngine`. Each saga declares a directed acyclic graph of steps with explicit compensation actions, allowing the engine to roll back partial work on failure.
 

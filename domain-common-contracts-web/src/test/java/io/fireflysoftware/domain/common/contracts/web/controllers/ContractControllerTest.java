@@ -36,7 +36,7 @@ class ContractControllerTest {
         UUID contractId = UUID.randomUUID();
         CreateContractCommand cmd = new CreateContractCommand(partyId, "LOAN", "Test contract");
 
-        when(contractService.createContract(partyId, "LOAN", "Test contract"))
+        when(contractService.createAgreement(org.mockito.ArgumentMatchers.any(CreateContractCommand.class)))
                 .thenReturn(Mono.just(contractId));
 
         webTestClient.post().uri("/api/v1/contracts")
@@ -46,7 +46,7 @@ class ContractControllerTest {
                 .expectStatus().isCreated()
                 .expectBody(UUID.class).isEqualTo(contractId);
 
-        verify(contractService).createContract(partyId, "LOAN", "Test contract");
+        verify(contractService).createAgreement(org.mockito.ArgumentMatchers.any(CreateContractCommand.class));
     }
 
     @Test

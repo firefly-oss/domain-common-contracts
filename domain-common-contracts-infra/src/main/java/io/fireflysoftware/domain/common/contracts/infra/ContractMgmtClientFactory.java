@@ -71,4 +71,9 @@ public class ContractMgmtClientFactory {
         return new ContractTermValidationRulesApi(apiClient);
     }
 
+    @Bean
+    public ContractLinesApi contractLinesApi() {
+        return new ContractLinesApi(apiClient);
+    }
+
 }

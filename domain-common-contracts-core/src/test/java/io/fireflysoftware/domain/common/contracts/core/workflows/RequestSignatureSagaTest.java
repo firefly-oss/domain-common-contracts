@@ -4,6 +4,7 @@ import io.fireflysoftware.commons.ecm.sdk.api.DocumentControllerApi;
 import io.fireflysoftware.commons.ecm.sdk.api.DocumentSignatureControllerApi;
 import io.fireflysoftware.commons.ecm.sdk.model.DocumentSignatureDTO;
 import io.fireflysoftware.core.contract.sdk.api.ContractDocumentsApi;
+import io.fireflysoftware.core.contract.sdk.api.ContractLinesApi;
 import io.fireflysoftware.core.contract.sdk.api.ContractPartiesApi;
 import io.fireflysoftware.core.contract.sdk.api.ContractStatusHistoryApi;
 import io.fireflysoftware.core.contract.sdk.api.ContractTermsApi;
@@ -69,6 +70,9 @@ class RequestSignatureSagaTest {
 
     @MockitoBean
     private ContractDocumentsApi contractDocumentsApi;
+
+    @MockitoBean
+    private ContractLinesApi contractLinesApi;
 
     @MockitoBean
     private DocumentControllerApi documentControllerApi;

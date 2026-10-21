@@ -28,6 +28,21 @@ public class CreateContractHandler extends CommandHandler<CreateContractCommand,
     @Override
     protected Mono<UUID> doHandle(CreateContractCommand cmd) {
         ContractDTO dto = mapper.toContractDto(cmd);
+        if (dto.getContractStatus() == null) {
+            dto.setContractStatus(ContractDTO.ContractStatusEnum.DRAFT);
+        }
+        if (cmd.getCurrencyCode() != null) {
+            dto.setCurrencyCode(cmd.getCurrencyCode());
+        }
+        if (cmd.getProductId() != null) {
+            dto.setProductId(cmd.getProductId());
+        }
+        if (cmd.getPredecessorContractId() != null) {
+            dto.setPredecessorContractId(cmd.getPredecessorContractId());
+        }
+        if (cmd.getLinkKind() != null) {
+            dto.setLinkKind(cmd.getLinkKind());
+        }
         return contractsApi.createContract(dto, UUID.randomUUID().toString())
                 .mapNotNull(result -> Objects.requireNonNull(result).getContractId());
     }

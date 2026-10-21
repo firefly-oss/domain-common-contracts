@@ -22,6 +22,21 @@ public interface ContractService {
     Mono<UUID> createContract(UUID partyId, String contractType, String description);
 
     /**
+     * Creates an agreement with currency, product lines, and an optional predecessor.
+     */
+    Mono<UUID> createAgreement(io.fireflysoftware.domain.common.contracts.core.commands.CreateContractCommand command);
+
+    /**
+     * Moves an agreement along the core status lifecycle.
+     */
+    Mono<UUID> changeStatus(io.fireflysoftware.domain.common.contracts.core.commands.ChangeContractStatusCommand command);
+
+    /**
+     * Deletes a draft agreement. Any other status is rejected.
+     */
+    Mono<Void> deleteContract(UUID contractId);
+
+    /**
      * Retrieves the details of a specific contract.
      *
      * @param contractId the contract identifier

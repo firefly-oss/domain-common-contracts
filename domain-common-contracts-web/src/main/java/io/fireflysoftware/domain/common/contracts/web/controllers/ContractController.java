@@ -27,8 +27,27 @@ public class ContractController {
     @Operation(summary = "Create Contract", description = "Create a new contract")
     @PostMapping
     public Mono<ResponseEntity<Object>> createContract(@Valid @RequestBody CreateContractCommand cmd) {
-        return contractService.createContract(cmd.partyId(), cmd.contractType(), cmd.description())
+        return contractService.createAgreement(cmd)
                 .map(id -> ResponseEntity.status(HttpStatus.CREATED).body((Object) id));
+    }
+
+    @Operation(summary = "Change contract status", description = "Moves the agreement along the core lifecycle and compensates the status history row")
+    @PostMapping("/{contractId}/status")
+    public Mono<ResponseEntity<Object>> changeStatus(
+            @PathVariable UUID contractId,
+            @RequestBody io.fireflysoftware.domain.common.contracts.core.commands.ChangeContractStatusCommand command) {
+        io.fireflysoftware.domain.common.contracts.core.commands.ChangeContractStatusCommand requested =
+                new io.fireflysoftware.domain.common.contracts.core.commands.ChangeContractStatusCommand(
+                        contractId, command.status(), command.reason());
+        return contractService.changeStatus(requested)
+                .map(id -> ResponseEntity.ok().body((Object) id));
+    }
+
+    @Operation(summary = "Delete a draft contract", description = "Deletes the agreement only while it is still a draft")
+    @DeleteMapping("/{contractId}")
+    public Mono<ResponseEntity<Object>> deleteContract(@PathVariable UUID contractId) {
+        return contractService.deleteContract(contractId)
+                .thenReturn(ResponseEntity.noContent().build());
     }
 
     @Operation(summary = "Get Contract Detail", description = "Retrieve the details of a specific contract")

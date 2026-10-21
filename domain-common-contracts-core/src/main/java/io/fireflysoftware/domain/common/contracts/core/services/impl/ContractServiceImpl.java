@@ -7,6 +7,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fireflyframework.cqrs.command.CommandBus;
 import org.fireflyframework.cqrs.query.QueryBus;
+import org.fireflyframework.orchestration.saga.engine.ExpandEach;
+import org.fireflyframework.orchestration.saga.engine.SagaEngine;
+import org.fireflyframework.orchestration.saga.engine.SagaResult;
+import org.fireflyframework.orchestration.saga.engine.StepInputs;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -24,11 +28,50 @@ public class ContractServiceImpl implements ContractService {
 
     private final CommandBus commandBus;
     private final QueryBus queryBus;
+    private final SagaEngine sagaEngine;
 
     @Override
     public Mono<UUID> createContract(UUID partyId, String contractType, String description) {
         log.debug("Creating contract for party: {}", partyId);
-        return commandBus.send(new CreateContractCommand(partyId, contractType, description));
+        return createAgreement(new CreateContractCommand(partyId, contractType, description));
+    }
+
+    @Override
+    public Mono<UUID> createAgreement(CreateContractCommand command) {
+        List<io.fireflysoftware.core.contract.sdk.model.ContractLineDTO> lines =
+                command.getLines() == null ? List.of() : command.getLines();
+        StepInputs inputs = StepInputs.builder()
+                .forStepId("createContract", command)
+                .forStepId("addContractLine", ExpandEach.of(lines))
+                .build();
+        return sagaEngine.execute("CreateAgreementSaga", inputs)
+                .flatMap(ContractServiceImpl::contractId);
+    }
+
+    @Override
+    public Mono<UUID> changeStatus(ChangeContractStatusCommand command) {
+        StepInputs inputs = StepInputs.builder()
+                .forStepId("readAgreement", command)
+                .forStepId("changeAgreementStatus", command)
+                .build();
+        return sagaEngine.execute("ChangeAgreementStatusSaga", inputs)
+                .flatMap(ContractServiceImpl::contractId);
+    }
+
+    @Override
+    public Mono<Void> deleteContract(UUID contractId) {
+        return commandBus.send(new RemoveContractCommand(contractId));
+    }
+
+    private static Mono<UUID> contractId(SagaResult result) {
+        if (!result.isSuccess()) {
+            Throwable cause = result.error().orElseGet(() -> new IllegalStateException(
+                    "Saga " + result.sagaName() + " failed"));
+            return Mono.error(cause);
+        }
+        return Mono.justOrEmpty(result.resultOf("createContract", UUID.class)
+                .or(() -> result.resultOf("changeAgreementStatus", UUID.class)))
+                .switchIfEmpty(Mono.error(new IllegalStateException("Saga did not return a contract id")));
     }
 
     @Override
