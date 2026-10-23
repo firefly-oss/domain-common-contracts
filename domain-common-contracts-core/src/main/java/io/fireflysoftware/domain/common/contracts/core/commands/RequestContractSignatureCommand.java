@@ -20,6 +20,7 @@ package io.fireflysoftware.domain.common.contracts.core.commands;
 import org.fireflyframework.cqrs.command.Command;
 
 import java.util.UUID;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Command to request a signature on a contract document.
@@ -29,7 +30,7 @@ import java.util.UUID;
  * @param signerPartyId the identifier of the signing party
  */
 public record RequestContractSignatureCommand(
-        UUID contractId,
-        UUID documentId,
-        UUID signerPartyId
+        @NotNull UUID contractId,
+        @NotNull UUID documentId,
+        @NotNull UUID signerPartyId
 ) implements Command<UUID> {}

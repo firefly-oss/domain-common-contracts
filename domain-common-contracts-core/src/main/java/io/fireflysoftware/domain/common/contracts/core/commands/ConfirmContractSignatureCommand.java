@@ -20,6 +20,8 @@ package io.fireflysoftware.domain.common.contracts.core.commands;
 import org.fireflyframework.cqrs.command.Command;
 
 import java.util.UUID;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * Command to confirm a previously requested contract signature.
@@ -28,6 +30,6 @@ import java.util.UUID;
  * @param signatureRequestId the identifier of the signature request to confirm
  */
 public record ConfirmContractSignatureCommand(
-        UUID contractId,
-        String signatureRequestId
+        @NotNull UUID contractId,
+        @NotBlank String signatureRequestId
 ) implements Command<Void> {}

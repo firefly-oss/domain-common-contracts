@@ -17,6 +17,9 @@ endpoints:
     common-platform-product-mgmt: ${ENDPOINT_CORE_PRODUCT_MGMT:http://localhost:8086}
 
 firefly:
+  security:
+    resource-server:
+      strict-policy: true
   cqrs:
     enabled: true
     command:
@@ -90,7 +93,7 @@ management:
 
 integration:
   esignature:
-    provider: sandbox
+    provider: document-management
 
 logging:
   pattern:

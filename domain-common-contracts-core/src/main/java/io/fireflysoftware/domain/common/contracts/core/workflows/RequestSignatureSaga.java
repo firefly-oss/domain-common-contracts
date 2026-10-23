@@ -17,8 +17,6 @@
 
 package io.fireflysoftware.domain.common.contracts.core.workflows;
 
-import io.fireflysoftware.commons.ecm.sdk.api.DocumentSignatureControllerApi;
-import io.fireflysoftware.commons.ecm.sdk.model.DocumentSignatureDTO;
 import io.fireflysoftware.core.contract.sdk.api.ContractStatusHistoryApi;
 import io.fireflysoftware.core.contract.sdk.model.ContractStatusHistoryDTO;
 import io.fireflysoftware.domain.common.contracts.core.commands.RequestContractSignatureCommand;
@@ -32,23 +30,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.util.Objects;
 import java.util.UUID;
 
 /**
  * Saga that orchestrates an e-signature request in three atomic steps:
- * record creation → provider submission → contract status update.
+ * durable core submission → accepted-request check → contract status update.
  *
  * <p>Step DAG:
  * <pre>
- *   create-signature-request   (Layer 0) — persists signature record in document mgmt
+ *   create-signature-request   (Layer 0) — submits through the core document signature authority
  *            |
- *   send-to-provider           (Layer 1) — submits to e-signature provider
+ *   send-to-provider           (Layer 1) — retains the accepted durable request identity
  *            |
  *   update-contract-status     (Layer 2) — records SUBMITTED_FOR_APPROVAL status
  * </pre>
  *
- * <p>Compensation: cancel signature record (best-effort; provider state is not reversed).
+ * <p>Provider requests remain durable when a later domain step fails; retries recover the same request.
  */
 @Saga(name = "request-signature-saga")
 @Service
@@ -61,87 +58,43 @@ public class RequestSignatureSaga {
     static final String CTX_SIGNATURE_RECORD_ID = "signatureRecordId";
     static final String CTX_PROVIDER_REQUEST_ID = "providerRequestId";
 
-    private final DocumentSignatureControllerApi documentSignatureControllerApi;
     private final ESignaturePort eSignaturePort;
     private final ContractStatusHistoryApi contractStatusHistoryApi;
 
     @Autowired
-    public RequestSignatureSaga(DocumentSignatureControllerApi documentSignatureControllerApi,
-                                ESignaturePort eSignaturePort,
+    public RequestSignatureSaga(ESignaturePort eSignaturePort,
                                 ContractStatusHistoryApi contractStatusHistoryApi) {
-        this.documentSignatureControllerApi = documentSignatureControllerApi;
         this.eSignaturePort = eSignaturePort;
         this.contractStatusHistoryApi = contractStatusHistoryApi;
     }
 
-    /**
-     * Step 1: Creates a signature record in the document management system.
-     * Stores the signature record ID in context for use by compensation.
-     */
-    @SagaStep(id = "create-signature-request", compensate = "cancelSignatureRequest")
+    /** Submits once through the core authority, which durably owns request identity and provider state. */
+    @SagaStep(id = "create-signature-request")
     public Mono<UUID> createSignatureRequest(RequestContractSignatureCommand cmd, ExecutionContext ctx) {
-        log.debug("Creating signature request for document: {}, contract: {}", cmd.documentId(), cmd.contractId());
-        // Persist command fields in the context so downstream steps can read them even
-        // when the argument resolver does not inject the original command instance.
         ctx.putVariable(CTX_CONTRACT_ID, cmd.contractId());
         ctx.putVariable(CTX_DOCUMENT_ID, cmd.documentId());
         ctx.putVariable(CTX_SIGNER_PARTY_ID, cmd.signerPartyId());
-
-        DocumentSignatureDTO sigDto = new DocumentSignatureDTO()
-                .documentId(cmd.documentId())
-                .signerPartyId(cmd.signerPartyId());
-
-        return documentSignatureControllerApi.addDocumentSignature(cmd.documentId(), sigDto, UUID.randomUUID().toString())
-                .mapNotNull(dto -> Objects.requireNonNull(dto).getId())
-                .doOnNext(sigId -> ctx.putVariable(CTX_SIGNATURE_RECORD_ID, sigId));
-    }
-
-    /**
-     * Compensation for create-signature-request: deletes the signature record.
-     */
-    public Mono<Void> cancelSignatureRequest(UUID signatureRecordId, ExecutionContext ctx) {
-        log.debug("Compensating: cancelling signature record: {}", signatureRecordId);
-        UUID documentId = ctx.getVariableAs(CTX_DOCUMENT_ID, UUID.class);
-        if (documentId == null) {
-            log.warn("Cannot cancel signature record {}: document ID not in context", signatureRecordId);
-            return Mono.empty();
-        }
-        return documentSignatureControllerApi.deleteDocumentSignature(documentId, signatureRecordId, UUID.randomUUID().toString())
-                .onErrorComplete(e -> {
-                    log.warn("Failed to cancel signature record {}: {}", signatureRecordId, e.getMessage());
-                    return true;
+        var request = SignatureRequest.builder().contractId(cmd.contractId()).documentId(cmd.documentId())
+                .signerPartyId(cmd.signerPartyId()).build();
+        return eSignaturePort.requestSignature(request)
+                .switchIfEmpty(Mono.error(new IllegalStateException("Core returned no signature submission")))
+                .flatMap(result -> {
+                    if (result.getSignatureRequestId()==null || result.getSignatureRequestId().isBlank()
+                            || result.getProvider()==null || result.getProvider().isBlank()
+                            || !("PENDING".equals(result.getStatus()) || "COMPLETED".equals(result.getStatus())))
+                        return Mono.error(new IllegalStateException("Signature submission is not accepted or has an unknown outcome"));
+                    UUID id=UUID.fromString(result.getSignatureRequestId());
+                    ctx.putVariable(CTX_SIGNATURE_RECORD_ID,id);
+                    ctx.putVariable(CTX_PROVIDER_REQUEST_ID,id.toString());
+                    return Mono.just(id);
                 });
     }
 
-    /**
-     * Step 2: Submits the signature request to the configured e-signature provider.
-     * Depends on create-signature-request.
-     */
+    /** Provider submission is retained after a later domain failure; deleting it would destroy recovery evidence. */
     @SagaStep(id = "send-to-provider", dependsOn = "create-signature-request")
     public Mono<String> sendToProvider(ExecutionContext ctx) {
-        // Read command fields from context: the argument resolver does not reliably
-        // inject the original command instance into downstream steps.
-        UUID contractId = ctx.getVariableAs(CTX_CONTRACT_ID, UUID.class);
-        UUID documentId = ctx.getVariableAs(CTX_DOCUMENT_ID, UUID.class);
-        UUID signerPartyId = ctx.getVariableAs(CTX_SIGNER_PARTY_ID, UUID.class);
-        log.debug("Sending signature request to provider for contract: {}", contractId);
-
-        SignatureRequest request = SignatureRequest.builder()
-                .contractId(contractId)
-                .documentId(documentId)
-                .signerPartyId(signerPartyId)
-                .build();
-
-        return eSignaturePort.requestSignature(request)
-                .map(result -> {
-                    String providerRequestId = result.getSignatureRequestId();
-                    // Saga engine treats Mono.empty() as step failure (map->null becomes empty),
-                    // and the execution context does not accept null values. Use a sentinel when
-                    // the provider does not return an id (e.g. stub providers).
-                    String effectiveId = providerRequestId != null ? providerRequestId : "no-provider-id";
-                    ctx.putVariable(CTX_PROVIDER_REQUEST_ID, effectiveId);
-                    return effectiveId;
-                });
+        String id=ctx.getVariableAs(CTX_PROVIDER_REQUEST_ID,String.class);
+        return id==null || id.isBlank() ? Mono.error(new IllegalStateException("Durable signature request identity is missing")) : Mono.just(id);
     }
 
     /**
@@ -157,7 +110,7 @@ public class RequestSignatureSaga {
         statusDto.setContractId(contractId);
         statusDto.setStatusCode(ContractStatusHistoryDTO.StatusCodeEnum.SUBMITTED_FOR_APPROVAL);
 
-        return contractStatusHistoryApi.createContractStatusHistory(contractId, statusDto, UUID.randomUUID().toString())
-                .mapNotNull(dto -> Objects.requireNonNull(dto).getContractStatusHistoryId());
+        return contractStatusHistoryApi.createContractStatusHistory(contractId, statusDto, "signature-submitted:"+ctx.getVariableAs(CTX_PROVIDER_REQUEST_ID,String.class))
+                .mapNotNull(dto -> dto.getContractStatusHistoryId());
     }
 }

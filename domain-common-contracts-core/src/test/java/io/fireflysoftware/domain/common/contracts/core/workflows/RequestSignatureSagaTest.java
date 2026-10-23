@@ -98,145 +98,47 @@ class RequestSignatureSagaTest {
     @MockitoBean
     private DocumentControllerApi documentControllerApi;
 
-    // ─── Happy Path ────────────────────────────────────────────────────────────
-
     @Test
-    void execute_happyPath_shouldCreateRecordSendToProviderAndUpdateStatus() {
-        UUID contractId = UUID.randomUUID();
-        UUID documentId = UUID.randomUUID();
-        UUID signerPartyId = UUID.randomUUID();
-        UUID signatureRecordId = UUID.randomUUID();
-        UUID statusHistoryId = UUID.randomUUID();
-
-        RequestContractSignatureCommand cmd = new RequestContractSignatureCommand(contractId, documentId, signerPartyId);
-
-        when(documentSignatureControllerApi.addDocumentSignature(eq(documentId), any(DocumentSignatureDTO.class), any()))
-                .thenReturn(Mono.just(new DocumentSignatureDTO(signatureRecordId, null, null, null, null, null, null, null)));
-
-        when(eSignaturePort.requestSignature(any()))
-                .thenReturn(Mono.just(SignatureRequestResult.builder()
-                        .signatureRequestId(null)
-                        .provider("STUB")
-                        .status("REQUESTED")
-                        .build()));
-
-        when(contractStatusHistoryApi.createContractStatusHistory(eq(contractId), any(ContractStatusHistoryDTO.class), any()))
-                .thenReturn(Mono.just(new ContractStatusHistoryDTO(statusHistoryId, null, null)));
-
-        StepInputs inputs = StepInputs.builder()
-                .forStepId("create-signature-request", cmd)
-                .forStepId("send-to-provider", cmd)
-                .forStepId("update-contract-status", cmd)
-                .build();
-
-        StepVerifier.create(sagaEngine.execute("request-signature-saga", inputs))
-                .assertNext(result -> {
-                    assertThat(result.isSuccess()).isTrue();
-                    assertThat(result.compensatedSteps()).isEmpty();
-                    assertThat(result.resultOf("update-contract-status", UUID.class)).contains(statusHistoryId);
-                })
-                .verifyComplete();
+    void execute_returnsTheDurableRequestIdWithoutCreatingAnotherCoreRecord() {
+        UUID contract=UUID.randomUUID(),document=UUID.randomUUID(),signer=UUID.randomUUID(),id=UUID.randomUUID();
+        var cmd=new RequestContractSignatureCommand(contract,document,signer);
+        when(eSignaturePort.requestSignature(any())).thenReturn(Mono.just(SignatureRequestResult.builder()
+                .signatureRequestId(id.toString()).provider("sandbox").status("PENDING").build()));
+        when(contractStatusHistoryApi.createContractStatusHistory(eq(contract),any(),any()))
+                .thenReturn(Mono.just(new ContractStatusHistoryDTO(UUID.randomUUID(),null,null)));
+        var inputs=StepInputs.builder().forStepId("create-signature-request",cmd).forStepId("send-to-provider",cmd)
+                .forStepId("update-contract-status",cmd).build();
+        StepVerifier.create(sagaEngine.execute("request-signature-saga",inputs)).assertNext(result -> {
+            assertThat(result.isSuccess()).isTrue();
+            assertThat(result.resultOf("create-signature-request",UUID.class)).contains(id);
+        }).verifyComplete();
+        verify(documentSignatureControllerApi,never()).addDocumentSignature(any(),any(),any());
+        verify(eSignaturePort).requestSignature(any());
     }
 
-    // ─── Compensation: create-signature-request fails ─────────────────────────
-
     @Test
-    void execute_whenCreateSignatureRequestFails_shouldNotCallSubsequentSteps() {
-        UUID contractId = UUID.randomUUID();
-        UUID documentId = UUID.randomUUID();
-        UUID signerPartyId = UUID.randomUUID();
-
-        RequestContractSignatureCommand cmd = new RequestContractSignatureCommand(contractId, documentId, signerPartyId);
-
-        when(documentSignatureControllerApi.addDocumentSignature(eq(documentId), any(DocumentSignatureDTO.class), any()))
-                .thenReturn(Mono.error(new RuntimeException("Document service unavailable")));
-
-        StepInputs inputs = StepInputs.builder()
-                .forStepId("create-signature-request", cmd)
-                .forStepId("send-to-provider", cmd)
-                .forStepId("update-contract-status", cmd)
-                .build();
-
-        StepVerifier.create(sagaEngine.execute("request-signature-saga", inputs))
-                .assertNext(result -> {
-                    assertThat(result.isFailed()).isTrue();
-                    assertThat(result.firstErrorStepId()).contains("create-signature-request");
-                })
-                .verifyComplete();
-
-        verify(eSignaturePort, never()).requestSignature(any());
-        verify(contractStatusHistoryApi, never()).createContractStatusHistory(any(), any(), any());
+    void missingProviderRequestIdFailsBeforeContractStatusMutation() {
+        var cmd=new RequestContractSignatureCommand(UUID.randomUUID(),UUID.randomUUID(),UUID.randomUUID());
+        when(eSignaturePort.requestSignature(any())).thenReturn(Mono.just(SignatureRequestResult.builder()
+                .provider("sandbox").status("PENDING").build()));
+        var inputs=StepInputs.builder().forStepId("create-signature-request",cmd).forStepId("send-to-provider",cmd)
+                .forStepId("update-contract-status",cmd).build();
+        StepVerifier.create(sagaEngine.execute("request-signature-saga",inputs)).assertNext(result -> assertThat(result.isFailed()).isTrue()).verifyComplete();
+        verify(contractStatusHistoryApi,never()).createContractStatusHistory(any(),any(),any());
     }
 
-    // ─── Compensation: send-to-provider fails → cancel signature record ────────
-
     @Test
-    void execute_whenSendToProviderFails_shouldCompensateByCancellingSignatureRecord() {
-        UUID contractId = UUID.randomUUID();
-        UUID documentId = UUID.randomUUID();
-        UUID signerPartyId = UUID.randomUUID();
-        UUID signatureRecordId = UUID.randomUUID();
-
-        RequestContractSignatureCommand cmd = new RequestContractSignatureCommand(contractId, documentId, signerPartyId);
-
-        when(documentSignatureControllerApi.addDocumentSignature(eq(documentId), any(DocumentSignatureDTO.class), any()))
-                .thenReturn(Mono.just(new DocumentSignatureDTO(signatureRecordId, null, null, null, null, null, null, null)));
-        when(eSignaturePort.requestSignature(any()))
-                .thenReturn(Mono.error(new RuntimeException("Provider timeout")));
-        when(documentSignatureControllerApi.deleteDocumentSignature(eq(documentId), eq(signatureRecordId), any()))
-                .thenReturn(Mono.empty());
-
-        StepInputs inputs = StepInputs.builder()
-                .forStepId("create-signature-request", cmd)
-                .forStepId("send-to-provider", cmd)
-                .forStepId("update-contract-status", cmd)
-                .build();
-
-        StepVerifier.create(sagaEngine.execute("request-signature-saga", inputs))
-                .assertNext(result -> {
-                    assertThat(result.isFailed()).isTrue();
-                    assertThat(result.firstErrorStepId()).contains("send-to-provider");
-                    assertThat(result.compensatedSteps()).contains("create-signature-request");
-                })
-                .verifyComplete();
-
-        verify(contractStatusHistoryApi, never()).createContractStatusHistory(any(), any(), any());
-    }
-
-    // ─── Compensation: update-contract-status fails ───────────────────────────
-
-    @Test
-    void execute_whenUpdateContractStatusFails_shouldCompensatePriorSteps() {
-        UUID contractId = UUID.randomUUID();
-        UUID documentId = UUID.randomUUID();
-        UUID signerPartyId = UUID.randomUUID();
-        UUID signatureRecordId = UUID.randomUUID();
-
-        RequestContractSignatureCommand cmd = new RequestContractSignatureCommand(contractId, documentId, signerPartyId);
-
-        when(documentSignatureControllerApi.addDocumentSignature(eq(documentId), any(DocumentSignatureDTO.class), any()))
-                .thenReturn(Mono.just(new DocumentSignatureDTO(signatureRecordId, null, null, null, null, null, null, null)));
-        when(eSignaturePort.requestSignature(any()))
-                .thenReturn(Mono.just(SignatureRequestResult.builder()
-                        .signatureRequestId(null)
-                        .provider("STUB").status("REQUESTED").build()));
-        when(contractStatusHistoryApi.createContractStatusHistory(eq(contractId), any(), any()))
-                .thenReturn(Mono.error(new RuntimeException("Contract service down")));
-        when(documentSignatureControllerApi.deleteDocumentSignature(eq(documentId), eq(signatureRecordId), any()))
-                .thenReturn(Mono.empty());
-
-        StepInputs inputs = StepInputs.builder()
-                .forStepId("create-signature-request", cmd)
-                .forStepId("send-to-provider", cmd)
-                .forStepId("update-contract-status", cmd)
-                .build();
-
-        StepVerifier.create(sagaEngine.execute("request-signature-saga", inputs))
-                .assertNext(result -> {
-                    assertThat(result.isFailed()).isTrue();
-                    assertThat(result.firstErrorStepId()).contains("update-contract-status");
-                    assertThat(result.compensatedSteps()).contains("create-signature-request");
-                })
-                .verifyComplete();
+    void failedContractUpdateRetainsDurableProviderRequestForRecovery() {
+        var cmd=new RequestContractSignatureCommand(UUID.randomUUID(),UUID.randomUUID(),UUID.randomUUID());
+        UUID id=UUID.randomUUID();
+        when(eSignaturePort.requestSignature(any())).thenReturn(Mono.just(SignatureRequestResult.builder()
+                .signatureRequestId(id.toString()).provider("sandbox").status("PENDING").build()));
+        when(contractStatusHistoryApi.createContractStatusHistory(any(),any(),any())).thenReturn(Mono.error(new IllegalStateException("Unavailable")));
+        var inputs=StepInputs.builder().forStepId("create-signature-request",cmd).forStepId("send-to-provider",cmd)
+                .forStepId("update-contract-status",cmd).build();
+        StepVerifier.create(sagaEngine.execute("request-signature-saga",inputs)).assertNext(result -> {
+            assertThat(result.isFailed()).isTrue();assertThat(result.compensatedSteps()).isEmpty();
+        }).verifyComplete();
+        verify(documentSignatureControllerApi,never()).deleteDocumentSignature(any(),any(),any());
     }
 }

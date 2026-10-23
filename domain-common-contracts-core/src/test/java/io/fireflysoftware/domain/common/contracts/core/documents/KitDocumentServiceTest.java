@@ -16,52 +16,35 @@
 
 package io.fireflysoftware.domain.common.contracts.core.documents;
 
-import io.fireflysoftware.commons.ecm.sdk.api.DocumentControllerApi;
-import io.fireflysoftware.commons.ecm.sdk.model.DocumentDTO;
-import io.fireflysoftware.documents.DocumentTypeCode;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import reactor.core.publisher.Mono;
-
-import java.util.UUID;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+import io.fireflysoftware.commons.ecm.sdk.api.DocumentControllerApi;
+import java.util.UUID;
+import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+import reactor.test.StepVerifier;
+
 class KitDocumentServiceTest {
-
-    @Mock
-    private DocumentControllerApi documents;
-
-    @Test
-    void issuesContractLetterAndWelcomeThroughDocumentCore() {
-        KitDocumentService service = new KitDocumentService(documents);
-        UUID partyId = UUID.randomUUID();
-        UUID contractId = UUID.randomUUID();
-        when(documents.createDocument(any(), any())).thenAnswer(invocation -> {
-            DocumentDTO command = invocation.getArgument(0);
-            DocumentDTO saved = new DocumentDTO(UUID.randomUUID());
-            saved.setName(command.getName());
-            return Mono.just(saved);
-        });
-
-        for (String code : new String[]{DocumentTypeCode.CONTRACT.code(), DocumentTypeCode.LETTER.code(), DocumentTypeCode.WELCOME.code()}) {
-            UUID id = service.issue(code, partyId, contractId).block();
-            assertThat(id).isNotNull();
-        }
-
-        ArgumentCaptor<DocumentDTO> captor = ArgumentCaptor.forClass(DocumentDTO.class);
-        verify(documents, org.mockito.Mockito.times(3)).createDocument(captor.capture(), any());
-        assertThat(captor.getAllValues()).extracting(DocumentDTO::getName)
-                .containsExactly("contract", "letter", "welcome");
-        assertThat(captor.getAllValues().get(0).getDocumentType()).isEqualTo(DocumentDTO.DocumentTypeEnum.CONTRACT);
-        assertThat(captor.getValue().getDescription()).contains(partyId.toString()).contains(contractId.toString());
-        assertThat(captor.getAllValues()).allSatisfy(body -> assertThat(body.getId()).isNull());
+  @Test
+  void oldContractLetterAndWelcomeRequestsRequireExplicitMigration() {
+    DocumentControllerApi documents = mock(DocumentControllerApi.class);
+    KitDocumentService service = new KitDocumentService(documents);
+    for (String code : new String[] {"contract", "letter", "welcome"}) {
+      StepVerifier.create(service.issue(code, UUID.randomUUID(), UUID.randomUUID()))
+          .expectErrorSatisfies(
+              error ->
+                  assertThat(error)
+                      .isInstanceOfSatisfying(
+                          ResponseStatusException.class,
+                          failure -> {
+                            assertThat(failure.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+                            assertThat(failure.getReason())
+                                .isEqualTo("GOVERNED_DOCUMENT_INTENT_REQUIRED");
+                          }))
+          .verify();
     }
+    verifyNoInteractions(documents);
+  }
 }

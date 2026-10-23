@@ -14,80 +14,37 @@
  * limitations under the License.
  */
 
-
 package io.fireflysoftware.domain.common.contracts.core.handlers;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
+
 import io.fireflysoftware.domain.common.contracts.core.commands.GenerateContractDocumentCommand;
+import java.util.UUID;
 import org.fireflyframework.orchestration.saga.engine.SagaEngine;
-import org.fireflyframework.orchestration.saga.engine.SagaResult;
-import org.fireflyframework.orchestration.saga.engine.StepInputs;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import reactor.core.publisher.Mono;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.test.StepVerifier;
 
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-@ExtendWith(MockitoExtension.class)
 class GenerateContractDocumentHandlerTest {
-
-    @Mock
-    private SagaEngine sagaEngine;
-
-    @Mock
-    private SagaResult sagaResult;
-
-    private GenerateContractDocumentHandler handler;
-
-    @BeforeEach
-    void setUp() {
-        handler = new GenerateContractDocumentHandler(sagaEngine);
-    }
-
-    @Test
-    void doHandle_shouldDelegateToSagaAndReturnContractDocumentId() {
-        UUID contractId = UUID.randomUUID();
-        UUID templateId = UUID.randomUUID();
-        UUID contractDocumentId = UUID.randomUUID();
-
-        GenerateContractDocumentCommand cmd = new GenerateContractDocumentCommand(contractId, templateId);
-
-        when(sagaResult.isFailed()).thenReturn(false);
-        when(sagaResult.resultOf(eq("attach-to-contract"), eq(UUID.class)))
-                .thenReturn(Optional.of(contractDocumentId));
-        when(sagaEngine.execute(eq("generate-document-saga"), any(StepInputs.class)))
-                .thenReturn(Mono.just(sagaResult));
-
-        StepVerifier.create(handler.doHandle(cmd))
-                .expectNext(contractDocumentId)
-                .verifyComplete();
-
-        verify(sagaEngine).execute(eq("generate-document-saga"), any(StepInputs.class));
-    }
-
-    @Test
-    void doHandle_whenSagaFails_shouldEmitError() {
-        UUID contractId = UUID.randomUUID();
-        UUID templateId = UUID.randomUUID();
-
-        GenerateContractDocumentCommand cmd = new GenerateContractDocumentCommand(contractId, templateId);
-
-        when(sagaResult.isFailed()).thenReturn(true);
-        when(sagaResult.firstErrorStepId()).thenReturn(Optional.of("generate-document"));
-        when(sagaEngine.execute(eq("generate-document-saga"), any(StepInputs.class)))
-                .thenReturn(Mono.just(sagaResult));
-
-        StepVerifier.create(handler.doHandle(cmd))
-                .expectErrorMatches(e -> e.getMessage().contains("generate-document-saga failed"))
-                .verify();
-    }
+  @Test
+  void templateOnlyCommandRequiresGovernedIntentBeforeSagaEffects() {
+    SagaEngine engine = mock(SagaEngine.class);
+    var handler = new GenerateContractDocumentHandler(engine);
+    StepVerifier.create(
+            handler.doHandle(
+                new GenerateContractDocumentCommand(UUID.randomUUID(), UUID.randomUUID())))
+        .expectErrorSatisfies(
+            error ->
+                assertThat(error)
+                    .isInstanceOfSatisfying(
+                        ResponseStatusException.class,
+                        failure -> {
+                          assertThat(failure.getStatusCode().value()).isEqualTo(409);
+                          assertThat(failure.getReason())
+                              .isEqualTo("GOVERNED_DOCUMENT_INTENT_REQUIRED");
+                        }))
+        .verify();
+    verifyNoInteractions(engine);
+  }
 }

@@ -18,6 +18,7 @@
 package io.fireflysoftware.domain.common.contracts.web.controllers;
 
 import io.fireflysoftware.domain.common.contracts.core.commands.GenerateContractDocumentCommand;
+import io.fireflysoftware.domain.common.contracts.core.documents.LegacyDocumentMigration;
 import io.fireflysoftware.domain.common.contracts.core.services.ContractService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,20 +51,18 @@ class ContractDocumentControllerTest {
     }
 
     @Test
-    void generateDocument_shouldReturn202WithDocumentId() {
+    void generateDocument_shouldRequireGovernedIntentMigration() {
         UUID templateId = UUID.randomUUID();
-        UUID documentId = UUID.randomUUID();
         GenerateContractDocumentCommand cmd = new GenerateContractDocumentCommand(CONTRACT_ID, templateId);
 
         when(contractService.generateContractDocument(CONTRACT_ID, templateId))
-                .thenReturn(Mono.just(documentId));
+                .thenReturn(Mono.error(LegacyDocumentMigration.required()));
 
         webTestClient.post().uri("/api/v1/contracts/{contractId}/documents/generate", CONTRACT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(cmd)
                 .exchange()
-                .expectStatus().isAccepted()
-                .expectBody(UUID.class).isEqualTo(documentId);
+                .expectStatus().isEqualTo(409);
 
         verify(contractService).generateContractDocument(CONTRACT_ID, templateId);
     }

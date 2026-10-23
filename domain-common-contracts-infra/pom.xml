@@ -20,6 +20,10 @@
 
     <dependencies>
 
+        <dependency><groupId>org.fireflyframework</groupId><artifactId>fireflyframework-security-spi</artifactId></dependency>
+        <dependency><groupId>org.springframework.security</groupId><artifactId>spring-security-oauth2-resource-server</artifactId></dependency>
+        <dependency><groupId>org.springframework.security</groupId><artifactId>spring-security-oauth2-jose</artifactId></dependency>
+
         <!-- Common Libraries -->
         <dependency>
             <groupId>org.fireflyframework</groupId>
@@ -47,6 +51,9 @@
             <artifactId>core-common-product-mgmt-sdk</artifactId>
             <scope>compile</scope>
         </dependency>
+
+        <dependency><groupId>io.fireflysoftware</groupId><artifactId>core-common-customer-mgmt-sdk</artifactId></dependency>
+        <dependency><groupId>io.fireflysoftware</groupId><artifactId>core-common-reference-master-data-sdk</artifactId></dependency>
 
         <!-- Spring WebFlux -->
         <dependency>
@@ -100,6 +107,9 @@
             <artifactId>reactor-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency><groupId>org.testcontainers</groupId><artifactId>testcontainers-postgresql</artifactId><scope>test</scope></dependency>
+        <dependency><groupId>org.testcontainers</groupId><artifactId>testcontainers-junit-jupiter</artifactId><scope>test</scope></dependency>
+        <dependency><groupId>org.postgresql</groupId><artifactId>postgresql</artifactId><scope>test</scope></dependency>
     </dependencies>
 
 </project>

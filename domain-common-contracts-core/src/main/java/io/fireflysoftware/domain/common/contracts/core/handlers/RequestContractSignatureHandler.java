@@ -30,7 +30,7 @@ import java.util.UUID;
  * Handles {@link RequestContractSignatureCommand} by executing the
  * {@code request-signature-saga}, which creates a signature record, submits it
  * to the e-signature provider, and records the SUBMITTED_FOR_APPROVAL status.
- * Returns the resulting {@code contractStatusHistoryId}.
+ * Returns the durable {@code signatureRequestId} needed by confirmation.
  */
 @CommandHandlerComponent
 public class RequestContractSignatureHandler extends CommandHandler<RequestContractSignatureCommand, UUID> {
@@ -57,7 +57,7 @@ public class RequestContractSignatureHandler extends CommandHandler<RequestContr
                                 result.firstErrorStepId().orElse("unknown")));
                     }
                     return Mono.justOrEmpty(
-                            result.resultOf("update-contract-status", UUID.class).orElse(null));
+                            result.resultOf("create-signature-request", UUID.class).orElse(null));
                 });
     }
 }

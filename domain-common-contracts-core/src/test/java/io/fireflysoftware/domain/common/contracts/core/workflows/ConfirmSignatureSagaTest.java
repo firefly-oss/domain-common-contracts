@@ -36,6 +36,9 @@ import io.fireflysoftware.domain.common.contracts.infra.ports.model.SignatureVer
 import org.fireflyframework.orchestration.saga.engine.SagaEngine;
 import org.fireflyframework.orchestration.saga.engine.StepInputs;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -112,7 +115,8 @@ class ConfirmSignatureSagaTest {
                 .thenReturn(Mono.just(SignatureVerificationResult.builder()
                         .signatureRequestId(signatureRequestId)
                         .status("VERIFIED")
-                        .provider("STUB")
+                        .provider("STUB").tenantId("synthetic-tenant").synthetic(true)
+                        .contractId(contractId).documentId(UUID.randomUUID()).signerPartyId(UUID.randomUUID())
                         .build()));
 
         when(contractStatusHistoryApi.createContractStatusHistory(eq(contractId), any(ContractStatusHistoryDTO.class), any()))
@@ -138,7 +142,96 @@ class ConfirmSignatureSagaTest {
                 .verifyComplete();
     }
 
+    @Test
+    void verifiedSignatureFromAnotherContractCannotApproveTheRequestedContract() {
+        String requestId=UUID.randomUUID().toString();
+        when(eSignaturePort.verifySignature(requestId)).thenReturn(Mono.just(SignatureVerificationResult.builder()
+                .signatureRequestId(requestId).status("VERIFIED").provider("sandbox").contractId(UUID.randomUUID())
+                .documentId(UUID.randomUUID()).signerPartyId(UUID.randomUUID()).build()));
+        var cmd=new ConfirmContractSignatureCommand(UUID.randomUUID(),requestId);
+        assertVerificationRejected(cmd);
+    }
+
     // ─── Compensation: verify-signature fails ─────────────────────────────────
+
+    @ParameterizedTest
+    @ValueSource(strings = {"REQUESTED", "PENDING", "DECLINED", "EXPIRED", "CANCELED", "UNKNOWN", "verified", ""})
+    void execute_whenProviderHasNotVerifiedSignature_shouldNotApproveContract(String status) {
+        String requestId = UUID.randomUUID().toString();
+        ConfirmContractSignatureCommand cmd = new ConfirmContractSignatureCommand(UUID.randomUUID(), requestId);
+        when(eSignaturePort.verifySignature(requestId)).thenReturn(Mono.just(SignatureVerificationResult.builder()
+                .signatureRequestId(requestId).status(status).provider("TEST").build()));
+
+        assertVerificationRejected(cmd);
+    }
+
+    @Test
+    void execute_whenProviderReturnsAnotherRequest_shouldNotApproveContract() {
+        String requestId = UUID.randomUUID().toString();
+        ConfirmContractSignatureCommand cmd = new ConfirmContractSignatureCommand(UUID.randomUUID(), requestId);
+        when(eSignaturePort.verifySignature(requestId)).thenReturn(Mono.just(SignatureVerificationResult.builder()
+                .signatureRequestId(UUID.randomUUID().toString()).status("VERIFIED").provider("TEST").build()));
+
+        assertVerificationRejected(cmd);
+    }
+
+    @Test
+    void execute_whenProviderReturnsNoVerification_shouldNotApproveContract() {
+        String requestId = UUID.randomUUID().toString();
+        ConfirmContractSignatureCommand cmd = new ConfirmContractSignatureCommand(UUID.randomUUID(), requestId);
+        when(eSignaturePort.verifySignature(requestId)).thenReturn(Mono.empty());
+
+        assertVerificationRejected(cmd);
+    }
+
+    private void assertVerificationRejected(ConfirmContractSignatureCommand cmd) {
+        StepInputs inputs = StepInputs.builder()
+                .forStepId("verify-signature", cmd)
+                .forStepId("update-contract-status", cmd)
+                .forStepId("send-notification", cmd)
+                .build();
+        StepVerifier.create(sagaEngine.execute("confirm-signature-saga", inputs))
+                .assertNext(result -> {
+                    assertThat(result.isSuccess()).isFalse();
+                    assertThat(result.firstErrorStepId()).contains("verify-signature");
+                }).verifyComplete();
+        verify(contractStatusHistoryApi, never()).createContractStatusHistory(any(), any(), any());
+        verify(contractEventsApi, never()).createContractEvent(any(), any(), any());
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" ", "\t"})
+    void execute_whenRequestIdentityIsAbsent_shouldNotAskProviderOrApprove(String requestId) {
+        ConfirmContractSignatureCommand cmd = new ConfirmContractSignatureCommand(UUID.randomUUID(), requestId);
+        when(eSignaturePort.verifySignature(requestId)).thenReturn(Mono.just(SignatureVerificationResult.builder()
+                .signatureRequestId(requestId).status("VERIFIED").provider("TEST").build()));
+
+        assertVerificationRejected(cmd);
+        verify(eSignaturePort, never()).verifySignature(any());
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" ", "\t"})
+    void execute_whenProviderIdentityIsAbsent_shouldNotApprove(String provider) {
+        String requestId = UUID.randomUUID().toString();
+        ConfirmContractSignatureCommand cmd = new ConfirmContractSignatureCommand(UUID.randomUUID(), requestId);
+        when(eSignaturePort.verifySignature(requestId)).thenReturn(Mono.just(SignatureVerificationResult.builder()
+                .signatureRequestId(requestId).status("VERIFIED").provider(provider).build()));
+
+        assertVerificationRejected(cmd);
+    }
+
+    @Test
+    void execute_whenProviderStatusIsAbsent_shouldNotApprove() {
+        String requestId = UUID.randomUUID().toString();
+        ConfirmContractSignatureCommand cmd = new ConfirmContractSignatureCommand(UUID.randomUUID(), requestId);
+        when(eSignaturePort.verifySignature(requestId)).thenReturn(Mono.just(SignatureVerificationResult.builder()
+                .signatureRequestId(requestId).provider("TEST").build()));
+
+        assertVerificationRejected(cmd);
+    }
 
     @Test
     void execute_whenVerifySignatureFails_shouldNotCallSubsequentSteps() {
@@ -179,7 +272,8 @@ class ConfirmSignatureSagaTest {
                 .thenReturn(Mono.just(SignatureVerificationResult.builder()
                         .signatureRequestId(signatureRequestId)
                         .status("VERIFIED")
-                        .provider("STUB")
+                        .provider("STUB").tenantId("synthetic-tenant").synthetic(true)
+                        .contractId(contractId).documentId(UUID.randomUUID()).signerPartyId(UUID.randomUUID())
                         .build()));
         when(contractStatusHistoryApi.createContractStatusHistory(eq(contractId), any(ContractStatusHistoryDTO.class), any()))
                 .thenReturn(Mono.error(new RuntimeException("Contract service down")));
@@ -214,7 +308,8 @@ class ConfirmSignatureSagaTest {
                 .thenReturn(Mono.just(SignatureVerificationResult.builder()
                         .signatureRequestId(signatureRequestId)
                         .status("VERIFIED")
-                        .provider("STUB")
+                        .provider("STUB").tenantId("synthetic-tenant").synthetic(true)
+                        .contractId(contractId).documentId(UUID.randomUUID()).signerPartyId(UUID.randomUUID())
                         .build()));
 
         when(contractStatusHistoryApi.createContractStatusHistory(eq(contractId), any(ContractStatusHistoryDTO.class), any()))

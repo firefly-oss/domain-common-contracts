@@ -58,8 +58,8 @@ class CreateContractHandlerTest {
         UUID expectedId = UUID.randomUUID();
         CreateContractCommand cmd = new CreateContractCommand(partyId, "LOAN", "Test contract");
 
-        ContractDTO mappedDto = new ContractDTO(null, null, null);
-        ContractDTO responseDto = new ContractDTO(expectedId, null, null);
+        ContractDTO mappedDto = new ContractDTO(null, null, null, null, null);
+        ContractDTO responseDto = new ContractDTO(expectedId, null, null, null, null);
         when(mapper.toContractDto(cmd)).thenReturn(mappedDto);
         when(contractsApi.createContract(eq(mappedDto), any())).thenReturn(Mono.just(responseDto));
 

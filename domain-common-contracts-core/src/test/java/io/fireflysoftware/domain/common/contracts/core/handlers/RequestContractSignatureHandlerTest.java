@@ -54,22 +54,22 @@ class RequestContractSignatureHandlerTest {
     }
 
     @Test
-    void doHandle_shouldDelegateToSagaAndReturnStatusHistoryId() {
+    void doHandle_shouldDelegateToSagaAndReturnDurableSignatureRequestId() {
         UUID contractId = UUID.randomUUID();
         UUID documentId = UUID.randomUUID();
         UUID signerPartyId = UUID.randomUUID();
-        UUID statusHistoryId = UUID.randomUUID();
+        UUID signatureRequestId = UUID.randomUUID();
 
         RequestContractSignatureCommand cmd = new RequestContractSignatureCommand(contractId, documentId, signerPartyId);
 
         when(sagaResult.isFailed()).thenReturn(false);
-        when(sagaResult.resultOf(eq("update-contract-status"), eq(UUID.class)))
-                .thenReturn(Optional.of(statusHistoryId));
+        when(sagaResult.resultOf(eq("create-signature-request"), eq(UUID.class)))
+                .thenReturn(Optional.of(signatureRequestId));
         when(sagaEngine.execute(eq("request-signature-saga"), any(StepInputs.class)))
                 .thenReturn(Mono.just(sagaResult));
 
         StepVerifier.create(handler.doHandle(cmd))
-                .expectNext(statusHistoryId)
+                .expectNext(signatureRequestId)
                 .verifyComplete();
 
         verify(sagaEngine).execute(eq("request-signature-saga"), any(StepInputs.class));

@@ -20,6 +20,11 @@ package io.fireflysoftware.domain.common.contracts.web.controllers;
 import io.fireflysoftware.domain.common.contracts.core.commands.GenerateContractDocumentCommand;
 import io.fireflysoftware.domain.common.contracts.core.services.ContractService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.fireflyframework.web.idempotency.annotation.DisableIdempotency;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -41,11 +46,18 @@ public class ContractDocumentController {
 
     private final ContractService contractService;
 
-    @Operation(summary = "Generate Document", description = "Generate a document for a contract")
+    @Operation(summary = "Legacy document generation requires migration", deprecated = true,
+            description = "Always returns 409. Use the governed document route with a complete exact intent.")
+    @ApiResponse(responseCode="200", description="Historical schema retained for client compatibility; current calls return409.",
+            content=@Content(mediaType="*/*",schema=@Schema(type="object",implementation=Object.class)))
+    @ApiResponse(responseCode = "409", description = "GOVERNED_DOCUMENT_INTENT_REQUIRED")
+    @DisableIdempotency
     @PostMapping("/generate")
     public Mono<ResponseEntity<Object>> generateDocument(
             @PathVariable UUID contractId,
-            @Valid @RequestBody GenerateContractDocumentCommand cmd) {
+            @Valid @RequestBody GenerateContractDocumentCommand cmd,
+            @Parameter(description = "Compatibility header; this route does not cache responses or derive authority from it.")
+            @RequestHeader(name = "X-Idempotency-Key", required = false) String ignoredIdempotencyKey) {
         return contractService.generateContractDocument(contractId, cmd.templateId())
                 .map(id -> ResponseEntity.status(HttpStatus.ACCEPTED).body((Object) id));
     }

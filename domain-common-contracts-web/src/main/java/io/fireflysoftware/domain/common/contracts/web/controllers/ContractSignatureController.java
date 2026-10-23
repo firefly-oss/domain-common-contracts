@@ -42,13 +42,13 @@ public class ContractSignatureController {
 
     private final ContractService contractService;
 
-    @Operation(summary = "Request Signature", description = "Request a signature on a contract document")
+    @Operation(summary = "Request Signature", description = "Request a signature on a contract document. Returns the durable signature submission UUID used for confirmation.")
     @PostMapping("/request")
-    public Mono<ResponseEntity<Object>> requestSignature(
+    public Mono<ResponseEntity<UUID>> requestSignature(
             @PathVariable UUID contractId,
             @Valid @RequestBody RequestContractSignatureCommand cmd) {
         return contractService.requestContractSignature(contractId, cmd.documentId(), cmd.signerPartyId())
-                .map(id -> ResponseEntity.status(HttpStatus.ACCEPTED).body((Object) id));
+                .map(id -> ResponseEntity.status(HttpStatus.ACCEPTED).body(id));
     }
 
     @Operation(summary = "Confirm Signature", description = "Confirm a previously requested contract signature")

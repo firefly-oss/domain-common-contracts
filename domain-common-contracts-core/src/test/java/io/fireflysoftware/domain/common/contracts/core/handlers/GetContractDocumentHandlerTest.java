@@ -54,7 +54,7 @@ class GetContractDocumentHandlerTest {
         UUID documentId = UUID.randomUUID();
         GetContractDocumentQuery query = new GetContractDocumentQuery(contractId, documentId);
 
-        ContractDocumentDTO responseDto = new ContractDocumentDTO(documentId, null, null);
+        ContractDocumentDTO responseDto = new ContractDocumentDTO(documentId, null, null, null, null, null, null, null, null, null, null, null);
         when(contractDocumentsApi.getContractDocumentById(eq(contractId), eq(documentId), any()))
                 .thenReturn(Mono.just(responseDto));
 
