@@ -17,6 +17,13 @@
 package io.fireflysoftware.domain.common.contracts.web.controllers;
 
 import io.fireflysoftware.domain.common.contracts.core.documents.KitDocumentService;
+import org.fireflyframework.web.idempotency.annotation.DisableIdempotency;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,13 +44,29 @@ public class KitDocumentsController {
         this.documents = documents;
     }
 
+    @Operation(summary = "Legacy document issue requires migration", deprecated = true,
+            description = "Always returns 409. Use a governed document intent with an actual contract and action identity.")
+    @ApiResponse(responseCode="200", description="Historical schema retained for client compatibility; current calls return409.",
+            content=@Content(mediaType="*/*",schema=@Schema(implementation=RecordedId.class)))
+    @ApiResponse(responseCode = "409", description = "GOVERNED_DOCUMENT_INTENT_REQUIRED")
+    @DisableIdempotency
     @PostMapping
-    public Mono<RecordedId> issue(@RequestBody IssueBody body) {
+    public Mono<RecordedId> issue(@RequestBody IssueBody body,
+            @Parameter(description = "Compatibility header; this route does not cache responses or derive authority from it.")
+            @RequestHeader(name = "X-Idempotency-Key", required = false) String ignoredIdempotencyKey) {
         return documents.issue(body.templateCode(), body.partyId(), body.contractId()).map(RecordedId::new);
     }
 
+    @Operation(summary = "Legacy document read requires migration", deprecated = true,
+            description = "Always returns 409. Read content through the governed contract action.")
+    @ApiResponse(responseCode="200", description="Historical schema retained for client compatibility; current calls return409.",
+            content=@Content(mediaType="*/*",schema=@Schema(implementation=IssuedView.class)))
+    @ApiResponse(responseCode = "409", description = "GOVERNED_DOCUMENT_INTENT_REQUIRED")
+    @DisableIdempotency
     @GetMapping("/{id}")
-    public Mono<IssuedView> read(@PathVariable UUID id) {
+    public Mono<IssuedView> read(@PathVariable UUID id,
+            @Parameter(description = "Compatibility header; this route does not cache responses or derive authority from it.")
+            @RequestHeader(name = "X-Idempotency-Key", required = false) String ignoredIdempotencyKey) {
         return documents.read(id).map(document -> new IssuedView(
                 document.id(), document.templateCode(), document.name()));
     }

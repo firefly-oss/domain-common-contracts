@@ -53,7 +53,7 @@ class GetContractDetailHandlerTest {
         UUID contractId = UUID.randomUUID();
         GetContractDetailQuery query = new GetContractDetailQuery(contractId);
 
-        ContractDTO responseDto = new ContractDTO(contractId, null, null);
+        ContractDTO responseDto = new ContractDTO(contractId, null, null, null, null);
         when(contractsApi.getContractById(eq(contractId), any())).thenReturn(Mono.just(responseDto));
 
         StepVerifier.create(handler.doHandle(query))

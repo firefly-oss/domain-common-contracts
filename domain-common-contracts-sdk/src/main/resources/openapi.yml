@@ -6,6 +6,8 @@ servers:
 - url: http://localhost:18080
   description: Generated server url
 tags:
+- name: Governed Contract Documents
+  description: Exact CONTRACT_DOCUMENT_V1 issuance and current-authority recovery
 - name: Contract Parties
   description: Contract party management operations
 - name: Contracts
@@ -17,16 +19,86 @@ tags:
 - name: Contract Documents
   description: Contract document management operations
 paths:
+  /api/v1/tenants/{tenantId}/contracts/{contractId}/governed-documents/{actionId}/resume:
+    post:
+      tags:
+      - Governed Contract Documents
+      summary: Resume the exact retained action under current authority
+      operationId: resumeGovernedContractDocument
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: contractId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: actionId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ContractDocumentOperation"
+      x-disable-idempotency: true
+  /api/v1/tenants/{tenantId}/contracts/{contractId}/governed-documents:
+    post:
+      tags:
+      - Governed Contract Documents
+      summary: Issue and attach an exact governed contract action
+      operationId: issueGovernedContractDocument
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: contractId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GovernedContractDocumentIntent"
+        required: true
+      responses:
+        "200":
+          description: Current retained journal state; issued evidence is never deleted
+            as compensation
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ContractDocumentOperation"
+      x-disable-idempotency: true
   /api/v1/kit-documents:
     post:
       tags:
       - kit-documents-controller
+      summary: Legacy document issue requires migration
+      description: Always returns 409. Use a governed document intent with an actual
+        contract and action identity.
       operationId: issue
       parameters:
       - name: X-Idempotency-Key
         in: header
-        description: "Unique key for idempotent requests. If provided, ensures that\
-          \ identical requests with the same key will only be processed once."
+        description: Compatibility header; this route does not cache responses or
+          derive authority from it.
         required: false
         schema:
           type: string
@@ -38,11 +110,20 @@ paths:
         required: true
       responses:
         "200":
-          description: OK
+          description: Historical schema retained for client compatibility; current
+            calls return409.
           content:
             '*/*':
               schema:
                 $ref: "#/components/schemas/RecordedId"
+        "409":
+          description: GOVERNED_DOCUMENT_INTENT_REQUIRED
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/RecordedId"
+      deprecated: true
+      x-disable-idempotency: true
   /api/v1/contracts:
     post:
       tags:
@@ -53,8 +134,10 @@ paths:
       parameters:
       - name: X-Idempotency-Key
         in: header
-        description: "Unique key for idempotent requests. If provided, ensures that\
-          \ identical requests with the same key will only be processed once."
+        description: "Optional retry key for scoped POST, PUT, PATCH, and DELETE response\
+          \ reuse. Safe methods ignore it. Reuse requires configured trusted identity\
+          \ and namespace; changed input returns 409. Business effects require durable\
+          \ application idempotency."
         required: false
         schema:
           type: string
@@ -87,8 +170,10 @@ paths:
           format: uuid
       - name: X-Idempotency-Key
         in: header
-        description: "Unique key for idempotent requests. If provided, ensures that\
-          \ identical requests with the same key will only be processed once."
+        description: "Optional retry key for scoped POST, PUT, PATCH, and DELETE response\
+          \ reuse. Safe methods ignore it. Reuse requires configured trusted identity\
+          \ and namespace; changed input returns 409. Business effects require durable\
+          \ application idempotency."
         required: false
         schema:
           type: string
@@ -114,8 +199,10 @@ paths:
           format: uuid
       - name: X-Idempotency-Key
         in: header
-        description: "Unique key for idempotent requests. If provided, ensures that\
-          \ identical requests with the same key will only be processed once."
+        description: "Optional retry key for scoped POST, PUT, PATCH, and DELETE response\
+          \ reuse. Safe methods ignore it. Reuse requires configured trusted identity\
+          \ and namespace; changed input returns 409. Business effects require durable\
+          \ application idempotency."
         required: false
         schema:
           type: string
@@ -148,8 +235,10 @@ paths:
           format: uuid
       - name: X-Idempotency-Key
         in: header
-        description: "Unique key for idempotent requests. If provided, ensures that\
-          \ identical requests with the same key will only be processed once."
+        description: "Optional retry key for scoped POST, PUT, PATCH, and DELETE response\
+          \ reuse. Safe methods ignore it. Reuse requires configured trusted identity\
+          \ and namespace; changed input returns 409. Business effects require durable\
+          \ application idempotency."
         required: false
         schema:
           type: string
@@ -176,8 +265,10 @@ paths:
           format: uuid
       - name: X-Idempotency-Key
         in: header
-        description: "Unique key for idempotent requests. If provided, ensures that\
-          \ identical requests with the same key will only be processed once."
+        description: "Optional retry key for scoped POST, PUT, PATCH, and DELETE response\
+          \ reuse. Safe methods ignore it. Reuse requires configured trusted identity\
+          \ and namespace; changed input returns 409. Business effects require durable\
+          \ application idempotency."
         required: false
         schema:
           type: string
@@ -199,7 +290,8 @@ paths:
       tags:
       - Contract Signatures
       summary: Request Signature
-      description: Request a signature on a contract document
+      description: Request a signature on a contract document. Returns the durable
+        signature submission UUID used for confirmation.
       operationId: requestSignature
       parameters:
       - name: contractId
@@ -210,8 +302,10 @@ paths:
           format: uuid
       - name: X-Idempotency-Key
         in: header
-        description: "Unique key for idempotent requests. If provided, ensures that\
-          \ identical requests with the same key will only be processed once."
+        description: "Optional retry key for scoped POST, PUT, PATCH, and DELETE response\
+          \ reuse. Safe methods ignore it. Reuse requires configured trusted identity\
+          \ and namespace; changed input returns 409. Business effects require durable\
+          \ application idempotency."
         required: false
         schema:
           type: string
@@ -227,7 +321,8 @@ paths:
           content:
             '*/*':
               schema:
-                type: object
+                type: string
+                format: uuid
   /api/v1/contracts/{contractId}/signature/confirm:
     post:
       tags:
@@ -244,8 +339,10 @@ paths:
           format: uuid
       - name: X-Idempotency-Key
         in: header
-        description: "Unique key for idempotent requests. If provided, ensures that\
-          \ identical requests with the same key will only be processed once."
+        description: "Optional retry key for scoped POST, PUT, PATCH, and DELETE response\
+          \ reuse. Safe methods ignore it. Reuse requires configured trusted identity\
+          \ and namespace; changed input returns 409. Business effects require durable\
+          \ application idempotency."
         required: false
         schema:
           type: string
@@ -278,8 +375,10 @@ paths:
           format: uuid
       - name: X-Idempotency-Key
         in: header
-        description: "Unique key for idempotent requests. If provided, ensures that\
-          \ identical requests with the same key will only be processed once."
+        description: "Optional retry key for scoped POST, PUT, PATCH, and DELETE response\
+          \ reuse. Safe methods ignore it. Reuse requires configured trusted identity\
+          \ and namespace; changed input returns 409. Business effects require durable\
+          \ application idempotency."
         required: false
         schema:
           type: string
@@ -305,8 +404,10 @@ paths:
           format: uuid
       - name: X-Idempotency-Key
         in: header
-        description: "Unique key for idempotent requests. If provided, ensures that\
-          \ identical requests with the same key will only be processed once."
+        description: "Optional retry key for scoped POST, PUT, PATCH, and DELETE response\
+          \ reuse. Safe methods ignore it. Reuse requires configured trusted identity\
+          \ and namespace; changed input returns 409. Business effects require durable\
+          \ application idempotency."
         required: false
         schema:
           type: string
@@ -327,8 +428,9 @@ paths:
     post:
       tags:
       - Contract Documents
-      summary: Generate Document
-      description: Generate a document for a contract
+      summary: Legacy document generation requires migration
+      description: Always returns 409. Use the governed document route with a complete
+        exact intent.
       operationId: generateDocument
       parameters:
       - name: contractId
@@ -339,8 +441,8 @@ paths:
           format: uuid
       - name: X-Idempotency-Key
         in: header
-        description: "Unique key for idempotent requests. If provided, ensures that\
-          \ identical requests with the same key will only be processed once."
+        description: Compatibility header; this route does not cache responses or
+          derive authority from it.
         required: false
         schema:
           type: string
@@ -352,15 +454,94 @@ paths:
         required: true
       responses:
         "200":
-          description: OK
+          description: Historical schema retained for client compatibility; current
+            calls return409.
           content:
             '*/*':
               schema:
                 type: object
+        "409":
+          description: GOVERNED_DOCUMENT_INTENT_REQUIRED
+          content:
+            '*/*':
+              schema:
+                type: object
+      deprecated: true
+      x-disable-idempotency: true
+  /api/v1/tenants/{tenantId}/contracts/{contractId}/governed-documents/{actionId}:
+    get:
+      tags:
+      - Governed Contract Documents
+      summary: Read retained governed action metadata under current authority
+      operationId: getGovernedContractDocument
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: contractId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: actionId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ContractDocumentOperation"
+      x-disable-idempotency: true
+  /api/v1/tenants/{tenantId}/contracts/{contractId}/governed-documents/{actionId}/content:
+    get:
+      tags:
+      - Governed Contract Documents
+      summary: Read verified immutable UTF-8 content of an attached action
+      operationId: getGovernedContractDocumentContent
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: contractId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: actionId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: Exact verified bytes; current content permission is required
+          content:
+            text/html:
+              schema:
+                type: string
+                format: binary
+      x-disable-idempotency: true
   /api/v1/kit-documents/{id}:
     get:
       tags:
       - kit-documents-controller
+      summary: Legacy document read requires migration
+      description: Always returns 409. Read content through the governed contract
+        action.
       operationId: read
       parameters:
       - name: id
@@ -371,18 +552,27 @@ paths:
           format: uuid
       - name: X-Idempotency-Key
         in: header
-        description: "Unique key for idempotent requests. If provided, ensures that\
-          \ identical requests with the same key will only be processed once."
+        description: Compatibility header; this route does not cache responses or
+          derive authority from it.
         required: false
         schema:
           type: string
       responses:
         "200":
-          description: OK
+          description: Historical schema retained for client compatibility; current
+            calls return409.
           content:
             '*/*':
               schema:
                 $ref: "#/components/schemas/IssuedView"
+        "409":
+          description: GOVERNED_DOCUMENT_INTENT_REQUIRED
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/IssuedView"
+      deprecated: true
+      x-disable-idempotency: true
   /api/v1/contracts/{contractId}:
     get:
       tags:
@@ -399,8 +589,10 @@ paths:
           format: uuid
       - name: X-Idempotency-Key
         in: header
-        description: "Unique key for idempotent requests. If provided, ensures that\
-          \ identical requests with the same key will only be processed once."
+        description: "Optional retry key for scoped POST, PUT, PATCH, and DELETE response\
+          \ reuse. Safe methods ignore it. Reuse requires configured trusted identity\
+          \ and namespace; changed input returns 409. Business effects require durable\
+          \ application idempotency."
         required: false
         schema:
           type: string
@@ -426,8 +618,10 @@ paths:
           format: uuid
       - name: X-Idempotency-Key
         in: header
-        description: "Unique key for idempotent requests. If provided, ensures that\
-          \ identical requests with the same key will only be processed once."
+        description: "Optional retry key for scoped POST, PUT, PATCH, and DELETE response\
+          \ reuse. Safe methods ignore it. Reuse requires configured trusted identity\
+          \ and namespace; changed input returns 409. Business effects require durable\
+          \ application idempotency."
         required: false
         schema:
           type: string
@@ -454,8 +648,10 @@ paths:
           format: uuid
       - name: X-Idempotency-Key
         in: header
-        description: "Unique key for idempotent requests. If provided, ensures that\
-          \ identical requests with the same key will only be processed once."
+        description: "Optional retry key for scoped POST, PUT, PATCH, and DELETE response\
+          \ reuse. Safe methods ignore it. Reuse requires configured trusted identity\
+          \ and namespace; changed input returns 409. Business effects require durable\
+          \ application idempotency."
         required: false
         schema:
           type: string
@@ -482,8 +678,10 @@ paths:
           format: uuid
       - name: X-Idempotency-Key
         in: header
-        description: "Unique key for idempotent requests. If provided, ensures that\
-          \ identical requests with the same key will only be processed once."
+        description: "Optional retry key for scoped POST, PUT, PATCH, and DELETE response\
+          \ reuse. Safe methods ignore it. Reuse requires configured trusted identity\
+          \ and namespace; changed input returns 409. Business effects require durable\
+          \ application idempotency."
         required: false
         schema:
           type: string
@@ -516,8 +714,10 @@ paths:
           format: uuid
       - name: X-Idempotency-Key
         in: header
-        description: "Unique key for idempotent requests. If provided, ensures that\
-          \ identical requests with the same key will only be processed once."
+        description: "Optional retry key for scoped POST, PUT, PATCH, and DELETE response\
+          \ reuse. Safe methods ignore it. Reuse requires configured trusted identity\
+          \ and namespace; changed input returns 409. Business effects require durable\
+          \ application idempotency."
         required: false
         schema:
           type: string
@@ -544,8 +744,10 @@ paths:
           format: uuid
       - name: X-Idempotency-Key
         in: header
-        description: "Unique key for idempotent requests. If provided, ensures that\
-          \ identical requests with the same key will only be processed once."
+        description: "Optional retry key for scoped POST, PUT, PATCH, and DELETE response\
+          \ reuse. Safe methods ignore it. Reuse requires configured trusted identity\
+          \ and namespace; changed input returns 409. Business effects require durable\
+          \ application idempotency."
         required: false
         schema:
           type: string
@@ -572,8 +774,10 @@ paths:
           format: uuid
       - name: X-Idempotency-Key
         in: header
-        description: "Unique key for idempotent requests. If provided, ensures that\
-          \ identical requests with the same key will only be processed once."
+        description: "Optional retry key for scoped POST, PUT, PATCH, and DELETE response\
+          \ reuse. Safe methods ignore it. Reuse requires configured trusted identity\
+          \ and namespace; changed input returns 409. Business effects require durable\
+          \ application idempotency."
         required: false
         schema:
           type: string
@@ -606,8 +810,10 @@ paths:
           format: uuid
       - name: X-Idempotency-Key
         in: header
-        description: "Unique key for idempotent requests. If provided, ensures that\
-          \ identical requests with the same key will only be processed once."
+        description: "Optional retry key for scoped POST, PUT, PATCH, and DELETE response\
+          \ reuse. Safe methods ignore it. Reuse requires configured trusted identity\
+          \ and namespace; changed input returns 409. Business effects require durable\
+          \ application idempotency."
         required: false
         schema:
           type: string
@@ -616,6 +822,281 @@ paths:
           description: OK
 components:
   schemas:
+    ContractDocumentIssuedEvidence:
+      type: object
+      properties:
+        issuanceId:
+          type: string
+          nullable: true
+        documentId:
+          type: string
+          nullable: true
+        documentVersionId:
+          type: string
+          nullable: true
+        versionNumber:
+          type: integer
+          format: int32
+          nullable: true
+        mediaType:
+          type: string
+          nullable: true
+        byteLength:
+          type: integer
+          format: int64
+          nullable: true
+        contentDigest:
+          type: string
+          nullable: true
+        factsDigest:
+          type: string
+          nullable: true
+        receiptDigest:
+          type: string
+          nullable: true
+    ContractDocumentOperation:
+      type: object
+      properties:
+        operationId:
+          type: string
+          nullable: true
+        tenantId:
+          type: string
+          nullable: true
+        contractId:
+          type: string
+          nullable: true
+        actionId:
+          type: string
+          nullable: true
+        phase:
+          type: string
+          nullable: true
+          enum:
+          - RESERVED
+          - READY
+          - ISSUED_PENDING_ATTACHMENT
+          - ATTACHED
+        intent:
+          $ref: "#/components/schemas/ContractDocumentPrepareRequest"
+        sourceRevision:
+          type: integer
+          format: int64
+          nullable: true
+        coreSnapshotDigest:
+          type: string
+          nullable: true
+        sealedRequestDigest:
+          type: string
+          nullable: true
+        factsDigest:
+          type: string
+          nullable: true
+        issued:
+          $ref: "#/components/schemas/ContractDocumentIssuedEvidence"
+        attachmentId:
+          type: string
+          nullable: true
+        createdAtEpochMillis:
+          type: integer
+          format: int64
+          nullable: true
+        createdBy:
+          type: string
+          nullable: true
+        sealedAtEpochMillis:
+          type: integer
+          format: int64
+          nullable: true
+        sealedBy:
+          type: string
+          nullable: true
+        recordedAtEpochMillis:
+          type: integer
+          format: int64
+          nullable: true
+        recordedBy:
+          type: string
+          nullable: true
+        attachedAtEpochMillis:
+          type: integer
+          format: int64
+          nullable: true
+        attachedBy:
+          type: string
+          nullable: true
+    ContractDocumentPins:
+      type: object
+      properties:
+        bindingId:
+          type: string
+          nullable: true
+        bindingStateVersion:
+          type: integer
+          format: int64
+          nullable: true
+        revisionId:
+          type: string
+          nullable: true
+        sourceDigest:
+          type: string
+          nullable: true
+    ContractDocumentPrepareRequest:
+      type: object
+      properties:
+        actionId:
+          type: string
+          nullable: true
+        expectedContractRevision:
+          type: integer
+          format: int64
+          nullable: true
+        selection:
+          $ref: "#/components/schemas/ContractDocumentSelection"
+        expected:
+          $ref: "#/components/schemas/ContractDocumentPins"
+        contractDocumentTypeId:
+          type: string
+          nullable: true
+        productVersionReferences:
+          type: array
+          nullable: true
+          items:
+            $ref: "#/components/schemas/ContractProductVersionReference"
+        retention:
+          $ref: "#/components/schemas/ContractDocumentRetention"
+        displayName:
+          type: string
+          nullable: true
+        predecessorOperationId:
+          type: string
+          nullable: true
+    ContractDocumentRetention:
+      type: object
+      properties:
+        policyCode:
+          type: string
+          nullable: true
+        policyVersion:
+          type: string
+          nullable: true
+        retainUntilEpochMillis:
+          type: integer
+          format: int64
+          nullable: true
+    ContractDocumentSelection:
+      type: object
+      properties:
+        documentPurpose:
+          type: string
+          nullable: true
+        productScope:
+          type: string
+          nullable: true
+          enum:
+          - NONE
+          - EXACT
+        productId:
+          type: string
+          nullable: true
+        channelCode:
+          type: string
+          nullable: true
+        jurisdiction:
+          type: string
+          nullable: true
+        localeCode:
+          type: string
+          nullable: true
+        businessAtEpochMillis:
+          type: integer
+          format: int64
+          nullable: true
+    ContractProductVersionReference:
+      type: object
+      properties:
+        productId:
+          type: string
+          nullable: true
+        productVersionId:
+          type: string
+          nullable: true
+    GovernedContractDocumentIntent:
+      type: object
+      properties:
+        actionId:
+          type: string
+        expectedContractRevision:
+          type: integer
+          format: int64
+        selection:
+          $ref: "#/components/schemas/GovernedSelection"
+        expected:
+          $ref: "#/components/schemas/GovernedPins"
+        contractDocumentTypeId:
+          type: string
+        productVersionReferences:
+          type: array
+          items:
+            $ref: "#/components/schemas/GovernedProductVersion"
+        retention:
+          $ref: "#/components/schemas/GovernedRetention"
+        displayName:
+          type: string
+        predecessorOperationId:
+          type: string
+      description: Immutable intent for CONTRACT_DOCUMENT_V1. Exact pins and product
+        versions are required; no implicit selection fallback.
+    GovernedPins:
+      type: object
+      properties:
+        bindingId:
+          type: string
+        bindingStateVersion:
+          type: integer
+          format: int64
+        revisionId:
+          type: string
+        sourceDigest:
+          type: string
+    GovernedProductVersion:
+      type: object
+      properties:
+        productId:
+          type: string
+        productVersionId:
+          type: string
+    GovernedRetention:
+      type: object
+      properties:
+        policyCode:
+          type: string
+        policyVersion:
+          type: string
+        retainUntilEpochMillis:
+          type: integer
+          format: int64
+    GovernedSelection:
+      type: object
+      properties:
+        documentPurpose:
+          type: string
+        productScope:
+          type: string
+          enum:
+          - NONE
+          - EXACT
+        productId:
+          type: string
+        channelCode:
+          type: string
+        jurisdiction:
+          type: string
+        localeCode:
+          type: string
+        businessAtEpochMillis:
+          type: integer
+          format: int64
     IssueBody:
       type: object
       properties:
@@ -731,6 +1212,10 @@ components:
         reason:
           type: string
     RequestContractSignatureCommand:
+      required:
+      - contractId
+      - documentId
+      - signerPartyId
       type: object
       properties:
         contractId:
@@ -743,12 +1228,16 @@ components:
           type: string
           format: uuid
     ConfirmContractSignatureCommand:
+      required:
+      - contractId
+      - signatureRequestId
       type: object
       properties:
         contractId:
           type: string
           format: uuid
         signatureRequestId:
+          minLength: 1
           type: string
     AddContractPartyCommand:
       type: object

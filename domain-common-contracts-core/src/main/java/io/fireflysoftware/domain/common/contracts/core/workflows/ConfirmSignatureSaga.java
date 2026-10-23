@@ -78,10 +78,25 @@ public class ConfirmSignatureSaga {
     @SagaStep(id = "verify-signature")
     public Mono<SignatureVerificationResult> verifySignature(ConfirmContractSignatureCommand cmd,
                                                             ExecutionContext ctx) {
+        if (cmd.signatureRequestId() == null || cmd.signatureRequestId().isBlank()) {
+            return Mono.error(new IllegalArgumentException("A signature request ID is required"));
+        }
         log.debug("Verifying signature request: {} for contract: {}", cmd.signatureRequestId(), cmd.contractId());
         ctx.putVariable(CTX_CONTRACT_ID, cmd.contractId());
 
         return eSignaturePort.verifySignature(cmd.signatureRequestId())
+                .switchIfEmpty(Mono.error(new IllegalStateException("The signature provider returned no verification")))
+                .flatMap(result -> {
+                    if (!"VERIFIED".equals(result.getStatus())
+                            || !Objects.equals(cmd.signatureRequestId(), result.getSignatureRequestId())
+                            || result.getProvider() == null || result.getProvider().isBlank()
+                            || !Objects.equals(cmd.contractId(), result.getContractId())
+                            || result.getContractId() == null || result.getDocumentId() == null || result.getSignerPartyId() == null
+                            || result.getTenantId() == null || result.getTenantId().isBlank() || result.getSynthetic() == null) {
+                        return Mono.error(new IllegalStateException("The requested signature has not been verified"));
+                    }
+                    return Mono.just(result);
+                })
                 .doOnNext(result -> ctx.putVariable(CTX_VERIFICATION_STATUS, result.getStatus()));
     }
 

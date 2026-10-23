@@ -44,6 +44,9 @@ public class DocumentMgmtClientFactory {
     }
 
     @Bean
+    public SignatureSubmissionApi signatureSubmissionApi() { return new SignatureSubmissionApi(apiClient); }
+
+    @Bean
     public DocumentSignatureControllerApi documentSignatureControllerApi() {
         return new DocumentSignatureControllerApi(apiClient);
     }

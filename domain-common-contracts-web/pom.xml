@@ -32,6 +32,11 @@
             <artifactId>domain-common-contracts-core</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.fireflyframework</groupId>
+            <artifactId>fireflyframework-security-resource-server</artifactId>
+        </dependency>
+
         <!-- Common Libraries -->
         <dependency>
             <groupId>org.fireflyframework</groupId>

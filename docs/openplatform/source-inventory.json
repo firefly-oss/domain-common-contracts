@@ -1,0 +1,2420 @@
+{
+  "adapters": [
+    {
+      "implements": "See source",
+      "memory": false,
+      "methods": [
+        "contractsApi",
+        "contractPartiesApi",
+        "contractTermsApi",
+        "contractDocumentsApi",
+        "contractStatusHistoryApi",
+        "contractEventsApi",
+        "contractRiskAssessmentsApi",
+        "globalContractPartiesApi",
+        "contractTermTemplatesApi",
+        "contractTermValidationRulesApi",
+        "contractLinesApi"
+      ],
+      "name": "ContractMgmtClientFactory",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/ContractMgmtClientFactory.java",
+      "synthetic": false
+    },
+    {
+      "implements": "ESignaturePort",
+      "memory": false,
+      "methods": [
+        "requestSignature",
+        "verifySignature"
+      ],
+      "name": "DocumentManagementESignatureAdapter",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/DocumentManagementESignatureAdapter.java",
+      "synthetic": false
+    },
+    {
+      "implements": "See source",
+      "memory": false,
+      "methods": [
+        "documentControllerApi",
+        "signatureSubmissionApi",
+        "documentSignatureControllerApi",
+        "signatureRequestControllerApi",
+        "signatureVerificationControllerApi",
+        "signatureProviderControllerApi",
+        "documentVersionControllerApi",
+        "documentMetadataControllerApi",
+        "documentTagControllerApi",
+        "documentPermissionControllerApi",
+        "documentSearchControllerApi",
+        "folderControllerApi",
+        "tagControllerApi"
+      ],
+      "name": "DocumentMgmtClientFactory",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/DocumentMgmtClientFactory.java",
+      "synthetic": false
+    },
+    {
+      "implements": "See source",
+      "memory": false,
+      "methods": [
+        "productApi"
+      ],
+      "name": "ProductMgmtClientFactory",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/ProductMgmtClientFactory.java",
+      "synthetic": false
+    },
+    {
+      "implements": "ContractDocumentSourcePort",
+      "memory": false,
+      "methods": [
+        "party",
+        "product",
+        "role",
+        "documentType"
+      ],
+      "name": "ContractDocumentSourceSdkAdapter",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/ContractDocumentSourceSdkAdapter.java",
+      "synthetic": false
+    },
+    {
+      "implements": "GovernedDocumentPeerPort",
+      "memory": false,
+      "methods": [
+        "prepare",
+        "get",
+        "facts",
+        "seal",
+        "record",
+        "attach",
+        "issue",
+        "content"
+      ],
+      "name": "GovernedDocumentSdkAdapter",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentSdkAdapter.java",
+      "synthetic": false
+    }
+  ],
+  "ci_jdks": [
+    "25",
+    "25"
+  ],
+  "conditions": [],
+  "config_files": [
+    "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/ContractMgmtProperties.java",
+    "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/DocumentMgmtProperties.java",
+    "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/ProductMgmtProperties.java",
+    "domain-common-contracts-sdk/src/main/resources/openapi.yml",
+    "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/DomainCommonContractsApplication.java",
+    "domain-common-contracts-web/src/main/resources/application.yaml"
+  ],
+  "docs": [
+    {
+      "path": "docs/governed-contract-documents.md",
+      "title": "Governed contract documents"
+    }
+  ],
+  "editorial_sha256": "7762763ad9a357ab14560e4aa730a2270b6f77118108236cd00f63f90617b871",
+  "errors": [
+    {
+      "evidence": "new ResponseStatusException(HttpStatus.CONFLICT, \"GOVERNED_DOCUMENT_INTENT_REQUIRED\");",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/documents/LegacyDocumentMigration.java"
+    },
+    {
+      "evidence": "new ResponseStatusException(",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/CapturedContractEnrichmentCollector.java"
+    },
+    {
+      "evidence": "HttpStatus.UNPROCESSABLE_ENTITY",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/CapturedContractEnrichmentCollector.java"
+    },
+    {
+      "evidence": "new ResponseStatusException(HttpStatus.BAD_GATEWAY, \"GOVERNED_DOCUMENT_PEER_INVALID\");",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/CapturedContractEnrichmentCollector.java"
+    },
+    {
+      "evidence": "new ResponseStatusException(HttpStatusCode.valueOf(code), reason);",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedContractDocumentCoordinator.java"
+    },
+    {
+      "evidence": "new ResponseStatusException(HttpStatus.FORBIDDEN, \"GOVERNED_DOCUMENT_ACCESS_DENIED\");",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedDocumentAccessGuard.java"
+    },
+    {
+      "evidence": "new ResponseStatusException(HttpStatus.BAD_REQUEST, \"GOVERNED_DOCUMENT_INTENT_INVALID\");",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/SealedContractDocumentRequest.java"
+    },
+    {
+      "evidence": "new ResponseStatusException(HttpStatus.BAD_GATEWAY, \"GOVERNED_DOCUMENT_PEER_INVALID\");",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/SealedContractDocumentRequest.java"
+    },
+    {
+      "evidence": "new RuntimeException(",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/handlers/ConfirmContractSignatureHandler.java"
+    },
+    {
+      "evidence": "new IllegalStateException(",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/handlers/RemoveContractHandler.java"
+    },
+    {
+      "evidence": "new RuntimeException(",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/handlers/RequestContractSignatureHandler.java"
+    },
+    {
+      "evidence": "new IllegalStateException(",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/services/impl/ContractServiceImpl.java"
+    },
+    {
+      "evidence": "new IllegalStateException(\"Saga did not return a contract id\")));",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/services/impl/ContractServiceImpl.java"
+    },
+    {
+      "evidence": "new IllegalStateException(\"Contract was not found\"));",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/workflows/ChangeAgreementStatusSaga.java"
+    },
+    {
+      "evidence": "new IllegalStateException(",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/workflows/ChangeAgreementStatusSaga.java"
+    },
+    {
+      "evidence": "new IllegalArgumentException(\"A signature request ID is required\"));",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/workflows/ConfirmSignatureSaga.java"
+    },
+    {
+      "evidence": "new IllegalStateException(\"The signature provider returned no verification\")))",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/workflows/ConfirmSignatureSaga.java"
+    },
+    {
+      "evidence": "new IllegalStateException(\"The requested signature has not been verified\"));",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/workflows/ConfirmSignatureSaga.java"
+    },
+    {
+      "evidence": "new IllegalStateException(\"Core returned no signature submission\")))",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/workflows/RequestSignatureSaga.java"
+    },
+    {
+      "evidence": "new IllegalStateException(\"Signature submission is not accepted or has an unknown outcome\"));",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/workflows/RequestSignatureSaga.java"
+    },
+    {
+      "evidence": "new IllegalStateException(\"Durable signature request identity is missing\")) : Mono.just(id);",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/workflows/RequestSignatureSaga.java"
+    },
+    {
+      "evidence": "new IllegalStateException(\"Core returned no signature submission\")))",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/DocumentManagementESignatureAdapter.java"
+    },
+    {
+      "evidence": "new IllegalStateException(\"Synthetic signatures are not permitted for this actor context\"));",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/DocumentManagementESignatureAdapter.java"
+    },
+    {
+      "evidence": "new IllegalStateException(\"Core signature association does not match\"));",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/DocumentManagementESignatureAdapter.java"
+    },
+    {
+      "evidence": "new IllegalStateException(\"Core returned no signature verification\")))",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/DocumentManagementESignatureAdapter.java"
+    },
+    {
+      "evidence": "new IllegalStateException(\"Synthetic signatures are not permitted for this actor context\"));",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/DocumentManagementESignatureAdapter.java"
+    },
+    {
+      "evidence": "new IllegalStateException(\"Core signature ownership does not match\"));",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/DocumentManagementESignatureAdapter.java"
+    },
+    {
+      "evidence": "new IllegalStateException(\"A validated signature actor context adapter is required\"));",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/SignatureRequestContextConfiguration.java"
+    },
+    {
+      "evidence": "new IllegalStateException(\"Explicit synthetic tenant and signature provider are required\"));",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/SignatureRequestContextConfiguration.java"
+    },
+    {
+      "evidence": "new ResponseStatusException(",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/ContractDocumentSourceSdkAdapter.java"
+    },
+    {
+      "evidence": "HttpStatus.SERVICE_UNAVAILABLE",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/ContractDocumentSourceSdkAdapter.java"
+    },
+    {
+      "evidence": "new ResponseStatusException(",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/ContractDocumentSourceSdkAdapter.java"
+    },
+    {
+      "evidence": "HttpStatus.BAD_GATEWAY",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/ContractDocumentSourceSdkAdapter.java"
+    },
+    {
+      "evidence": "HttpStatus.SERVICE_UNAVAILABLE",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentRelay.java"
+    },
+    {
+      "evidence": "new ResponseStatusException(",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentRelay.java"
+    },
+    {
+      "evidence": "HttpStatus.SERVICE_UNAVAILABLE",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentRelay.java"
+    },
+    {
+      "evidence": "new ResponseStatusException(HttpStatus.FORBIDDEN, \"GOVERNED_DOCUMENT_DELEGATION_DENIED\");",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentRelay.java"
+    },
+    {
+      "evidence": "new IllegalArgumentException();",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentSdkAdapter.java"
+    },
+    {
+      "evidence": "new ResponseStatusException(HttpStatusCode.valueOf(status), reason);",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentSdkAdapter.java"
+    },
+    {
+      "evidence": "new ResponseStatusException(",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedPeerEndpoint.java"
+    },
+    {
+      "evidence": "HttpStatus.SERVICE_UNAVAILABLE",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedPeerEndpoint.java"
+    },
+    {
+      "evidence": "HttpStatus.CREATED",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractController.java"
+    },
+    {
+      "evidence": "HttpStatus.ACCEPTED",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractDocumentController.java"
+    },
+    {
+      "evidence": "HttpStatus.CREATED",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractPartyController.java"
+    },
+    {
+      "evidence": "HttpStatus.ACCEPTED",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractSignatureController.java"
+    },
+    {
+      "evidence": "HttpStatus.CREATED",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractTermsController.java"
+    },
+    {
+      "evidence": "new ResponseStatusException(HttpStatus.BAD_REQUEST, \"GOVERNED_DOCUMENT_INTENT_INVALID\");",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedContractDocumentInputs.java"
+    },
+    {
+      "evidence": "new OAuth2AuthenticationException(",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentAuthentication.java"
+    },
+    {
+      "evidence": "new OAuth2Error(\"invalid_token\"), \"Invalid governed document authentication\");",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentAuthentication.java"
+    },
+    {
+      "evidence": "new JwtException(\"Governed document trust is not configured\"));",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentSecurityConfiguration.java"
+    },
+    {
+      "evidence": "HttpStatus.FORBIDDEN",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentSecurityConfiguration.java"
+    }
+  ],
+  "files": {
+    ".github/workflows/maven-central.yml": "85634fa359375e3402a26470e04db322dac267ffd9f56d266962f7f601277b37",
+    ".github/workflows/release.yml": "c95ab5639487399dfd1ef83c550833e671b4d57403175c2a49ef98626bbf1a61",
+    "LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "docs/governed-contract-documents.md": "be0f96ebece1c3d340595220e6c5e04dc6bfcb28d36997d0a8ab311e6d9946bd",
+    "domain-common-contracts-core/pom.xml": "6a44ce4b176809b5e9745d9a0519eea8c2f33365e0c1a08312d5f4c60885142b",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/commands/AddContractLineCommand.java": "7fff2b4a941e5f202251a4acf54a0811a647da98f7c2024d0f16c0d1668ba9e8",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/commands/AddContractPartyCommand.java": "a0d5f8bef01341b37e5eb096637adc210a07f733965070895401ad1895f0b3e4",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/commands/AddContractTermsCommand.java": "910b8a5692623c852683f8186b320bdcda61e78e8ca7a985327d23f206173d5d",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/commands/ChangeContractStatusCommand.java": "1372faac1603e987b3e06bfc4601404697beb076cd197170153aadf93c362ab3",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/commands/ConfirmContractSignatureCommand.java": "97db8f420b6ec541936485c05d5dd80964b7b635810de1fe5339455bdb3dd640",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/commands/CreateContractCommand.java": "08fe680016a89939fdbd38b0dff0f65de768f572c6caf1f9f76725d88bd909bf",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/commands/GenerateContractDocumentCommand.java": "bcfc8614f961fab9e10feb098ee6eafcf2f1c2efc3ece20e4dd69fce25be3557",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/commands/RemoveContractCommand.java": "24c1d3e11e4ab030874a3a7492151859e1496fff8fd2e22629e42f272e0f9712",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/commands/RemoveContractLineCommand.java": "6067950237d389b8f48dac42dd1185f28d392c28e736782ed6e6041c5505ec33",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/commands/RemoveContractPartyCommand.java": "ce244c9395790f8ae7937796427a58b6ea29ebdc7d94ec679737e0c27e996bc6",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/commands/RemoveContractStatusHistoryCommand.java": "5a9fd6d565f95c791bfdfa1525bf3b42ecb8b7808b9e46dd63aacf10e9fde42a",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/commands/RequestContractSignatureCommand.java": "e45c1284ca06b37b215d93d5086351b7e858af5e2032cdc2f8d8c002c21720fc",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/commands/UpdateContractCommand.java": "e447ca6c126b597cc3cb7158d8f8f6a0fc91b2980a5c4416f7e86411f7e72dd7",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/commands/UpdateContractLineCommand.java": "6a171c809c21882caca7f4ff0128c819f5ffc367863f4662a1317ed819584331",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/documents/KitDocumentService.java": "0f5cb9dd822aab19ed697994c615781939b04b4bab108bc55df02e0fcfd40431",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/documents/LegacyDocumentMigration.java": "55afab080d52d7eaba97dada02a7562ed800c201d2b225ae7bd45df6a67ab11d",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/CapturedContractEnrichmentCollector.java": "9106908e50583c6b97a925b0037eeab9abe1e97e5669a6df5d0fb56003da805e",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/ContractDocumentEnrichmentCollector.java": "a17bbbe4da373b51623e563f14c861ee4c24ca481c20ed6005af9a9122cd5044",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedContractDocumentCoordinator.java": "1de49caa02865cdf4c446e43359b433ca2a3e086e1847786e4837e63c7648d78",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedDocumentAccessGuard.java": "7b9f205a75150222679d9750e74fbe237dad3a93c3e41eb0240cb2f036f42c83",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/SealedContractDocumentRequest.java": "2d0ffb041a237f1c01375cccd88237c9bbc789909b08ee7f90e9437dfe698023",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/handlers/AddContractLineHandler.java": "6791ea1a4a24a795e5566c6e1e4a58dffc9ea7f4bc7f9136a655f42ab96bcd22",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/handlers/AddContractPartyHandler.java": "56161375d43d65686a26dbb7ac5f64cd270dbd5d6e700bda228c033d99d8f70d",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/handlers/AddContractTermsHandler.java": "7dc6c0f400c3207293dc0ce5472336c935558872a1c485203aaba47e169d4c4e",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/handlers/ConfirmContractSignatureHandler.java": "c56f4ab4e22d23e5166afeb65ddfea7e3c43fcffacc3becff11c5f216ba402cc",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/handlers/CreateContractHandler.java": "e64ca7025dbbea9e02ce3df2ab415f209d51e9d99439f3ed3ace4f60ca23a2f1",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/handlers/GenerateContractDocumentHandler.java": "9902c7bc131d5b3bb77f1b00f5724d7019b2eb54a1f77e711a8da198a9c9e29e",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetActiveContractsByPartyHandler.java": "e61c039c059f4a0fae433b4f6db53931c73a761404af16f0434e50af5a5c4e45",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractDetailHandler.java": "25d96758c7216adfe81b3c391a9b26537d1124327b8194e1cb477a5f197df073",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractDocumentHandler.java": "8c447f17f89ca2b6c9c23ad6120137e1d6e943940fab7046866ded4fb4db0cf1",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractDocumentsHandler.java": "81fd738a3939949cc441d94575cea963ddd0ca6de5867e8732b12498bb3cd3cd",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractPartiesHandler.java": "d7207f5f700a9f28d5afc6c9c66b1bd0989fe435b76ab36c44cd1b70be578f69",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractStatusHandler.java": "b9e4933bd235f715650aa2373e25668f4e67471e66a7af3aa82336695702ddf8",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractStatusHistoryHandler.java": "4b771d766d6fdf7dc9ef710e6476d2e511cc94fbccd9014456a40b255b85b8df",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractTermsHandler.java": "dc2e97067ba6c282c92899d5a52c60d2bb5494800e04e4701190f0b14ae82fef",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractsByPartyHandler.java": "47cce561f3bcb9936c5c47e7cba0acc83cc565737030500e8ddf38019e6473cc",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/handlers/RemoveContractHandler.java": "bd11bb0f922d702340bfc529bd6ced4ad07b3052e135718e6e0b425522f9d992",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/handlers/RemoveContractLineHandler.java": "295ad89df6a4145dca19becdf5e340d092417db31c7741a7c72507d004bb4b8a",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/handlers/RemoveContractPartyHandler.java": "e31f6f34eb18376f9be21b53fe98d4f1789077ec35240eba8f7ae67c03306a45",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/handlers/RemoveContractStatusHistoryHandler.java": "5245e11394f33bb0b118fe55a038792f74503d0411583a74bcfa0ef863a31301",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/handlers/RequestContractSignatureHandler.java": "627863f3563d63ce37f7340a799bb974c7d0c07035f00cebde1ecac2238fa2d3",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/handlers/UpdateContractHandler.java": "65344cdda6c8ae514945eb525b2ccd3c8f4c0e1bae8bb8ecd0a6932eb6a94739",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/handlers/UpdateContractLineHandler.java": "eb49d8139949fd9c1e2c311fde39601d6d955e0bceae1388feee95bd39494e10",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/lifecycle/AgreementLifecycle.java": "cd5992b3907ce01b0d9b1ce50fe3b4642b5b6c5ce7b42959e7f61979a1948a4e",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/mappers/ContractCommandMapper.java": "097dc79c11385068aec76aeedd9e3c7808b86b26905b780b0d825e50d47c5536",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/queries/GetActiveContractsByPartyQuery.java": "663f66c5e45c3dadc3c63f5b4f3bcb3626078138293cd4cc20384ee7aa880e64",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/queries/GetContractDetailQuery.java": "03920989b3af61ae0ebf776b0485e44e3f005bb3d936b5bddc60c7856548fd5d",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/queries/GetContractDocumentQuery.java": "ebe83d94a65eaff40e58562bbacf48d0dd7361c54e0ace3ff4b233b4639831cd",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/queries/GetContractDocumentsQuery.java": "e723597d6c8b6f7bc616f4aa88b51493f69c0dc27680b25104d1e477175aebc0",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/queries/GetContractPartiesQuery.java": "787d38c4ee63a70a8f6818e6d8c996745af613f0ffeb96f7414fec57623fc897",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/queries/GetContractStatusHistoryQuery.java": "0eac15c50195a1ccad945ea7d64319414a8d1ed8e5e8ba8df9788a24b7ccd398",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/queries/GetContractStatusQuery.java": "5cb14f5362e9bdbe7d79baa071896557ee285417ad351c7eec28e66773241fa0",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/queries/GetContractTermsQuery.java": "2e3371af977c7368691c1237e2f02236f26fdd8b2d39f70beaa941cd0a7ceb5a",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/queries/GetContractsByPartyQuery.java": "6c9d635364eed8bc74277d18a3c813b3de1adfedc4a37dabb120ace0b0e7ef9a",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/services/ContractService.java": "199a5f950a010589cfd57169788c7441addf6bf62b5d2dec01431fdcee83fba4",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/services/impl/ContractServiceImpl.java": "9f537801e34d226984491e2eb57a0c4d1ae140710dd1b69e8270d6d76680f265",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/workflows/ChangeAgreementStatusSaga.java": "196bbd5db335c8d1c1f1341a64c9ae365240325007594744853494e3ecbb8963",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/workflows/ConfirmSignatureSaga.java": "ef17040b741650dadb438e746699aa508de4874668da72a4391c98a4d8788fd3",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/workflows/CreateAgreementSaga.java": "646ac153768d58cad092f7adc5674f8e8040eb7430966da0336f578b2c1fb569",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/workflows/GenerateDocumentSaga.java": "8fe8276afae0fb04d6d0cae20a0963fe9277a3887ce10e39b8d4e43f58c5aff4",
+    "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/workflows/RequestSignatureSaga.java": "aedd674556c7b9f7f83520ef117a4cc5d35bc9204060043b31f45b01c8691615",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/TestContractsCoreApplication.java": "94b6fc7b19e5eb2c344fe79cd53769df99eecfad6dc5c95c8998aec12dafac76",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/KitDocumentServiceTest.java": "6413c1944e365180e3faa3557f0bbbb64854d33c002a29498324081972b2784f",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/LegacyDocumentMigrationTest.java": "33d437fe6e2c986b352e23f887b0b1dc18b48508d31c4c22bccbc1cc26070e51",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/CapturedContractEnrichmentCollectorTest.java": "c3063a35105f79d183169dd82e775f8f1d4d1208e8913f12f901afc5781c3cba",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedContractDocumentCoordinatorTest.java": "872079dcb47d2df332bce05619835273f4a028ed8ee3dd153c07bedb29bfd8a5",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedDocumentAccessGuardTest.java": "39a13725a7ad3afdd7c702bbbe2169efa0f2d93ad5f0dc2426b131bb95ad3ff4",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/SealedContractDocumentRequestTest.java": "f07261eb585911cfe435ec302bf5d9911c87f4e7db12d6b7020a8ccee07dbdff",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/AddContractPartyHandlerTest.java": "bbf22b3e7647925fa786383b56a21148dcf9f1a61ed6e29290983b11db40b71c",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/AddContractTermsHandlerTest.java": "046d0488e7af8b2457eb22328605a3e95a6baa64f05f14558bf396267f1a4760",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/ConfirmContractSignatureHandlerTest.java": "f39c1d293709fdcbcc1024c226eb77dd211b3b5535bbb71d20070f9af88e515b",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/CreateContractHandlerTest.java": "bf27e841ab74ea8a2d0dc5c8c9e3e8c5c198d413ece7f0fcdfb07bc190f35188",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/GenerateContractDocumentHandlerTest.java": "507cd4ff19200b0644d23ca2c12678bd75f0cd4feb850b324b855dcdadb8d24d",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetActiveContractsByPartyHandlerTest.java": "ed0bf0779a5c0fceb77e67e0b783d69d31daa30b3531923895ab5c5711232ddf",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractDetailHandlerTest.java": "c5801cc8a3e2b19563875c624b48af4388267dcd1f400ab0f0e8e4c0f76b6028",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractDocumentHandlerTest.java": "413ea70e72443ca06372b689a329c79a9f423707a2b1daa16ea8f3269433118e",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractDocumentsHandlerTest.java": "a18d0bf882fd908aebb76b9fe514335bf562aa54089c46e3bd2ce8fd24d6a617",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractPartiesHandlerTest.java": "5350fcb38e3506cf7c0742adba6a354aa47f74c5d60ebc365742e3ee884bba47",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractStatusHandlerTest.java": "aff710a7df96271b632c0c60797349d56c81e55c07da1819c2cf17e937553855",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractStatusHistoryHandlerTest.java": "3f9534abcbac01e0e00e0b6afb072b69107d6fcc1d9bea1d42db9effc81c1521",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractTermsHandlerTest.java": "9b913d89a4b5124a1d3c1031f03129aebe89710cc2a3c28d31b8385d684cf359",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractsByPartyHandlerTest.java": "38bf5fb761b73ac68277ecb65dc09dd046e54ec4962ad564007134f1ad8298ca",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/RemoveContractPartyHandlerTest.java": "4ec86006d50752c01e843950531fb48005d812d4f582333f1277775aeb374736",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/RequestContractSignatureHandlerTest.java": "7fcf18a563180b08327b75dc2d4601db4c748d6e0d163b89a85f9f4b338499bf",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/workflows/ConfirmSignatureSagaTest.java": "4e13512214459830832e0ac4a27e52b20f7ac9016ebbe447479eed4ff1a091eb",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/workflows/GenerateDocumentSagaTest.java": "10fdd14ec209079d8dbabb3adb2b22dcb504c7c4a861f1f381af1d4ccda1fc0c",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/workflows/RequestSignatureSagaTest.java": "7361cdf3feba2629270ad8f1ef63d36c63c4b3804dc477abd8d65756f39a3312",
+    "domain-common-contracts-infra/pom.xml": "ac242781a413e5e92e2a9d361e0ff38f0091670151a2c855626dad1dc686f210",
+    "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/ContractMgmtClientFactory.java": "565922c3fc65e07c42f504d74d30bed694334ca3fd7919bc07e9bd79e174538c",
+    "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/ContractMgmtProperties.java": "40e02924afd35b2a3832cf6b9c2e6186ac73759d6ce2404b8422a5629596d1dd",
+    "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/DocumentManagementESignatureAdapter.java": "4856846522f05abf7fe84185810ecbd25483d6a5f531a8f517b3de9aced0d40c",
+    "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/DocumentMgmtClientFactory.java": "8e0e265198a03cb6e4d8abe6c2858944bb91ac019a54563acccb053fcb107043",
+    "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/DocumentMgmtProperties.java": "b86e265cc4a76b33e0a9d02e85059b1d5f86d6ad80fa9663168675592011773b",
+    "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/ProductMgmtClientFactory.java": "f0bb5b64bd4ac3abd736589c8e765677961979b9e1677494084845a096fe244a",
+    "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/ProductMgmtProperties.java": "8c8f7d088e998a059b72a69e150d371ae8fd2e48d40d4775517b8ae5762beb27",
+    "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/SignatureRequestContextConfiguration.java": "0035f1f3807d6d1fcf634ef211839e8ec6b4e7ff632a2e5236cf3a1fc955a919",
+    "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/ContractDocumentSourcePort.java": "a8f376fb6dbbf13acd0a5d08cd3f6bf6b2c671fef4e468f6f339119fb7a84881",
+    "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/ContractDocumentSourceSdkAdapter.java": "d940992dcd735e729157e977f816d57e4ad6ff5f21470b30a818390ad2f5c5eb",
+    "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentCredentialPort.java": "ffd91053660f8ff5c9047c1a93e20dd91d7d655083c313e39e3222eea9f41f8f",
+    "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentDelegationConfiguration.java": "d62311d381baafe342732fb7b5c1d4496b11ec8c243aedf5d98bc25ab4e39cd3",
+    "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentPeerPort.java": "b4d56f0056dcd0498543515dbec27ccbac37b37100087035237a5e42511a29cb",
+    "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentRelay.java": "a7d1a764ad548d580c47d9ab7cdb78e7863f47900a8e3c6686d8109bcaae1db6",
+    "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentSdkAdapter.java": "abdd2754be57e573608912ac43b8e4399545387a66627564ded7e2587db70301",
+    "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedPeerCodec.java": "228103e7a3b0271f0b8119c3c2fe3158186fd30338b00df2dfee1fe2e6c14c83",
+    "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedPeerEndpoint.java": "dc96168ce74f26e634440cdc3a4b8c4a8d8c715e568ac7f5bc4a563ca5b5694b",
+    "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/ports/ESignaturePort.java": "fcc6c21360d379089a5b5945a50e30c90156b5d1d388170ee6dece6fe6d65c47",
+    "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/ports/SignatureRequestContextPort.java": "1ca8f877a8508794f13d9c64d12864f2af29a3abffe28b25e77079724117ac64",
+    "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/ports/model/SignatureRequest.java": "ba4a81b42ab6ef9cfd8eb70c2e5afe144dd7f3f7b3699ccca1ee8cfb111794e9",
+    "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/ports/model/SignatureRequestResult.java": "97cb8f8eb71c47814120bdd8f65ad4228d5611c1c94f93a815737a820b9d014d",
+    "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/ports/model/SignatureVerificationResult.java": "797b338dea9c5d9962183f38f00b205ce7d814aa30f9db8bf71ca8da79f6d93e",
+    "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/SandboxESignatureAdapterTest.java": "fffad7932ffefdff256cd5426474019ce16d5d185ee1ded6aca88025a36a0476",
+    "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/SignatureCoreSdkDatabaseTest.java": "c31cc04a06ad9ceacfb6852f86f2fa4fb4c24e23d64cff23fc1cb590e1d2ffec",
+    "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/SignatureRequestContextConfigurationTest.java": "86db44fd8e2e79617b3861b8979edeff70daab2c2e0da9e03b477a66debfa25c",
+    "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/ContractDocumentSourceSdkAdapterTest.java": "7ce4802b0b2ca9ff1ee69551278ac3246adc6c416e4b6947e93c2ce04380aa1f",
+    "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentDelegationConfigurationTest.java": "339889d83e4bce8a1d03969f8d6fe4cccddbf6bfabed3364bcc048ccb7b872ee",
+    "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentRelayTest.java": "19ed17e14d8ebd81bd08b2c5800130136e8145f5edaa583a143616e18aea45c3",
+    "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentSdkAdapterTest.java": "5d96cc65236ab09a508be96b723baaf3c3ada43b73219c59e0d0d2aab5d90821",
+    "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedPeerEndpointTest.java": "f1a1df40885c74608901bdf93527244b33ec0e6bdad6e91c2703cbd34ca34ed2",
+    "domain-common-contracts-interfaces/pom.xml": "6231e51c24f09508ccdf10d0c428dc556d2d25455e81db0c1c4888bf45749bd2",
+    "domain-common-contracts-interfaces/src/main/java/io/fireflysoftware/domain/common/contracts/interfaces/dtos/document/v1/GovernedContractDocumentIntent.java": "d44e9f012a3e97583310504e7661fe65d89cb07a296cc07d036f2dfbd06ba864",
+    "domain-common-contracts-sdk/pom.xml": "60027de08fdef0df8900f7eef269ddc0f3be628d4604b5e04f57bd3f0ea55c16",
+    "domain-common-contracts-sdk/src/main/resources/openapi.yml": "e52ca8104445ac3b51bb0f54a84286f5fc1565e13e02641c1d2ee378ed4aa0b2",
+    "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/ContractDocumentRuntimeBootstrap.java": "199ac596a3344d849de2dc8ca9696dc441959f45a6e0d556171578fa271df53a",
+    "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/ContractRuntimeSupport.java": "5f059fba27b2b22b09f978919584e2db05391044061945c9e6340d0fd5c2bc13",
+    "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/GovernedContractDocumentGeneratedContractTest.java": "e060bce9dae8df3d7385440eb01d2afdebecf379c69b47d54142527f115c877a",
+    "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/GovernedContractDocumentRuntimeIT.java": "59053f06953b7bfdbc747e2c585de3f196386d4e0549ae2b1fabba6f130560cb",
+    "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/GovernedDocumentRuntimeBootstrap.java": "6a51965f771c7557c1f0d506f10aae9eaec2471923dbb87e83dbe553bd48a698",
+    "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/OwnedPeerProxy.java": "1c50e8451990fe678fcbe3a6e447e2872d4208a9081540845d5a10cb1522cb9a",
+    "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/PrivateIssuer.java": "06b13d2f3cdd97e74e491a3b99b0a7cfa3508ce91b7398c3c72e0ecbe2247da3",
+    "domain-common-contracts-web/pom.xml": "930c29adbcde9b143e311e3a4017250cf063ab005fd82cde933dbf92d1e2f5e2",
+    "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/DomainCommonContractsApplication.java": "f72a6caad2d3592128d35bc0e919f02500418f703b5dba454c10f89a5ee05a5c",
+    "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractController.java": "bf6b91603decd0ab6d805f6db6f04658db4b6a83e9c6c0f6d9101ca76e3243f8",
+    "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractDocumentController.java": "daa0f754bb8d4f95e652d57cb025a26c03d5dc24a7a3b684c21a6c3f739cdbd4",
+    "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractPartyController.java": "aa617a46983256fa0e2f0dfa5090b8eeac0a61a84aa75615817482934c5e0427",
+    "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractSignatureController.java": "45e17a8fb5c62169caa45e8213ccd67fd8f4d8ceef057d268c20bda639e09204",
+    "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractTermsController.java": "f8beb8557b0dfca719f421d83f3f151a33e25d258c62f6d630a2f253521b5174",
+    "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/KitDocumentsController.java": "e8b34772f970eb7e36272dc06704a45c848c7fc33b3290dc0e0182329a74838c",
+    "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/document/v1/GovernedContractDocumentController.java": "79252712b8f64551b060b28d7d9889a7003fbfbab0c1a29b205674c2f9af0a86",
+    "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedContractDocumentConfiguration.java": "2fcd4f694823ad94d5ee44289419882f792202494577ec11badbb9886e5e9cfe",
+    "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedContractDocumentInputs.java": "4634c8b959cbfcd46602a21ea41c920645002fb95351da2acf9d23807079aaef",
+    "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentAuthentication.java": "464b61fa1520e0d038b1def2a4cfac839a6bcc4c30ec5e2e21bce735d6318363",
+    "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentSecurityConfiguration.java": "14b86103fa4ffff0e025c10292e225372cc2d7b4e813b4855f88d8e8c2cdc67b",
+    "domain-common-contracts-web/src/main/resources/application.yaml": "6dd16b7df82d02797cfe0509ecc4fdaa28f6fd66b72fd00599da55ef7341a425",
+    "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractControllerTest.java": "a1219103dc78439c743a97e4d4fd8d27c47ff9573ec6ae7e9de11f057ac052c0",
+    "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractDocumentControllerTest.java": "394f4b8b20917ac10388ac82c604bf4cf394a31e4f9938bb87611a2e8bdd9785",
+    "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractPartyControllerTest.java": "bae028c3c5d57053427522b66498ecfc51783f4132853fc0481cf7b8da2fc4bf",
+    "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractSignatureControllerTest.java": "8ac3aa8da1d5416f958f25d7e7d5018a9956895ba103e3b86ef2bfad93ae5795",
+    "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractTermsControllerTest.java": "52265207ae3be5d876fc4a4455b8532eb9cb6dd4e0497040f8a37d5e32175f50",
+    "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedContractDocumentControllerTest.java": "b6d09a0f05d45bd673f2e57dd5075595534ed176597ff12cd141adf0855fd2f9",
+    "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedContractDocumentInputsTest.java": "ee2a657e2eeac9f8310cb0fd18174603789083301fe5abc4c61ef2547ee06039",
+    "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentAuthenticationTest.java": "00d47850c3f02a42fb4ec7649b42bcd54f0a4fbf9f5ad7928b1f89125637b405",
+    "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentDefaultPolicyHttpTest.java": "f76b6f034c5ab90046c2f9836175b2d186be4d948456c53875c468fd2b2a8f92",
+    "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentHttpTestSupport.java": "0a3b0d5116b661b0d020ddfed1d781030321aace0c3eb591d4f731435fced584",
+    "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentMissingTrustHttpTest.java": "a54892143e989935396ccaf0fa4c254cd7ba4cd09a78d4351761d2c8aa46cb1a",
+    "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentSecurityHttpTest.java": "07afbd457aa6e95ef81c3c53e0849903bafc72762a43a0765d65adee60be81de",
+    "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentStrictPolicyDisabledHttpTest.java": "916973a4a49832b5287a71db61f15020037983439c2398b1f53d8d7f8c0aa672",
+    "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/openapi/OpenApiGenApplication.java": "da7d7239c86d1790e14289cdc119353f5239f94b39dd595e7efd56cf40454162",
+    "pom.xml": "c0bfe58fe90cdb0a026753bc8be124a1f3410099df85b650f21fb4b878bd7249"
+  },
+  "migrations": [],
+  "modules": [
+    "domain-common-contracts-core",
+    "domain-common-contracts-interfaces",
+    "domain-common-contracts-web",
+    "domain-common-contracts-sdk",
+    "domain-common-contracts-infra"
+  ],
+  "operations": [
+    {
+      "abstract": false,
+      "mapping": "\"/{contractId}\"",
+      "method": "getContractDetail",
+      "owner": "ContractController",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractController.java",
+      "route": "/api/v1/contracts/{contractId}",
+      "signature": "public Mono<ResponseEntity<Object>> getContractDetail(@PathVariable UUID contractId)",
+      "verb": "GET"
+    },
+    {
+      "abstract": false,
+      "mapping": "\"/by-party/{partyId}\"",
+      "method": "listByParty",
+      "owner": "ContractController",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractController.java",
+      "route": "/api/v1/contracts/by-party/{partyId}",
+      "signature": "public Mono<ResponseEntity<Object>> listByParty(@PathVariable UUID partyId)",
+      "verb": "GET"
+    },
+    {
+      "abstract": false,
+      "mapping": "\"/by-party/{partyId}/active\"",
+      "method": "listActiveByParty",
+      "owner": "ContractController",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractController.java",
+      "route": "/api/v1/contracts/by-party/{partyId}/active",
+      "signature": "public Mono<ResponseEntity<Object>> listActiveByParty(@PathVariable UUID partyId)",
+      "verb": "GET"
+    },
+    {
+      "abstract": false,
+      "mapping": "\"/{contractId}/status\"",
+      "method": "getStatus",
+      "owner": "ContractController",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractController.java",
+      "route": "/api/v1/contracts/{contractId}/status",
+      "signature": "public Mono<ResponseEntity<Object>> getStatus(@PathVariable UUID contractId)",
+      "verb": "GET"
+    },
+    {
+      "abstract": false,
+      "mapping": "\"/{contractId}/status-history\"",
+      "method": "getStatusHistory",
+      "owner": "ContractController",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractController.java",
+      "route": "/api/v1/contracts/{contractId}/status-history",
+      "signature": "public Mono<ResponseEntity<Object>> getStatusHistory(@PathVariable UUID contractId)",
+      "verb": "GET"
+    },
+    {
+      "abstract": false,
+      "mapping": "",
+      "method": "createContract",
+      "owner": "ContractController",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractController.java",
+      "route": "/api/v1/contracts",
+      "signature": "public Mono<ResponseEntity<Object>> createContract(@Valid @RequestBody CreateContractCommand cmd)",
+      "verb": "POST"
+    },
+    {
+      "abstract": false,
+      "mapping": "\"/{contractId}/status\"",
+      "method": "changeStatus",
+      "owner": "ContractController",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractController.java",
+      "route": "/api/v1/contracts/{contractId}/status",
+      "signature": "public Mono<ResponseEntity<Object>> changeStatus( @PathVariable UUID contractId, @RequestBody io.fireflysoftware.domain.common.contracts.core.commands.ChangeContractStatusCommand command)",
+      "verb": "POST"
+    },
+    {
+      "abstract": false,
+      "mapping": "\"/{contractId}\"",
+      "method": "deleteContract",
+      "owner": "ContractController",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractController.java",
+      "route": "/api/v1/contracts/{contractId}",
+      "signature": "public Mono<ResponseEntity<Object>> deleteContract(@PathVariable UUID contractId)",
+      "verb": "DELETE"
+    },
+    {
+      "abstract": false,
+      "mapping": "",
+      "method": "listDocuments",
+      "owner": "ContractDocumentController",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractDocumentController.java",
+      "route": "/api/v1/contracts/{contractId}/documents",
+      "signature": "public Mono<ResponseEntity<Object>> listDocuments(@PathVariable UUID contractId)",
+      "verb": "GET"
+    },
+    {
+      "abstract": false,
+      "mapping": "\"/{docId}\"",
+      "method": "getDocument",
+      "owner": "ContractDocumentController",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractDocumentController.java",
+      "route": "/api/v1/contracts/{contractId}/documents/{docId}",
+      "signature": "public Mono<ResponseEntity<Object>> getDocument( @PathVariable UUID contractId, @PathVariable UUID docId)",
+      "verb": "GET"
+    },
+    {
+      "abstract": false,
+      "mapping": "\"/generate\"",
+      "method": "generateDocument",
+      "owner": "ContractDocumentController",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractDocumentController.java",
+      "route": "/api/v1/contracts/{contractId}/documents/generate",
+      "signature": "public Mono<ResponseEntity<Object>> generateDocument( @PathVariable UUID contractId, @Valid @RequestBody GenerateContractDocumentCommand cmd, @Parameter(description = \"Compatibility header; this route does not cache responses or derive authority from it.\") @RequestHeader(name = \"X-Idempotency-Key\", required = false) String ignoredIdempotencyKey)",
+      "verb": "POST"
+    },
+    {
+      "abstract": false,
+      "mapping": "",
+      "method": "listParties",
+      "owner": "ContractPartyController",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractPartyController.java",
+      "route": "/api/v1/contracts/{contractId}/parties",
+      "signature": "public Mono<ResponseEntity<Object>> listParties(@PathVariable UUID contractId)",
+      "verb": "GET"
+    },
+    {
+      "abstract": false,
+      "mapping": "",
+      "method": "addParty",
+      "owner": "ContractPartyController",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractPartyController.java",
+      "route": "/api/v1/contracts/{contractId}/parties",
+      "signature": "public Mono<ResponseEntity<Object>> addParty( @PathVariable UUID contractId, @Valid @RequestBody AddContractPartyCommand cmd)",
+      "verb": "POST"
+    },
+    {
+      "abstract": false,
+      "mapping": "\"/{partyId}\"",
+      "method": "removeParty",
+      "owner": "ContractPartyController",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractPartyController.java",
+      "route": "/api/v1/contracts/{contractId}/parties/{partyId}",
+      "signature": "public Mono<ResponseEntity<Void>> removeParty( @PathVariable UUID contractId, @PathVariable UUID partyId)",
+      "verb": "DELETE"
+    },
+    {
+      "abstract": false,
+      "mapping": "\"/request\"",
+      "method": "requestSignature",
+      "owner": "ContractSignatureController",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractSignatureController.java",
+      "route": "/api/v1/contracts/{contractId}/signature/request",
+      "signature": "public Mono<ResponseEntity<UUID>> requestSignature( @PathVariable UUID contractId, @Valid @RequestBody RequestContractSignatureCommand cmd)",
+      "verb": "POST"
+    },
+    {
+      "abstract": false,
+      "mapping": "\"/confirm\"",
+      "method": "confirmSignature",
+      "owner": "ContractSignatureController",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractSignatureController.java",
+      "route": "/api/v1/contracts/{contractId}/signature/confirm",
+      "signature": "public Mono<ResponseEntity<Object>> confirmSignature( @PathVariable UUID contractId, @Valid @RequestBody ConfirmContractSignatureCommand cmd)",
+      "verb": "POST"
+    },
+    {
+      "abstract": false,
+      "mapping": "",
+      "method": "listTerms",
+      "owner": "ContractTermsController",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractTermsController.java",
+      "route": "/api/v1/contracts/{contractId}/terms",
+      "signature": "public Mono<ResponseEntity<Object>> listTerms(@PathVariable UUID contractId)",
+      "verb": "GET"
+    },
+    {
+      "abstract": false,
+      "mapping": "",
+      "method": "addTerms",
+      "owner": "ContractTermsController",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractTermsController.java",
+      "route": "/api/v1/contracts/{contractId}/terms",
+      "signature": "public Mono<ResponseEntity<Object>> addTerms( @PathVariable UUID contractId, @Valid @RequestBody AddContractTermsCommand cmd)",
+      "verb": "POST"
+    },
+    {
+      "abstract": false,
+      "mapping": "\"/{id}\"",
+      "method": "read",
+      "owner": "KitDocumentsController",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/KitDocumentsController.java",
+      "route": "/api/v1/kit-documents/{id}",
+      "signature": "public Mono<IssuedView> read(@PathVariable UUID id, @Parameter(description = \"Compatibility header; this route does not cache responses or derive authority from it.\") @RequestHeader(name = \"X-Idempotency-Key\", required = false) String ignoredIdempotencyKey)",
+      "verb": "GET"
+    },
+    {
+      "abstract": false,
+      "mapping": "\"/{actionId}\"",
+      "method": "getGovernedContractDocument",
+      "owner": "GovernedContractDocumentController",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/document/v1/GovernedContractDocumentController.java",
+      "route": "/api/v1/tenants/{tenantId}/contracts/{contractId}/governed-documents/{actionId}",
+      "signature": "public Mono<ResponseEntity<ContractDocumentOperation>> getGovernedContractDocument( @PathVariable UUID tenantId, @PathVariable UUID contractId, @PathVariable UUID actionId)",
+      "verb": "GET"
+    },
+    {
+      "abstract": false,
+      "mapping": "value = \"/{actionId}/content\", produces = \"text/html\"",
+      "method": "getGovernedContractDocumentContent",
+      "owner": "GovernedContractDocumentController",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/document/v1/GovernedContractDocumentController.java",
+      "route": "/api/v1/tenants/{tenantId}/contracts/{contractId}/governed-documents/{actionId}/content",
+      "signature": "public Mono<ResponseEntity<byte[]>> getGovernedContractDocumentContent( @PathVariable UUID tenantId, @PathVariable UUID contractId, @PathVariable UUID actionId)",
+      "verb": "GET"
+    },
+    {
+      "abstract": false,
+      "mapping": "consumes = MediaType.APPLICATION_JSON_VALUE",
+      "method": "issueGovernedContractDocument",
+      "owner": "GovernedContractDocumentController",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/document/v1/GovernedContractDocumentController.java",
+      "route": "/api/v1/tenants/{tenantId}/contracts/{contractId}/governed-documents",
+      "signature": "public Mono<ResponseEntity<ContractDocumentOperation>> issueGovernedContractDocument( @PathVariable UUID tenantId, @PathVariable UUID contractId, @io.swagger.v3.oas.annotations.parameters.RequestBody( required = true, content = @Content(schema = @Schema(implementation = GovernedContractDocumentIntent.class))) @RequestBody String body)",
+      "verb": "POST"
+    },
+    {
+      "abstract": false,
+      "mapping": "\"/{actionId}/resume\"",
+      "method": "resumeGovernedContractDocument",
+      "owner": "GovernedContractDocumentController",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/controllers/document/v1/GovernedContractDocumentController.java",
+      "route": "/api/v1/tenants/{tenantId}/contracts/{contractId}/governed-documents/{actionId}/resume",
+      "signature": "public Mono<ResponseEntity<ContractDocumentOperation>> resumeGovernedContractDocument( @PathVariable UUID tenantId, @PathVariable UUID contractId, @PathVariable UUID actionId)",
+      "verb": "POST"
+    }
+  ],
+  "poms": [
+    {
+      "artifact": "domain-common-contracts-core",
+      "dependencies": [
+        "io.fireflysoftware:domain-common-contracts-infra:",
+        "io.fireflysoftware:core-common-contract-mgmt-sdk:",
+        "io.fireflysoftware:core-common-document-mgmt-sdk:",
+        "org.fireflyframework:fireflyframework-security-spi:",
+        "org.fireflyframework:fireflyframework-utils:",
+        "org.fireflyframework:fireflyframework-starter-domain:",
+        "org.springframework.boot:spring-boot-starter-webflux:",
+        "org.mapstruct:mapstruct:",
+        "org.projectlombok:lombok:",
+        "org.springframework.boot:spring-boot-starter-test:",
+        "io.projectreactor:reactor-test:"
+      ],
+      "group": "io.fireflysoftware",
+      "java": "",
+      "parent": "io.fireflysoftware:domain-common-contracts:26.10.6",
+      "path": "domain-common-contracts-core/pom.xml",
+      "plugins": [
+        "maven-compiler-plugin"
+      ],
+      "version": "26.10.6"
+    },
+    {
+      "artifact": "domain-common-contracts-infra",
+      "dependencies": [
+        "org.fireflyframework:fireflyframework-security-spi:",
+        "org.springframework.security:spring-security-oauth2-resource-server:",
+        "org.springframework.security:spring-security-oauth2-jose:",
+        "org.fireflyframework:fireflyframework-utils:",
+        "org.fireflyframework:fireflyframework-validators:",
+        "io.fireflysoftware:core-common-contract-mgmt-sdk:",
+        "io.fireflysoftware:core-common-document-mgmt-sdk:",
+        "io.fireflysoftware:core-common-product-mgmt-sdk:",
+        "io.fireflysoftware:core-common-customer-mgmt-sdk:",
+        "io.fireflysoftware:core-common-reference-master-data-sdk:",
+        "org.springframework.boot:spring-boot-starter-webflux:",
+        "org.springframework.boot:spring-boot-starter-validation:",
+        "io.swagger.core.v3:swagger-annotations:",
+        "org.springframework.boot:spring-boot-starter:",
+        "org.projectlombok:lombok:",
+        "com.fasterxml.jackson.core:jackson-databind:",
+        "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:",
+        "org.springframework.boot:spring-boot-starter-test:",
+        "io.projectreactor:reactor-test:",
+        "org.testcontainers:testcontainers-postgresql:",
+        "org.testcontainers:testcontainers-junit-jupiter:",
+        "org.postgresql:postgresql:"
+      ],
+      "group": "io.fireflysoftware",
+      "java": "",
+      "parent": "io.fireflysoftware:domain-common-contracts:26.10.6",
+      "path": "domain-common-contracts-infra/pom.xml",
+      "plugins": [],
+      "version": "26.10.6"
+    },
+    {
+      "artifact": "domain-common-contracts-interfaces",
+      "dependencies": [
+        "io.fireflysoftware:domain-common-contracts-core:",
+        "org.fireflyframework:fireflyframework-utils:",
+        "org.fireflyframework:fireflyframework-validators:",
+        "org.springframework.boot:spring-boot-starter-webflux:",
+        "org.springframework.boot:spring-boot-starter-validation:",
+        "io.swagger.core.v3:swagger-annotations:",
+        "org.projectlombok:lombok:",
+        "com.fasterxml.jackson.core:jackson-databind:",
+        "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:"
+      ],
+      "group": "io.fireflysoftware",
+      "java": "",
+      "parent": "io.fireflysoftware:domain-common-contracts:26.10.6",
+      "path": "domain-common-contracts-interfaces/pom.xml",
+      "plugins": [],
+      "version": "26.10.6"
+    },
+    {
+      "artifact": "domain-common-contracts-sdk",
+      "dependencies": [
+        "io.fireflysoftware:domain-common-contracts-web:",
+        "io.swagger.core.v3:swagger-annotations:",
+        "com.fasterxml.jackson.core:jackson-databind:",
+        "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:",
+        "jakarta.annotation:jakarta.annotation-api:",
+        "org.projectlombok:lombok:",
+        "com.squareup.okhttp3:okhttp:",
+        "com.squareup.okhttp3:logging-interceptor:",
+        "org.openapitools:jackson-databind-nullable:0.2.8",
+        "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:",
+        "javax.annotation:javax.annotation-api:1.3.2",
+        "org.springframework:spring-webflux:",
+        "org.springframework.boot:spring-boot-starter-test:",
+        "org.testcontainers:testcontainers-postgresql:",
+        "org.testcontainers:testcontainers-junit-jupiter:",
+        "org.flywaydb:flyway-database-postgresql:",
+        "org.postgresql:postgresql:",
+        "io.fireflysoftware:core-common-config-mgmt-sdk:"
+      ],
+      "group": "io.fireflysoftware",
+      "java": "",
+      "parent": "io.fireflysoftware:domain-common-contracts:26.10.6",
+      "path": "domain-common-contracts-sdk/pom.xml",
+      "plugins": [
+        "maven-failsafe-plugin",
+        "openapi-generator-maven-plugin"
+      ],
+      "version": "26.10.6"
+    },
+    {
+      "artifact": "domain-common-contracts-web",
+      "dependencies": [
+        "io.fireflysoftware:domain-common-contracts-interfaces:",
+        "io.fireflysoftware:domain-common-contracts-core:",
+        "org.fireflyframework:fireflyframework-security-resource-server:",
+        "org.fireflyframework:fireflyframework-web:",
+        "org.springframework.boot:spring-boot-starter-webflux:",
+        "org.springframework.boot:spring-boot-starter-actuator:",
+        "org.springframework.boot:spring-boot-starter-validation:",
+        "org.springdoc:springdoc-openapi-starter-webflux-ui:",
+        "io.micrometer:micrometer-registry-prometheus:",
+        "org.projectlombok:lombok:",
+        "org.springframework.boot:spring-boot-starter-test:",
+        "io.projectreactor:reactor-test:"
+      ],
+      "group": "io.fireflysoftware",
+      "java": "",
+      "parent": "io.fireflysoftware:domain-common-contracts:26.10.6",
+      "path": "domain-common-contracts-web/pom.xml",
+      "plugins": [
+        "maven-compiler-plugin",
+        "maven-resources-plugin",
+        "spring-boot-maven-plugin"
+      ],
+      "version": "26.10.6"
+    },
+    {
+      "artifact": "domain-common-contracts",
+      "dependencies": [
+        "io.fireflysoftware:domain-common-contracts-core:${project.version}",
+        "io.fireflysoftware:domain-common-contracts-interfaces:${project.version}",
+        "io.fireflysoftware:domain-common-contracts-web:${project.version}",
+        "io.fireflysoftware:domain-common-contracts-sdk:${project.version}",
+        "io.fireflysoftware:domain-common-contracts-infra:${project.version}"
+      ],
+      "group": "io.fireflysoftware",
+      "java": "25",
+      "parent": "io.fireflysoftware:firefly-parent:26.10.6",
+      "path": "pom.xml",
+      "plugins": [],
+      "version": "26.10.6"
+    }
+  ],
+  "ports": [
+    {
+      "boundary": false,
+      "boundary_evidence": [],
+      "methods": [
+        "Mono<UUID> createContract(UUID partyId, String contractType, String description)",
+        "Mono<UUID> createAgreement(io.fireflysoftware.domain.common.contracts.core.commands.CreateContractCommand command)",
+        "Mono<UUID> changeStatus(io.fireflysoftware.domain.common.contracts.core.commands.ChangeContractStatusCommand command)",
+        "Mono<Void> deleteContract(UUID contractId)",
+        "Mono<Object> getContractDetail(UUID contractId)",
+        "Mono<UUID> addContractParty(UUID contractId, UUID partyId, String role)",
+        "Mono<Void> removeContractParty(UUID contractId, UUID partyId)",
+        "Mono<List<Object>> getContractParties(UUID contractId)",
+        "Mono<UUID> addContractTerms(UUID contractId, UUID termTemplateId, String termValue)",
+        "Mono<List<Object>> getContractTerms(UUID contractId)",
+        "Mono<List<Object>> getContractsByParty(UUID partyId)",
+        "Mono<List<Object>> getActiveContractsByParty(UUID partyId)",
+        "Mono<Object> getContractStatus(UUID contractId)",
+        "Mono<List<Object>> getContractStatusHistory(UUID contractId)",
+        "Mono<UUID> generateContractDocument(UUID contractId, UUID templateId)",
+        "Mono<List<Object>> getContractDocuments(UUID contractId)",
+        "Mono<Object> getContractDocument(UUID contractId, UUID documentId)",
+        "Mono<UUID> requestContractSignature(UUID contractId, UUID documentId, UUID signerPartyId)",
+        "Mono<Void> confirmContractSignature(UUID contractId, String signatureRequestId)"
+      ],
+      "name": "ContractService",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/services/ContractService.java"
+    },
+    {
+      "boundary": false,
+      "boundary_evidence": [],
+      "methods": [
+        "Mono<ContractDocumentPartyObservation> party(UUID tenant, UUID contract, UUID action, UUID party)",
+        "Mono<ContractDocumentProductObservation> product( UUID tenant, UUID contract, UUID action, UUID product, UUID version)",
+        "Mono<ContractDocumentRoleObservation> role(UUID tenant, UUID contract, UUID action, UUID role)",
+        "Mono<ContractDocumentTypeObservation> documentType( UUID tenant, UUID contract, UUID action, UUID type)"
+      ],
+      "name": "ContractDocumentSourcePort",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/ContractDocumentSourcePort.java"
+    },
+    {
+      "boundary": false,
+      "boundary_evidence": [],
+      "methods": [
+        "Mono<Credential> current(Peer peer, UUID tenant, UUID contract, UUID action)",
+        "public Credential(String bearer, Instant expiresAt)",
+        "String bearer()",
+        "Instant expiresAt()",
+        "String toString()"
+      ],
+      "name": "GovernedDocumentCredentialPort",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentCredentialPort.java"
+    },
+    {
+      "boundary": false,
+      "boundary_evidence": [],
+      "methods": [
+        "Mono<ContractDocumentOperation> prepare( UUID tenant, UUID contract, ContractDocumentPrepareRequest intent)",
+        "Mono<ContractDocumentOperation> get(UUID tenant, UUID contract, UUID action)",
+        "Mono<ContractDocumentFactPreparation> facts(UUID tenant, UUID contract, UUID action)",
+        "Mono<ContractDocumentOperation> seal( UUID tenant, UUID contract, UUID action, ContractDocumentEnrichment enrichment)",
+        "Mono<DocumentIssuanceReceipt> issue( UUID tenant, UUID contract, UUID action, DocumentIssueRequest retainedRequest)",
+        "Mono<ContractDocumentOperation> record(UUID tenant, UUID contract, UUID action, UUID issuance)",
+        "Mono<ContractDocumentOperation> attach(UUID tenant, UUID contract, UUID action)",
+        "Mono<DocumentIssuedContent> content(UUID tenant, UUID contract, UUID action, UUID issuance)"
+      ],
+      "name": "GovernedDocumentPeerPort",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentPeerPort.java"
+    },
+    {
+      "boundary": false,
+      "boundary_evidence": [],
+      "methods": [
+        "Mono<SignatureRequestResult> requestSignature(SignatureRequest request)",
+        "Mono<SignatureVerificationResult> verifySignature(String signatureRequestId)"
+      ],
+      "name": "ESignaturePort",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/ports/ESignaturePort.java"
+    },
+    {
+      "boundary": false,
+      "boundary_evidence": [],
+      "methods": [
+        "Mono<Context> current()",
+        "record Context(String tenantId, UUID signatureProviderId, boolean syntheticAllowed)",
+        "public Context(String tenantId, UUID signatureProviderId)"
+      ],
+      "name": "SignatureRequestContextPort",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/ports/SignatureRequestContextPort.java"
+    }
+  ],
+  "repository": "domain-common-contracts",
+  "routes": [],
+  "schema": 1,
+  "settings": [
+    {
+      "default": "false",
+      "key": "firefly.security.resource-server.strict-policy",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedDocumentAccessGuard.java"
+    },
+    {
+      "default": "",
+      "key": "firefly.contracts.documents.peers.customers.base-url",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/ContractDocumentSourceSdkAdapter.java"
+    },
+    {
+      "default": "",
+      "key": "firefly.contracts.documents.peers.products.base-url",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/ContractDocumentSourceSdkAdapter.java"
+    },
+    {
+      "default": "",
+      "key": "firefly.contracts.documents.peers.masters.base-url",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/ContractDocumentSourceSdkAdapter.java"
+    },
+    {
+      "default": "false",
+      "key": "firefly.contracts.documents.peers.customers.allow-loopback-http",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/ContractDocumentSourceSdkAdapter.java"
+    },
+    {
+      "default": "false",
+      "key": "firefly.contracts.documents.peers.products.allow-loopback-http",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/ContractDocumentSourceSdkAdapter.java"
+    },
+    {
+      "default": "false",
+      "key": "firefly.contracts.documents.peers.masters.allow-loopback-http",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/ContractDocumentSourceSdkAdapter.java"
+    },
+    {
+      "default": "",
+      "key": "firefly.contracts.documents.peers.contracts.base-url",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentSdkAdapter.java"
+    },
+    {
+      "default": "",
+      "key": "firefly.contracts.documents.peers.documents.base-url",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentSdkAdapter.java"
+    },
+    {
+      "default": "false",
+      "key": "firefly.contracts.documents.peers.contracts.allow-loopback-http",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentSdkAdapter.java"
+    },
+    {
+      "default": "false",
+      "key": "firefly.contracts.documents.peers.documents.allow-loopback-http",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentSdkAdapter.java"
+    },
+    {
+      "default": null,
+      "key": "spring.application.name",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/DomainCommonContractsApplication.java"
+    },
+    {
+      "default": null,
+      "key": "spring.application.version",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/DomainCommonContractsApplication.java"
+    },
+    {
+      "default": null,
+      "key": "spring.application.description",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/DomainCommonContractsApplication.java"
+    },
+    {
+      "default": null,
+      "key": "spring.application.team.name",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/DomainCommonContractsApplication.java"
+    },
+    {
+      "default": null,
+      "key": "spring.application.team.email",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/DomainCommonContractsApplication.java"
+    },
+    {
+      "default": "",
+      "key": "firefly.contracts.documents.security.issuer",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentSecurityConfiguration.java"
+    },
+    {
+      "default": "",
+      "key": "firefly.contracts.documents.security.audience",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentSecurityConfiguration.java"
+    },
+    {
+      "default": "",
+      "key": "firefly.contracts.documents.security.jwk-set-uri",
+      "path": "domain-common-contracts-web/src/main/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentSecurityConfiguration.java"
+    },
+    {
+      "default": "http://localhost:8082",
+      "key": "ENDPOINT_CORE_CONTRACT_MGMT",
+      "path": "domain-common-contracts-web/src/main/resources/application.yaml"
+    },
+    {
+      "default": "http://localhost:8084",
+      "key": "ENDPOINT_CORE_DOCUMENT_MGMT",
+      "path": "domain-common-contracts-web/src/main/resources/application.yaml"
+    },
+    {
+      "default": "http://localhost:8086",
+      "key": "ENDPOINT_CORE_PRODUCT_MGMT",
+      "path": "domain-common-contracts-web/src/main/resources/application.yaml"
+    },
+    {
+      "default": "localhost:9092",
+      "key": "FIREFLY_KAFKA_BOOTSTRAP_SERVERS",
+      "path": "domain-common-contracts-web/src/main/resources/application.yaml"
+    },
+    {
+      "default": "localhost",
+      "key": "SERVER_ADDRESS",
+      "path": "domain-common-contracts-web/src/main/resources/application.yaml"
+    },
+    {
+      "default": "8080",
+      "key": "SERVER_PORT",
+      "path": "domain-common-contracts-web/src/main/resources/application.yaml"
+    },
+    {
+      "default": null,
+      "key": "endpoints.core.common-platform-contract-mgmt",
+      "path": "domain-common-contracts-web/src/main/resources/application.yaml"
+    },
+    {
+      "default": null,
+      "key": "endpoints.core.common-platform-document-mgmt",
+      "path": "domain-common-contracts-web/src/main/resources/application.yaml"
+    },
+    {
+      "default": null,
+      "key": "endpoints.core.common-platform-product-mgmt",
+      "path": "domain-common-contracts-web/src/main/resources/application.yaml"
+    }
+  ],
+  "test_cases": [
+    {
+      "name": "oldContractLetterAndWelcomeRequestsRequireExplicitMigration",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/KitDocumentServiceTest.java"
+    },
+    {
+      "name": "templateOnlyKitIssueRejectsBeforeCreatingMetadata",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/LegacyDocumentMigrationTest.java"
+    },
+    {
+      "name": "unscopedKitReadRejectsRatherThanReturningEmptyContent",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/LegacyDocumentMigrationTest.java"
+    },
+    {
+      "name": "oldDeleteCompensationCannotRemoveIssuedEvidence",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/LegacyDocumentMigrationTest.java"
+    },
+    {
+      "name": "oldDetachCompensationCannotRemoveRetainedContractAssociation",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/LegacyDocumentMigrationTest.java"
+    },
+    {
+      "name": "requiresGovernedIntent",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/LegacyDocumentMigrationTest.java"
+    },
+    {
+      "name": "rejects",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/CapturedContractEnrichmentCollectorTest.java"
+    },
+    {
+      "name": "onlyExactEffectiveIdentitiesAreReadAndDeduplicated",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/CapturedContractEnrichmentCollectorTest.java"
+    },
+    {
+      "name": "totalConcurrentForeignReadsStayBoundedAcrossEverySourceFamily",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/CapturedContractEnrichmentCollectorTest.java"
+    },
+    {
+      "name": "nativeSupportedPreEpochBusinessDatesRemainValid",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/CapturedContractEnrichmentCollectorTest.java"
+    },
+    {
+      "name": "snapshotDigestAndScopeMustMatchBeforeAnyForeignRead",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/CapturedContractEnrichmentCollectorTest.java"
+    },
+    {
+      "name": "productVersionsMustEqualTheCompleteCapturedEffectiveProductSet",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/CapturedContractEnrichmentCollectorTest.java"
+    },
+    {
+      "name": "duplicateRelationshipsAndInvalidIntervalsNeverReachSources",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/CapturedContractEnrichmentCollectorTest.java"
+    },
+    {
+      "name": "unsupportedValidationRulesUseExplicitProfileErrorBeforeForeignReads",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/CapturedContractEnrichmentCollectorTest.java"
+    },
+    {
+      "name": "over100RowsFailBeforeForeignReads",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/CapturedContractEnrichmentCollectorTest.java"
+    },
+    {
+      "name": "nativePhasesCollectSealIssueRecordAndAttachWithoutSecondJournal",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedContractDocumentCoordinatorTest.java"
+    },
+    {
+      "name": "readyResumeNeverRecollectsMutableSources",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedContractDocumentCoordinatorTest.java"
+    },
+    {
+      "name": "lostIssueResponseReplaysExactRetainedActionWithoutDeleteCompensation",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedContractDocumentCoordinatorTest.java"
+    },
+    {
+      "name": "lostRecordResponseResumesAttachmentWithoutReissueOrCollection",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedContractDocumentCoordinatorTest.java"
+    },
+    {
+      "name": "lostAttachResponseReturnsCurrentRetainedAssociationOnNextResume",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedContractDocumentCoordinatorTest.java"
+    },
+    {
+      "name": "currentDenialPreventsAnyPeerEffect",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedContractDocumentCoordinatorTest.java"
+    },
+    {
+      "name": "policyWithdrawnAfterPrivateReadPreventsIssuance",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedContractDocumentCoordinatorTest.java"
+    },
+    {
+      "name": "callerMutationDuringPolicyCannotChangeTheApprovedPreparedIntent",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedContractDocumentCoordinatorTest.java"
+    },
+    {
+      "name": "unsupportedProfileRetainsReservedJournalWithoutSealingIssuingOrAttaching",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedContractDocumentCoordinatorTest.java"
+    },
+    {
+      "name": "arbitraryPeerReasonCannotBecomePublicThroughASharedPrefix",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedContractDocumentCoordinatorTest.java"
+    },
+    {
+      "name": "emptyPrepareResponseIsExplicitDependencyError",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedContractDocumentCoordinatorTest.java"
+    },
+    {
+      "name": "attachedMetadataReadRechecksCurrentAuthorityWithoutPrivateFacts",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedContractDocumentCoordinatorTest.java"
+    },
+    {
+      "name": "actualContentReadRequiresRetainedAttachedEvidenceAndExactBytes",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedContractDocumentCoordinatorTest.java"
+    },
+    {
+      "name": "pendingContentDoesNotBecomeEmptySuccess",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedContractDocumentCoordinatorTest.java"
+    },
+    {
+      "name": "denied",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedDocumentAccessGuardTest.java"
+    },
+    {
+      "name": "missingTrustedContextOrPolicyDenies",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedDocumentAccessGuardTest.java"
+    },
+    {
+      "name": "exactPolicyContextUsesContractActionAndSafeSelectionOnly",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedDocumentAccessGuardTest.java"
+    },
+    {
+      "name": "currentPolicyIsReevaluatedForWarmReplay",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedDocumentAccessGuardTest.java"
+    },
+    {
+      "name": "anotherTenantDoesNotReachPolicy",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedDocumentAccessGuardTest.java"
+    },
+    {
+      "name": "missingExpiredOrCoercedExpiryDeniesBeforePolicy",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedDocumentAccessGuardTest.java"
+    },
+    {
+      "name": "policyErrorsAreSanitized",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedDocumentAccessGuardTest.java"
+    },
+    {
+      "name": "unsignedBodyTenantCannotCreateDelegation",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedDocumentAccessGuardTest.java"
+    },
+    {
+      "name": "validatedDelegatedTenantStillRequiresExactPolicy",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedDocumentAccessGuardTest.java"
+    },
+    {
+      "name": "unknownOperationOrMissingActionFailsClosed",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedDocumentAccessGuardTest.java"
+    },
+    {
+      "name": "invalid",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/SealedContractDocumentRequestTest.java"
+    },
+    {
+      "name": "retainedFactsRemainByteExactWithUnicodeLargeIntegerAnd128Scale",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/SealedContractDocumentRequestTest.java"
+    },
+    {
+      "name": "factsAndRetainedRequestDigestsMustBothMatch",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/SealedContractDocumentRequestTest.java"
+    },
+    {
+      "name": "stationeryFactsContractsCannotMasqueradeAsContractDocumentV1",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/SealedContractDocumentRequestTest.java"
+    },
+    {
+      "name": "partialOrDifferentOperationResponseIsNotAccepted",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/SealedContractDocumentRequestTest.java"
+    },
+    {
+      "name": "duplicatedOrTrailingRequestContentRejectsEvenWithMatchingDigest",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/SealedContractDocumentRequestTest.java"
+    },
+    {
+      "name": "factsInRequestMustEqualRetainedFacts",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/SealedContractDocumentRequestTest.java"
+    },
+    {
+      "name": "doHandle_shouldCallCreateContractPartyAndReturnId",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/AddContractPartyHandlerTest.java"
+    },
+    {
+      "name": "doHandle_shouldCallCreateContractTermAndReturnId",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/AddContractTermsHandlerTest.java"
+    },
+    {
+      "name": "doHandle_shouldDelegateToSagaAndCompleteSuccessfully",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/ConfirmContractSignatureHandlerTest.java"
+    },
+    {
+      "name": "doHandle_whenSagaFails_shouldEmitError",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/ConfirmContractSignatureHandlerTest.java"
+    },
+    {
+      "name": "doHandle_shouldCallCreateContractAndReturnId",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/CreateContractHandlerTest.java"
+    },
+    {
+      "name": "templateOnlyCommandRequiresGovernedIntentBeforeSagaEffects",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/GenerateContractDocumentHandlerTest.java"
+    },
+    {
+      "name": "doHandle_shouldCallGetContractPartiesByPartyIdWithActiveTrue",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetActiveContractsByPartyHandlerTest.java"
+    },
+    {
+      "name": "doHandle_shouldCallGetContractByIdAndReturnResult",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractDetailHandlerTest.java"
+    },
+    {
+      "name": "doHandle_shouldCallGetContractDocumentByIdAndReturnResult",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractDocumentHandlerTest.java"
+    },
+    {
+      "name": "doHandle_shouldCallFilterContractDocumentsAndReturnContent",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractDocumentsHandlerTest.java"
+    },
+    {
+      "name": "doHandle_shouldCallFilterContractPartiesAndReturnContent",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractPartiesHandlerTest.java"
+    },
+    {
+      "name": "doHandle_shouldReturnFirstStatusHistoryEntry",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractStatusHandlerTest.java"
+    },
+    {
+      "name": "doHandle_shouldReturnAllStatusHistoryEntries",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractStatusHistoryHandlerTest.java"
+    },
+    {
+      "name": "doHandle_shouldCallFilterContractTermsAndReturnContent",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractTermsHandlerTest.java"
+    },
+    {
+      "name": "doHandle_shouldCallGetContractPartiesByPartyIdWithNullActiveFilter",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractsByPartyHandlerTest.java"
+    },
+    {
+      "name": "doHandle_shouldCallDeleteContractParty",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/RemoveContractPartyHandlerTest.java"
+    },
+    {
+      "name": "doHandle_shouldDelegateToSagaAndReturnDurableSignatureRequestId",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/RequestContractSignatureHandlerTest.java"
+    },
+    {
+      "name": "doHandle_whenSagaFails_shouldEmitError",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/RequestContractSignatureHandlerTest.java"
+    },
+    {
+      "name": "execute_happyPath_shouldVerifySignatureUpdateStatusAndSendNotification",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/workflows/ConfirmSignatureSagaTest.java"
+    },
+    {
+      "name": "verifiedSignatureFromAnotherContractCannotApproveTheRequestedContract",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/workflows/ConfirmSignatureSagaTest.java"
+    },
+    {
+      "name": "execute_whenProviderHasNotVerifiedSignature_shouldNotApproveContract",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/workflows/ConfirmSignatureSagaTest.java"
+    },
+    {
+      "name": "execute_whenProviderReturnsAnotherRequest_shouldNotApproveContract",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/workflows/ConfirmSignatureSagaTest.java"
+    },
+    {
+      "name": "execute_whenProviderReturnsNoVerification_shouldNotApproveContract",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/workflows/ConfirmSignatureSagaTest.java"
+    },
+    {
+      "name": "assertVerificationRejected",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/workflows/ConfirmSignatureSagaTest.java"
+    },
+    {
+      "name": "execute_whenRequestIdentityIsAbsent_shouldNotAskProviderOrApprove",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/workflows/ConfirmSignatureSagaTest.java"
+    },
+    {
+      "name": "execute_whenProviderIdentityIsAbsent_shouldNotApprove",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/workflows/ConfirmSignatureSagaTest.java"
+    },
+    {
+      "name": "execute_whenProviderStatusIsAbsent_shouldNotApprove",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/workflows/ConfirmSignatureSagaTest.java"
+    },
+    {
+      "name": "execute_whenVerifySignatureFails_shouldNotCallSubsequentSteps",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/workflows/ConfirmSignatureSagaTest.java"
+    },
+    {
+      "name": "execute_whenUpdateContractStatusFails_shouldLogWarningAndFail",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/workflows/ConfirmSignatureSagaTest.java"
+    },
+    {
+      "name": "execute_whenVerifyAndStatusSucceed_sagaCompletesRegardlessOfNotificationStep",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/workflows/ConfirmSignatureSagaTest.java"
+    },
+    {
+      "name": "legacyMetadataWorkflowIsNotRegisteredForExecution",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/workflows/GenerateDocumentSagaTest.java"
+    },
+    {
+      "name": "directMetadataGenerationRequiresMigrationWithoutPeerEffects",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/workflows/GenerateDocumentSagaTest.java"
+    },
+    {
+      "name": "directOrdinaryAttachmentRequiresMigrationWithoutPeerEffects",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/workflows/GenerateDocumentSagaTest.java"
+    },
+    {
+      "name": "execute_returnsTheDurableRequestIdWithoutCreatingAnotherCoreRecord",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/workflows/RequestSignatureSagaTest.java"
+    },
+    {
+      "name": "missingProviderRequestIdFailsBeforeContractStatusMutation",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/workflows/RequestSignatureSagaTest.java"
+    },
+    {
+      "name": "failedContractUpdateRetainsDurableProviderRequestForRecovery",
+      "path": "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/workflows/RequestSignatureSagaTest.java"
+    },
+    {
+      "name": "requestUsesCoreAuthorityAndStableBusinessIdentity",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/SandboxESignatureAdapterTest.java"
+    },
+    {
+      "name": "pendingIsNotVerified",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/SandboxESignatureAdapterTest.java"
+    },
+    {
+      "name": "completionRetainsBindingAndSyntheticProvenance",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/SandboxESignatureAdapterTest.java"
+    },
+    {
+      "name": "completionWithoutPersistedSigningTimestampIsNotVerified",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/SandboxESignatureAdapterTest.java"
+    },
+    {
+      "name": "missingCoreRequestFails",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/SandboxESignatureAdapterTest.java"
+    },
+    {
+      "name": "liveActorContextCannotAcceptSyntheticCompletion",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/SandboxESignatureAdapterTest.java"
+    },
+    {
+      "name": "wrongTenantCannotBeVerified",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/SandboxESignatureAdapterTest.java"
+    },
+    {
+      "name": "actualGeneratedSdkAndDomainAdapterRetainPendingAndCompletionAcrossCoreProcessRestart",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/SignatureCoreSdkDatabaseTest.java"
+    },
+    {
+      "name": "seed",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/SignatureCoreSdkDatabaseTest.java"
+    },
+    {
+      "name": "close",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/SignatureCoreSdkDatabaseTest.java"
+    },
+    {
+      "name": "productionNeverUsesConfiguredSyntheticTenantAsAuthority",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/SignatureRequestContextConfigurationTest.java"
+    },
+    {
+      "name": "sandboxRequiresExplicitTenantAndProviderConfiguration",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/SignatureRequestContextConfigurationTest.java"
+    },
+    {
+      "name": "sandboxResolvesOnlyExplicitSyntheticOwnership",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/SignatureRequestContextConfigurationTest.java"
+    },
+    {
+      "name": "start",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/ContractDocumentSourceSdkAdapterTest.java"
+    },
+    {
+      "name": "stop",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/ContractDocumentSourceSdkAdapterTest.java"
+    },
+    {
+      "name": "invalid",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/ContractDocumentSourceSdkAdapterTest.java"
+    },
+    {
+      "name": "genuineCustomerSdkUsesActualPartyAndProfileWithMinimalUnicodeDisplay",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/ContractDocumentSourceSdkAdapterTest.java"
+    },
+    {
+      "name": "legitimateGivenOnlyAndFamilyOnlyCustomerNamesRemainUsable",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/ContractDocumentSourceSdkAdapterTest.java"
+    },
+    {
+      "name": "organizationUsesLegalNameAndDoesNotFallBackToTradeName",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/ContractDocumentSourceSdkAdapterTest.java"
+    },
+    {
+      "name": "genuineProductAndMastersSdkKeepExactIdentityAndNumericVersion",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/ContractDocumentSourceSdkAdapterTest.java"
+    },
+    {
+      "name": "nativeSupportedPreEpochProductEffectiveDateRemainsValid",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/ContractDocumentSourceSdkAdapterTest.java"
+    },
+    {
+      "name": "wrongPartyTenantStopsBeforeAnyProfileRead",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/ContractDocumentSourceSdkAdapterTest.java"
+    },
+    {
+      "name": "wrongProfileParentAndWrongProductVersionParentReject",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/ContractDocumentSourceSdkAdapterTest.java"
+    },
+    {
+      "name": "fractionalVersionAndDuplicateOrUnknownResponseFieldsFailClosed",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/ContractDocumentSourceSdkAdapterTest.java"
+    },
+    {
+      "name": "inactiveMasterAndMissingRequiredNameNeverBecomeObservations",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/ContractDocumentSourceSdkAdapterTest.java"
+    },
+    {
+      "name": "observationFingerprintChangesWithConsumedSourceButNeverClaimsAnExternalRevision",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/ContractDocumentSourceSdkAdapterTest.java"
+    },
+    {
+      "name": "missingOrExpiredDelegationHasNoHttpEffect",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/ContractDocumentSourceSdkAdapterTest.java"
+    },
+    {
+      "name": "legacyEndpointPropertiesCannotSelectGovernedSourceOwners",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/ContractDocumentSourceSdkAdapterTest.java"
+    },
+    {
+      "name": "ordinaryConfigurationFailsClosedEvenWithAValidAuthentication",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentDelegationConfigurationTest.java"
+    },
+    {
+      "name": "explicitModeAndPeerAudienceEnableCurrentValidatedRelay",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentDelegationConfigurationTest.java"
+    },
+    {
+      "name": "aTrustedCustomCredentialAdapterReplacesTheDefault",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentDelegationConfigurationTest.java"
+    },
+    {
+      "name": "actualUserConfigurationRegistersBeforeConditionalDefault",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentDelegationConfigurationTest.java"
+    },
+    {
+      "name": "denied",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentRelayTest.java"
+    },
+    {
+      "name": "explicitMultiAudienceModeReturnsOnlyCurrentValidatedCredential",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentRelayTest.java"
+    },
+    {
+      "name": "unspecifiedModeDoesNotRelayEvenAuthenticatedBearer",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentRelayTest.java"
+    },
+    {
+      "name": "absentReactiveAuthenticationDenies",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentRelayTest.java"
+    },
+    {
+      "name": "plainJwtAuthenticationWithoutRichTrustedPrincipalDenies",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentRelayTest.java"
+    },
+    {
+      "name": "missingPeerAudienceDenies",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentRelayTest.java"
+    },
+    {
+      "name": "expiredBearerDenies",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentRelayTest.java"
+    },
+    {
+      "name": "mismatchBetweenJaflyContextAndValidatedAuthenticationDenies",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentRelayTest.java"
+    },
+    {
+      "name": "bodyTenantCannotOverrideSignedPrincipalTenant",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentRelayTest.java"
+    },
+    {
+      "name": "unconfiguredPeerDenies",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentRelayTest.java"
+    },
+    {
+      "name": "principalCannotInventClaimsDifferentFromActualJwt",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentRelayTest.java"
+    },
+    {
+      "name": "start",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentSdkAdapterTest.java"
+    },
+    {
+      "name": "stop",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentSdkAdapterTest.java"
+    },
+    {
+      "name": "existingNativeJournalMethodsUseActualGeneratedSdkWithExactTuple",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentSdkAdapterTest.java"
+    },
+    {
+      "name": "genuineDocumentSdkTransportsExactFactsString",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentSdkAdapterTest.java"
+    },
+    {
+      "name": "unavailableCredentialsFailBeforeAnyHttpRequest",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentSdkAdapterTest.java"
+    },
+    {
+      "name": "expiredCredentialsFailBeforeAnyHttpRequest",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentSdkAdapterTest.java"
+    },
+    {
+      "name": "concurrentOperationsNeverShareMutableSdkAuthorizationHeaders",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentSdkAdapterTest.java"
+    },
+    {
+      "name": "fractionalNativeRevisionIsRejectedBeforeItCanBecomeALong",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentSdkAdapterTest.java"
+    },
+    {
+      "name": "numericIdentifierCannotBeCoercedIntoText",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentSdkAdapterTest.java"
+    },
+    {
+      "name": "duplicateNativeRevisionIsRejectedRatherThanSelectingOneValue",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentSdkAdapterTest.java"
+    },
+    {
+      "name": "unknownCurrentProfileResponseFieldsFailExplicitly",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentSdkAdapterTest.java"
+    },
+    {
+      "name": "legitimateNumericRevisionAndBusinessTimestampKeepTheirTypes",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentSdkAdapterTest.java"
+    },
+    {
+      "name": "genuineSdkReadsBoundedContentAboveDefaultCodecBufferWithoutChangingUnicode",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentSdkAdapterTest.java"
+    },
+    {
+      "name": "legacyEndpointsCannotConfigureGovernedContractOrDocumentCalls",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentSdkAdapterTest.java"
+    },
+    {
+      "name": "rejects",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedPeerEndpointTest.java"
+    },
+    {
+      "name": "httpsOriginIsExplicitAndDoesNotRequireSandbox",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedPeerEndpointTest.java"
+    },
+    {
+      "name": "cleartextNeedsExplicitSandboxAndLiteralLoopbackOrigin",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedPeerEndpointTest.java"
+    },
+    {
+      "name": "absentCredentialsQueryFragmentPathAliasesAndInvalidPortsReject",
+      "path": "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedPeerEndpointTest.java"
+    },
+    {
+      "name": "sql",
+      "path": "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/ContractRuntimeSupport.java"
+    },
+    {
+      "name": "migrate",
+      "path": "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/ContractRuntimeSupport.java"
+    },
+    {
+      "name": "stop",
+      "path": "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/ContractRuntimeSupport.java"
+    },
+    {
+      "name": "oldTypedClientCodeStillCompilesWhileLegacyRoutesRequireMigration",
+      "path": "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/GovernedContractDocumentGeneratedContractTest.java"
+    },
+    {
+      "name": "generatedNativeApiHasOnlyExplicitResourceAndIntentParameters",
+      "path": "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/GovernedContractDocumentGeneratedContractTest.java"
+    },
+    {
+      "name": "pinPeers",
+      "path": "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/GovernedContractDocumentRuntimeIT.java"
+    },
+    {
+      "name": "start",
+      "path": "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/GovernedContractDocumentRuntimeIT.java"
+    },
+    {
+      "name": "startContracts",
+      "path": "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/GovernedContractDocumentRuntimeIT.java"
+    },
+    {
+      "name": "finish",
+      "path": "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/GovernedContractDocumentRuntimeIT.java"
+    },
+    {
+      "name": "status",
+      "path": "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/GovernedContractDocumentRuntimeIT.java"
+    },
+    {
+      "name": "startDomain",
+      "path": "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/GovernedContractDocumentRuntimeIT.java"
+    },
+    {
+      "name": "genuineDomainSdkUsesSevenBootOwnersAndRetainsExactImmutableEvidence",
+      "path": "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/GovernedContractDocumentRuntimeIT.java"
+    },
+    {
+      "name": "currentAuthorityWithdrawalCannotReplayReadResumeOrDownloadWarmEvidence",
+      "path": "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/GovernedContractDocumentRuntimeIT.java"
+    },
+    {
+      "name": "unsupportedCapturedRulesRetainOnlyReservedAndNeverReadForeignSourcesOrIssue",
+      "path": "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/GovernedContractDocumentRuntimeIT.java"
+    },
+    {
+      "name": "lostSuccessfulIssueRecordAndAttachRepliesRecoverAfterDomainRestartWithoutNewSourcesOrDeletes",
+      "path": "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/GovernedContractDocumentRuntimeIT.java"
+    },
+    {
+      "name": "authoritativeWrongTenantCustomerAndProductSourcesCannotSealOrIssue",
+      "path": "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/GovernedContractDocumentRuntimeIT.java"
+    },
+    {
+      "name": "nativeAttachmentRollbackRetainsIssuedEvidenceAndResumesWithoutCompensation",
+      "path": "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/GovernedContractDocumentRuntimeIT.java"
+    },
+    {
+      "name": "concurrentSameIntentKeepsOneNativeJournalIssuanceAndAttachment",
+      "path": "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/GovernedContractDocumentRuntimeIT.java"
+    },
+    {
+      "name": "ordinaryActualBootWithoutProjectPolicyDeniesBeforeCredentialOrJournalRead",
+      "path": "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/GovernedContractDocumentRuntimeIT.java"
+    },
+    {
+      "name": "ordinaryActualBootWithoutTrustRejectsSignedTokenAndDeniesUnmatchedLegacyAndDiscovery",
+      "path": "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/GovernedContractDocumentRuntimeIT.java"
+    },
+    {
+      "name": "actualRuntimeOpenApiKeepsFourGovernedRoutesAndExplicitParameters",
+      "path": "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/GovernedContractDocumentRuntimeIT.java"
+    },
+    {
+      "name": "policyWithdrawalAfterActualSnapshotReadStopsBeforeSourceCollectionAndSeal",
+      "path": "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/GovernedContractDocumentRuntimeIT.java"
+    },
+    {
+      "name": "close",
+      "path": "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/OwnedPeerProxy.java"
+    },
+    {
+      "name": "close",
+      "path": "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/PrivateIssuer.java"
+    },
+    {
+      "name": "createContract_shouldReturn201WithContractId",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractControllerTest.java"
+    },
+    {
+      "name": "getContractDetail_shouldReturn200WithDetail",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractControllerTest.java"
+    },
+    {
+      "name": "listByParty_shouldReturn200WithContracts",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractControllerTest.java"
+    },
+    {
+      "name": "listActiveByParty_shouldReturn200WithActiveContracts",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractControllerTest.java"
+    },
+    {
+      "name": "getStatus_shouldReturn200WithStatus",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractControllerTest.java"
+    },
+    {
+      "name": "getStatusHistory_shouldReturn200WithHistory",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractControllerTest.java"
+    },
+    {
+      "name": "generateDocument_shouldRequireGovernedIntentMigration",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractDocumentControllerTest.java"
+    },
+    {
+      "name": "listDocuments_shouldReturn200WithDocuments",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractDocumentControllerTest.java"
+    },
+    {
+      "name": "getDocument_shouldReturn200WithDocument",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractDocumentControllerTest.java"
+    },
+    {
+      "name": "addParty_shouldReturn201WithPartyId",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractPartyControllerTest.java"
+    },
+    {
+      "name": "listParties_shouldReturn200WithParties",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractPartyControllerTest.java"
+    },
+    {
+      "name": "removeParty_shouldReturn204",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractPartyControllerTest.java"
+    },
+    {
+      "name": "requestSignature_shouldReturn202WithRequestId",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractSignatureControllerTest.java"
+    },
+    {
+      "name": "confirmSignature_shouldReturn200",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractSignatureControllerTest.java"
+    },
+    {
+      "name": "addTerms_shouldReturn201WithTermId",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractTermsControllerTest.java"
+    },
+    {
+      "name": "listTerms_shouldReturn200WithTerms",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractTermsControllerTest.java"
+    },
+    {
+      "name": "malformedIntentRejectsBeforeAnyCoordinatorOrPeerEffect",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedContractDocumentControllerTest.java"
+    },
+    {
+      "name": "contentReturnsExactUtf8BytesWithNoStoreAndImmutableVersionDigest",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedContractDocumentControllerTest.java"
+    },
+    {
+      "name": "currentContentDenialHasNoSuccessfulContentHeadersOrBytes",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedContractDocumentControllerTest.java"
+    },
+    {
+      "name": "resumeAndReadUseExplicitRouteScopeAndDisableCachingOfCurrentViews",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedContractDocumentControllerTest.java"
+    },
+    {
+      "name": "rejects",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedContractDocumentInputsTest.java"
+    },
+    {
+      "name": "exactIntegerPinsUnicodeAndSupportedPreEpochDatesRetainTheirMeaning",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedContractDocumentInputsTest.java"
+    },
+    {
+      "name": "scalarCoercionDuplicatesTrailingAndAuthorityFieldsReject",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedContractDocumentInputsTest.java"
+    },
+    {
+      "name": "completeExactShapeAndCanonicalIdentitiesAreMandatory",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedContractDocumentInputsTest.java"
+    },
+    {
+      "name": "invalidEnumsEpochOverflowAndBoundedBodyReject",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedContractDocumentInputsTest.java"
+    },
+    {
+      "name": "denied",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentAuthenticationTest.java"
+    },
+    {
+      "name": "standardJwtAuthenticationRetainsTokenAndJaflyPrincipalFromTheSameClaims",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentAuthenticationTest.java"
+    },
+    {
+      "name": "exactSignedDelegationCanRepresentAServiceWithoutATenant",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentAuthenticationTest.java"
+    },
+    {
+      "name": "missingTenantAndDelegationDenies",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentAuthenticationTest.java"
+    },
+    {
+      "name": "unprivilegedDelegationCannotReplaceTenant",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentAuthenticationTest.java"
+    },
+    {
+      "name": "nonCanonicalOrCoercedTenantDenies",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentAuthenticationTest.java"
+    },
+    {
+      "name": "duplicateMalformedOrUnboundedDelegationDenies",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentAuthenticationTest.java"
+    },
+    {
+      "name": "missingExpiredOrUnusableTokenIdentityDenies",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentAuthenticationTest.java"
+    },
+    {
+      "name": "trust",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentDefaultPolicyHttpTest.java"
+    },
+    {
+      "name": "stop",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentDefaultPolicyHttpTest.java"
+    },
+    {
+      "name": "signedTokenWithoutProjectPolicyRulesCannotReadTheResource",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentDefaultPolicyHttpTest.java"
+    },
+    {
+      "name": "close",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentHttpTestSupport.java"
+    },
+    {
+      "name": "stop",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentMissingTrustHttpTest.java"
+    },
+    {
+      "name": "missingTrustIsAnAuthenticationRejectionRatherThanAnInternalError",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentMissingTrustHttpTest.java"
+    },
+    {
+      "name": "trust",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentSecurityHttpTest.java"
+    },
+    {
+      "name": "stop",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentSecurityHttpTest.java"
+    },
+    {
+      "name": "reset",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentSecurityHttpTest.java"
+    },
+    {
+      "name": "legacyKitMigrationCannotReplayAnEarlierMetadataOnlySuccess",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentSecurityHttpTest.java"
+    },
+    {
+      "name": "legacyGenerateMigrationCannotReplayAnEarlierMetadataOnlySuccess",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentSecurityHttpTest.java"
+    },
+    {
+      "name": "unmatchedLegacyCollectionDeniesBeforeSensitiveServiceResults",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentSecurityHttpTest.java"
+    },
+    {
+      "name": "legacyReadAlwaysRequiresMigrationOverActualHttp",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentSecurityHttpTest.java"
+    },
+    {
+      "name": "nativeIssueRechecksCurrentPolicyAfterSuccessfulSameKeyRequest",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentSecurityHttpTest.java"
+    },
+    {
+      "name": "actualRemoteJwksSignedTokenReachesJaflyPolicyAndCurrentRelay",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentSecurityHttpTest.java"
+    },
+    {
+      "name": "unsignedAndMissingExpirationNeverReachResource",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentSecurityHttpTest.java"
+    },
+    {
+      "name": "wrongIssuerAudienceAndSignatureAreRejected",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentSecurityHttpTest.java"
+    },
+    {
+      "name": "exactTenantContractScopeAndPeerAudienceAreAllRequired",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentSecurityHttpTest.java"
+    },
+    {
+      "name": "policyWithdrawalAfterWarmReadCannotReuseEarlierAuthority",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentSecurityHttpTest.java"
+    },
+    {
+      "name": "trust",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentStrictPolicyDisabledHttpTest.java"
+    },
+    {
+      "name": "stop",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentStrictPolicyDisabledHttpTest.java"
+    },
+    {
+      "name": "compatibilityPolicyModeCannotBeUsedByTheProtectedIntegration",
+      "path": "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentStrictPolicyDisabledHttpTest.java"
+    }
+  ],
+  "tests": [
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/TestContractsCoreApplication.java",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/KitDocumentServiceTest.java",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/LegacyDocumentMigrationTest.java",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/CapturedContractEnrichmentCollectorTest.java",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedContractDocumentCoordinatorTest.java",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/GovernedDocumentAccessGuardTest.java",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/documents/v1/SealedContractDocumentRequestTest.java",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/AddContractPartyHandlerTest.java",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/AddContractTermsHandlerTest.java",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/ConfirmContractSignatureHandlerTest.java",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/CreateContractHandlerTest.java",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/GenerateContractDocumentHandlerTest.java",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetActiveContractsByPartyHandlerTest.java",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractDetailHandlerTest.java",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractDocumentHandlerTest.java",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractDocumentsHandlerTest.java",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractPartiesHandlerTest.java",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractStatusHandlerTest.java",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractStatusHistoryHandlerTest.java",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractTermsHandlerTest.java",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/GetContractsByPartyHandlerTest.java",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/RemoveContractPartyHandlerTest.java",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/handlers/RequestContractSignatureHandlerTest.java",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/workflows/ConfirmSignatureSagaTest.java",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/workflows/GenerateDocumentSagaTest.java",
+    "domain-common-contracts-core/src/test/java/io/fireflysoftware/domain/common/contracts/core/workflows/RequestSignatureSagaTest.java",
+    "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/SandboxESignatureAdapterTest.java",
+    "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/SignatureCoreSdkDatabaseTest.java",
+    "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/SignatureRequestContextConfigurationTest.java",
+    "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/ContractDocumentSourceSdkAdapterTest.java",
+    "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentDelegationConfigurationTest.java",
+    "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentRelayTest.java",
+    "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedDocumentSdkAdapterTest.java",
+    "domain-common-contracts-infra/src/test/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedPeerEndpointTest.java",
+    "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/ContractDocumentRuntimeBootstrap.java",
+    "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/ContractRuntimeSupport.java",
+    "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/GovernedContractDocumentGeneratedContractTest.java",
+    "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/GovernedContractDocumentRuntimeIT.java",
+    "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/GovernedDocumentRuntimeBootstrap.java",
+    "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/OwnedPeerProxy.java",
+    "domain-common-contracts-sdk/src/test/java/io/fireflysoftware/qualification/contracts/PrivateIssuer.java",
+    "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractControllerTest.java",
+    "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractDocumentControllerTest.java",
+    "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractPartyControllerTest.java",
+    "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractSignatureControllerTest.java",
+    "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/controllers/ContractTermsControllerTest.java",
+    "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedContractDocumentControllerTest.java",
+    "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedContractDocumentInputsTest.java",
+    "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentAuthenticationTest.java",
+    "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentDefaultPolicyHttpTest.java",
+    "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentHttpTestSupport.java",
+    "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentMissingTrustHttpTest.java",
+    "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentSecurityHttpTest.java",
+    "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/documents/v1/GovernedDocumentStrictPolicyDisabledHttpTest.java",
+    "domain-common-contracts-web/src/test/java/io/fireflysoftware/domain/common/contracts/web/openapi/OpenApiGenApplication.java"
+  ],
+  "types": [
+    {
+      "constraints": [],
+      "fields": [
+        {
+          "constraints": [],
+          "name": "contractId",
+          "type": "UUID"
+        },
+        {
+          "constraints": [],
+          "name": "partyId",
+          "type": "UUID"
+        },
+        {
+          "constraints": [],
+          "name": "role",
+          "type": "String"
+        }
+      ],
+      "name": "AddContractPartyCommand",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/commands/AddContractPartyCommand.java",
+      "persistent": false
+    },
+    {
+      "constraints": [],
+      "fields": [
+        {
+          "constraints": [],
+          "name": "contractId",
+          "type": "UUID"
+        },
+        {
+          "constraints": [],
+          "name": "termTemplateId",
+          "type": "UUID"
+        },
+        {
+          "constraints": [],
+          "name": "termValue",
+          "type": "String"
+        }
+      ],
+      "name": "AddContractTermsCommand",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/commands/AddContractTermsCommand.java",
+      "persistent": false
+    },
+    {
+      "constraints": [],
+      "fields": [
+        {
+          "constraints": [],
+          "name": "contractId",
+          "type": "UUID"
+        },
+        {
+          "constraints": [],
+          "name": "status",
+          "type": "ContractDTO.ContractStatusEnum"
+        },
+        {
+          "constraints": [],
+          "name": "reason",
+          "type": "String"
+        }
+      ],
+      "name": "ChangeContractStatusCommand",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/commands/ChangeContractStatusCommand.java",
+      "persistent": false
+    },
+    {
+      "constraints": [
+        "NotBlank",
+        "NotNull"
+      ],
+      "fields": [
+        {
+          "constraints": [],
+          "name": "contractId",
+          "type": "UUID"
+        },
+        {
+          "constraints": [],
+          "name": "signatureRequestId",
+          "type": "String"
+        }
+      ],
+      "name": "ConfirmContractSignatureCommand",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/commands/ConfirmContractSignatureCommand.java",
+      "persistent": false
+    },
+    {
+      "constraints": [],
+      "fields": [
+        {
+          "constraints": [],
+          "name": "contractId",
+          "type": "UUID"
+        },
+        {
+          "constraints": [],
+          "name": "templateId",
+          "type": "UUID"
+        }
+      ],
+      "name": "GenerateContractDocumentCommand",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/commands/GenerateContractDocumentCommand.java",
+      "persistent": false
+    },
+    {
+      "constraints": [],
+      "fields": [
+        {
+          "constraints": [],
+          "name": "contractId",
+          "type": "UUID"
+        }
+      ],
+      "name": "RemoveContractCommand",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/commands/RemoveContractCommand.java",
+      "persistent": false
+    },
+    {
+      "constraints": [],
+      "fields": [
+        {
+          "constraints": [],
+          "name": "contractId",
+          "type": "UUID"
+        },
+        {
+          "constraints": [],
+          "name": "contractLineId",
+          "type": "UUID"
+        }
+      ],
+      "name": "RemoveContractLineCommand",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/commands/RemoveContractLineCommand.java",
+      "persistent": false
+    },
+    {
+      "constraints": [],
+      "fields": [
+        {
+          "constraints": [],
+          "name": "contractId",
+          "type": "UUID"
+        },
+        {
+          "constraints": [],
+          "name": "partyId",
+          "type": "UUID"
+        }
+      ],
+      "name": "RemoveContractPartyCommand",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/commands/RemoveContractPartyCommand.java",
+      "persistent": false
+    },
+    {
+      "constraints": [],
+      "fields": [
+        {
+          "constraints": [],
+          "name": "contractId",
+          "type": "UUID"
+        },
+        {
+          "constraints": [],
+          "name": "contractStatusHistoryId",
+          "type": "UUID"
+        }
+      ],
+      "name": "RemoveContractStatusHistoryCommand",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/commands/RemoveContractStatusHistoryCommand.java",
+      "persistent": false
+    },
+    {
+      "constraints": [
+        "NotNull"
+      ],
+      "fields": [
+        {
+          "constraints": [],
+          "name": "contractId",
+          "type": "UUID"
+        },
+        {
+          "constraints": [],
+          "name": "documentId",
+          "type": "UUID"
+        },
+        {
+          "constraints": [],
+          "name": "signerPartyId",
+          "type": "UUID"
+        }
+      ],
+      "name": "RequestContractSignatureCommand",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/commands/RequestContractSignatureCommand.java",
+      "persistent": false
+    },
+    {
+      "constraints": [],
+      "fields": [
+        {
+          "constraints": [],
+          "name": "sagaEngine",
+          "type": "SagaEngine"
+        }
+      ],
+      "name": "RequestContractSignatureHandler",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/handlers/RequestContractSignatureHandler.java",
+      "persistent": false
+    },
+    {
+      "constraints": [],
+      "fields": [
+        {
+          "constraints": [],
+          "name": "eSignaturePort",
+          "type": "ESignaturePort"
+        },
+        {
+          "constraints": [],
+          "name": "contractStatusHistoryApi",
+          "type": "ContractStatusHistoryApi"
+        }
+      ],
+      "name": "RequestSignatureSaga",
+      "path": "domain-common-contracts-core/src/main/java/io/fireflysoftware/domain/common/contracts/core/workflows/RequestSignatureSaga.java",
+      "persistent": false
+    },
+    {
+      "constraints": [],
+      "fields": [
+        {
+          "constraints": [],
+          "name": "baseUrl",
+          "type": "String"
+        },
+        {
+          "constraints": [],
+          "name": "allowLoopbackHttp",
+          "type": "boolean"
+        }
+      ],
+      "name": "GovernedPeerEndpoint",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/documents/v1/GovernedPeerEndpoint.java",
+      "persistent": false
+    },
+    {
+      "constraints": [],
+      "fields": [
+        {
+          "constraints": [],
+          "name": "contractId",
+          "type": "UUID"
+        },
+        {
+          "constraints": [],
+          "name": "documentId",
+          "type": "UUID"
+        },
+        {
+          "constraints": [],
+          "name": "signerPartyId",
+          "type": "UUID"
+        }
+      ],
+      "name": "SignatureRequest",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/ports/model/SignatureRequest.java",
+      "persistent": false
+    },
+    {
+      "constraints": [],
+      "fields": [
+        {
+          "constraints": [],
+          "name": "signatureRequestId",
+          "type": "String"
+        },
+        {
+          "constraints": [],
+          "name": "provider",
+          "type": "String"
+        },
+        {
+          "constraints": [],
+          "name": "status",
+          "type": "String"
+        }
+      ],
+      "name": "SignatureRequestResult",
+      "path": "domain-common-contracts-infra/src/main/java/io/fireflysoftware/domain/common/contracts/infra/ports/model/SignatureRequestResult.java",
+      "persistent": false
+    },
+    {
+      "constraints": [],
+      "fields": [
+        {
+          "constraints": [],
+          "name": "actionId",
+          "type": "String"
+        },
+        {
+          "constraints": [],
+          "name": "expectedContractRevision",
+          "type": "Long"
+        },
+        {
+          "constraints": [],
+          "name": "selection",
+          "type": "GovernedSelection"
+        },
+        {
+          "constraints": [],
+          "name": "expected",
+          "type": "GovernedPins"
+        },
+        {
+          "constraints": [],
+          "name": "contractDocumentTypeId",
+          "type": "String"
+        },
+        {
+          "constraints": [],
+          "name": "productVersionReferences",
+          "type": "List<GovernedProductVersion>"
+        },
+        {
+          "constraints": [],
+          "name": "retention",
+          "type": "GovernedRetention"
+        },
+        {
+          "constraints": [],
+          "name": "displayName",
+          "type": "String"
+        },
+        {
+          "constraints": [],
+          "name": "predecessorOperationId",
+          "type": "String"
+        }
+      ],
+      "name": "GovernedContractDocumentIntent",
+      "path": "domain-common-contracts-interfaces/src/main/java/io/fireflysoftware/domain/common/contracts/interfaces/dtos/document/v1/GovernedContractDocumentIntent.java",
+      "persistent": false
+    }
+  ],
+  "verification_hazards": [],
+  "workflows": [
+    ".github/workflows/maven-central.yml",
+    ".github/workflows/release.yml"
+  ]
+}

@@ -17,71 +17,23 @@
 package io.fireflysoftware.domain.common.contracts.core.documents;
 
 import io.fireflysoftware.commons.ecm.sdk.api.DocumentControllerApi;
-import io.fireflysoftware.commons.ecm.sdk.model.DocumentDTO;
-import io.fireflysoftware.documents.DocumentTypeCode;
-import io.fireflysoftware.documents.IssuedDocument;
+import java.util.UUID;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.util.UUID;
-
-/**
- * Issues a contract, letter, or welcome through the document core SDK.
- * The journey calls {@code KitDocumentsControllerApi}. This service is the domain behind that client.
- */
+/** Compatibility boundary for callers that cannot express a governed document intent. */
 @Service
 public class KitDocumentService {
+  public KitDocumentService(DocumentControllerApi documents) {}
 
-    private final DocumentControllerApi documents;
+  public Mono<UUID> issue(String templateCode, UUID partyId, UUID contractId) {
+    return Mono.error(LegacyDocumentMigration.required());
+  }
 
-    public KitDocumentService(DocumentControllerApi documents) {
-        this.documents = documents;
-    }
+  public Mono<LegacyIssuedView> read(UUID documentId) {
+    return Mono.error(LegacyDocumentMigration.required());
+  }
 
-    public Mono<UUID> issue(String templateCode, UUID partyId, UUID contractId) {
-        if (DocumentTypeCode.fromCode(templateCode) == null) {
-            return Mono.error(new IllegalArgumentException("Unknown document template: " + templateCode));
-        }
-        DocumentDTO body = new DocumentDTO();
-        body.setName(templateCode);
-        body.setDescription(describe(templateCode, partyId, contractId));
-        body.setFileName(templateCode + ".html");
-        body.setFileExtension("html");
-        body.setMimeType("text/html");
-        body.setDocumentType(documentType(templateCode));
-        body.setDocumentStatus(DocumentDTO.DocumentStatusEnum.PUBLISHED);
-        body.setStorageType(DocumentDTO.StorageTypeEnum.DATABASE);
-        if (partyId != null) {
-            body.setTenantId(partyId.toString());
-        }
-        return documents.createDocument(body, UUID.randomUUID().toString())
-                .flatMap(saved -> {
-                    if (saved == null || saved.getId() == null) {
-                        return Mono.error(new IllegalStateException("Document core did not return an id"));
-                    }
-                    return Mono.just(saved.getId());
-                });
-    }
-
-    public Mono<IssuedDocument> read(UUID documentId) {
-        return documents.getDocumentById(documentId, UUID.randomUUID().toString())
-                .flatMap(dto -> {
-                    if (dto == null || dto.getId() == null) {
-                        return Mono.error(new IllegalStateException("Document core did not return an id"));
-                    }
-                    String template = dto.getName() == null ? dto.getDescription() : dto.getName();
-                    return Mono.just(new IssuedDocument(dto.getId(), template, dto.getMimeType(), "", dto.getName()));
-                });
-    }
-
-    private static String describe(String templateCode, UUID partyId, UUID contractId) {
-        return templateCode + " party=" + partyId + " contract=" + contractId;
-    }
-
-    private static DocumentDTO.DocumentTypeEnum documentType(String templateCode) {
-        if (DocumentTypeCode.CONTRACT.code().equals(templateCode)) {
-            return DocumentDTO.DocumentTypeEnum.CONTRACT;
-        }
-        return DocumentDTO.DocumentTypeEnum.DOCUMENT;
-    }
+  public record LegacyIssuedView(
+      UUID id, String templateCode, String mediaType, String html, String name) {}
 }

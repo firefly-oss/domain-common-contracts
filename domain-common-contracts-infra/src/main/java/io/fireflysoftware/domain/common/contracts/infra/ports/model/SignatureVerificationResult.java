@@ -27,6 +27,11 @@ import lombok.Data;
 @Builder
 public class SignatureVerificationResult {
     private String signatureRequestId;
+    private java.util.UUID contractId;
+    private java.util.UUID documentId;
+    private java.util.UUID signerPartyId;
+    private String tenantId;
+    private Boolean synthetic;
     private String status;
     private String provider;
 }
